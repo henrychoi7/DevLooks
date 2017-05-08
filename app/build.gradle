@@ -26,6 +26,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    // https://github.com/square/retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+
     // https://github.com/baoyongzhang/android-PullRefreshLayout
     // https://github.com/tsengvn/Typekit
     compile 'com.android.support:appcompat-v7:25.3.1'

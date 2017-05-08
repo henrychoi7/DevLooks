@@ -11,12 +11,20 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import gachon.mobile.programming.android.finalproject.DTO.LoginData;
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.init.InitActivity;
 import gachon.mobile.programming.android.finalproject.main.MainActivity;
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
 import gachon.mobile.programming.android.finalproject.utils.ClearEditText;
+import gachon.mobile.programming.android.finalproject.utils.RetrofitInterface;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends BaseActivity {
     private UserLoginTask mAuthTask = null;
@@ -140,6 +148,29 @@ public class LoginActivity extends BaseActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://13.124.94.238/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            RetrofitInterface retrofitInterface = retrofit.create(RetrofitInterface.class);
+            Call<LoginData> Login = retrofitInterface.Login("dlsdud@dngus.com", "dngus2929");
+            Login.enqueue(new Callback<LoginData>() {
+                @Override
+                public void onResponse(Call<LoginData> call, Response<LoginData> response) {
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    LoginData loginData = response.body();
+                    Toast.makeText(getApplicationContext(), "성공", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<LoginData> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "실패", Toast.LENGTH_SHORT).show();
+                }
+            });
 
             try {
                 // Simulate network access.
