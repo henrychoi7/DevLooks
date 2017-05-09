@@ -14,7 +14,7 @@ import android.view.View;
 import gachon.mobile.programming.android.finalproject.R;
 
 /**
- * Created by jungwh on 2017-05-07.
+ * Created by JJSOFT-DESKTOP on 2017-05-09.
  */
 
 public class ClearEditText extends AppCompatEditText implements TextWatcher, View.OnTouchListener, View.OnFocusChangeListener {

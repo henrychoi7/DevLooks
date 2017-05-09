@@ -32,14 +32,20 @@
         <item name="android:layout_marginBottom">@dimen/init_text_view_margin_bottom</item>
     </style>
 
+    <!-- Default Button Style -->
+    <style name="defaultButton">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/attr_toast</item>
+    </style>
+
     <style name="InitButton">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:paddingLeft">@dimen/init_button_padding</item>
-        <item name="android:paddingRight">@dimen/init_button_padding</item>
         <item name="android:background">@drawable/attr_toast</item>
         <item name="android:layout_marginBottom">@dimen/init_button_margin</item>
     </style>

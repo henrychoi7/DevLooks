@@ -9,7 +9,6 @@
     <!-- Init Text View Attr -->
     <dimen name="init_text_view_margin_bottom">100dp</dimen>
     <dimen name="init_button_margin">40dp</dimen>
-    <dimen name="init_button_padding">100dp</dimen>
 
     <!-- List Text View Attr -->
     <dimen name="list_text_view_margin_top">16dp</dimen>
@@ -17,5 +16,7 @@
     <dimen name="list_text_view_margin_right">16dp</dimen>
     <dimen name="list_text_view_margin_left">16dp</dimen>
 
+    <!-- Login Button Attr -->
+    <dimen name="login_button_margin_top">20dp</dimen>
 
 </resources>

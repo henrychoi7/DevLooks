@@ -1,10 +1,9 @@
-package gachon.mobile.programming.android.finalproject.register;
+package gachon.mobile.programming.android.finalproject.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import gachon.mobile.programming.android.finalproject.R;
-import gachon.mobile.programming.android.finalproject.init.InitActivity;
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
 
 public class RegisterActivity extends BaseActivity {

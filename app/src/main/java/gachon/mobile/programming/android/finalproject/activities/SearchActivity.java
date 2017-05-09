@@ -1,11 +1,11 @@
-package gachon.mobile.programming.android.finalproject.main.search;
+package gachon.mobile.programming.android.finalproject.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import gachon.mobile.programming.android.finalproject.R;
+import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

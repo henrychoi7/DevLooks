@@ -1,12 +1,8 @@
 package gachon.mobile.programming.android.finalproject.utils;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +12,27 @@ import android.widget.Toast;
 import com.tsengvn.typekit.Typekit;
 
 import gachon.mobile.programming.android.finalproject.R;
+import okhttp3.MediaType;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+/**
+ * Created by JJSOFT-DESKTOP on 2017-05-09.
+ */
 
 public class ApplicationClass extends Application {
-
+    public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
+    public static final String BASE_URL =  "http://13.124.94.238/";
     private static Boolean gIsBackPressedOnce = false;
+
+    public static final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
+    public static final RetrofitInterface RETROFIT_INTERFACE = RETROFIT_BUILDER.create(RetrofitInterface.class);
 
     @Override
     public void onCreate() {
