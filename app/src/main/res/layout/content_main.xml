@@ -8,7 +8,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     app:refreshType="material"
     tools:context="gachon.mobile.programming.android.finalproject.activities.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/activity_main">
 
     <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/pull_to_refresh"

@@ -51,13 +51,7 @@ public class ApplicationClass extends Application {
         gIsBackPressedOnce = true;
         DisplayCustomToast(context, context.getResources().getString(R.string.dismiss_activity));
 
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                gIsBackPressedOnce = false;
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> gIsBackPressedOnce = false, 2000);
     }
 
     public static void DisplayCustomToast(Context context, String toastText) {

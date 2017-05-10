@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="gachon.mobile.programming.android.finalproject">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -28,8 +24,12 @@
         <activity
             android:name=".activities.InitActivity"
             android:theme="@style/AppTheme.NoActionBarNoTitle" />
-        <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.RegisterActivity"/>
+        <activity
+            android:name=".activities.LoginActivity"
+            android:theme="@style/AppTheme.ActionBarNoTitle" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:theme="@style/AppTheme.ActionBarNoTitle" />
         <activity
             android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.ActionBarNoTitle" />

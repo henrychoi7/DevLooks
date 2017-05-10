@@ -2,12 +2,12 @@ package gachon.mobile.programming.android.finalproject.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -17,6 +17,7 @@ import gachon.mobile.programming.android.finalproject.models.LoginData;
 import gachon.mobile.programming.android.finalproject.presenters.LoginActivityPresenter;
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
 import gachon.mobile.programming.android.finalproject.utils.ClearEditText;
+import gachon.mobile.programming.android.finalproject.utils.PasswordEditText;
 import gachon.mobile.programming.android.finalproject.views.LoginActivityView;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -33,7 +34,7 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 
 public class LoginActivity extends BaseActivity implements LoginActivityView {
     private ClearEditText mEmailView;
-    private EditText mPasswordView;
+    private PasswordEditText mPasswordView;
 
     LoginActivityView.UserInteractions loginActivityPresenter;
 
@@ -41,6 +42,15 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        final Toolbar toolbarLogin = (Toolbar) findViewById(R.id.toolbar_login);
+        setSupportActionBar(toolbarLogin);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         loginActivityPresenter = new LoginActivityPresenter(getApplicationContext(), this);
 
@@ -60,17 +70,34 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
                 emailTextView.setText(String.valueOf(s.length()));
             }
         });
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = (PasswordEditText) findViewById(R.id.password);
+        TextView passwordTextView = (TextView) findViewById(R.id.password_text_edited);
         mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
-            if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                loginActivityPresenter.attemptLogin();
-                return true;
+            loginActivityPresenter.attemptLogin();
+            return true;
+        });
+        mPasswordView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
-            return false;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                passwordTextView.setText(String.valueOf(s.length()));
+            }
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(view -> loginActivityPresenter.attemptLogin());
+        //mEmailSignInButton.setOnClickListener(view -> loginActivityPresenter.attemptLogin());
+        mEmailSignInButton.setOnClickListener(view -> {
+            mEmailView.setText("dlsdud@dngus.com");
+            mPasswordView.setText("dngus2929");
+            loginActivityPresenter.attemptLogin();
+        });
     }
 
     @Override
@@ -91,11 +118,13 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
 
     @Override
     public void setEmailError(String message) {
+        mEmailView.requestFocus();
         mEmailView.setError(message);
     }
 
     @Override
     public void setPasswordError(String message) {
+        mPasswordView.requestFocus();
         mPasswordView.setError(message);
     }
 

@@ -22,6 +22,7 @@ public class SplashActivity extends BaseActivity {
             /*startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();*/
             startActivity(new Intent(getApplicationContext(), InitActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
+            //startActivity(new Intent(getApplicationContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
             finish();
         }, 2000);
     }
