@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">커뮤니터</string>
+    <string name="init_header_first">WEIRD</string>
+    <string name="init_header_second">MEETUP</string>
+    <string name="init_header_third">Just do meetup</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -21,4 +24,6 @@
 
     <string name="login">로그인</string>
     <string name="register">가입하기</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
 </resources>

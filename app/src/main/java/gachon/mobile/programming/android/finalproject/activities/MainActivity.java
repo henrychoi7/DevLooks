@@ -12,6 +12,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +23,11 @@ import android.widget.TextView;
 import com.baoyz.widget.PullRefreshLayout;
 import com.tsengvn.typekit.Typekit;
 
+import java.util.ArrayList;
+
 import gachon.mobile.programming.android.finalproject.R;
+import gachon.mobile.programming.android.finalproject.adapters.RecycleViewAdapter;
+import gachon.mobile.programming.android.finalproject.models.RecycleViewData;
 import gachon.mobile.programming.android.finalproject.utils.ApplicationClass;
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
 
@@ -72,16 +78,25 @@ public class MainActivity extends BaseActivity
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
+        //mTextMessage = (TextView) findViewById(R.id.message);
 
-        final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh);
-        pullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Async 작업으로 true, false 주기
-                pullRefreshLayout.setRefreshing(false);
-            }
-        });
+        /*final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh);
+        pullRefreshLayout.setOnRefreshListener(() -> {
+            // Async 작업으로 true, false 주기
+            pullRefreshLayout.setRefreshing(false);
+        });*/
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_main);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        ArrayList<RecycleViewData> recycleViewDataArrayList = new ArrayList<>();
+        RecycleViewAdapter recycleViewAdapter = new RecycleViewAdapter(recycleViewDataArrayList);
+        recyclerView.setAdapter(recycleViewAdapter);
+
+        recycleViewDataArrayList.add(new RecycleViewData("#InsideOut", R.drawable.insideout));
+        recycleViewDataArrayList.add(new RecycleViewData("#Mini", R.drawable.mini));
+        recycleViewDataArrayList.add(new RecycleViewData("#ToyStroy", R.drawable.toystory));
     }
 
     @Override
@@ -125,19 +140,19 @@ public class MainActivity extends BaseActivity
             case R.id.nav_send:
                 break;
             case R.id.navigation_home:
-                mTextMessage.setText(R.string.title_home);
+                //mTextMessage.setText(R.string.title_home);
                 break;
             case 0:
-                mTextMessage.setText(item.getTitle());
+                //mTextMessage.setText(item.getTitle());
                 break;
             case 1:
-                mTextMessage.setText(item.getTitle());
+                //mTextMessage.setText(item.getTitle());
                 break;
             case 2:
-                mTextMessage.setText(item.getTitle());
+                //mTextMessage.setText(item.getTitle());
                 break;
             case 3:
-                mTextMessage.setText(item.getTitle());
+                //mTextMessage.setText(item.getTitle());
                 break;
         }
 

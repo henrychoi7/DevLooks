@@ -1,13 +1,14 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">64dp</dimen>
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <!-- Init Text View Attr -->
-    <dimen name="init_text_view_margin_bottom">100dp</dimen>
+    <!-- Init Views Attr -->
+    <dimen name="init_text_view_margin_top">100dp</dimen>
+    <dimen name="init_text_view_margin_start">30dp</dimen>
     <dimen name="init_button_margin">40dp</dimen>
 
     <!-- List Text View Attr -->
@@ -16,7 +17,7 @@
     <dimen name="list_text_view_margin_right">16dp</dimen>
     <dimen name="list_text_view_margin_left">16dp</dimen>
 
-    <!-- Login Button Attr -->
-    <dimen name="login_button_margin_top">20dp</dimen>
+    <!-- Default Margin Top Attr -->
+    <dimen name="default_margin_top">20dp</dimen>
 
 </resources>

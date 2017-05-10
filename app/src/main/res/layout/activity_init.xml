@@ -7,23 +7,46 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
+        android:layout_alignParentStart="true"
         android:orientation="vertical">
 
         <TextView
             style="@style/InitTextView"
-            android:text="@string/app_name" />
+            android:textSize="40sp"
+            android:layout_marginTop="@dimen/init_text_view_margin_top"
+            android:text="@string/init_header_first" />
+
+        <TextView
+            style="@style/InitTextView"
+            android:textSize="40sp"
+            android:text="@string/init_header_second" />
+
+        <TextView
+            style="@style/InitTextView"
+            android:textSize="20sp"
+            android:text="@string/init_header_third" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/goRegisterActivity"
             style="@style/InitButton"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="0.5"
             android:text="@string/register" />
 
         <Button
             android:id="@+id/goLoginActivity"
             style="@style/InitButton"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="3dp"
+            android:layout_weight="0.5"
             android:text="@string/login" />
     </LinearLayout>
-
 </RelativeLayout>

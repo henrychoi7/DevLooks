@@ -22,9 +22,6 @@ public class InitActivity extends BaseActivity {
         findViewById(R.id.goLoginActivity).setOnClickListener(onClickListener);
     }
 
-    /**
-     * @param View v
-     */
     private Button.OnClickListener onClickListener = v -> {
         switch (v.getId()) {
             case R.id.goRegisterActivity:

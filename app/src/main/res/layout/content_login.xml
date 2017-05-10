@@ -5,22 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     app:refreshType="material"
     tools:context="gachon.mobile.programming.android.finalproject.activities.LoginActivity"
     tools:showIn="@layout/activity_login">
 
-    <gachon.mobile.programming.android.finalproject.utils.ClearEditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/require_email"
-        android:inputType="textEmailAddress"
-        android:maxLength="30" />
+    <LinearLayout
+        style="@style/defaultTextLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="@string/email"/>
+
+        <gachon.mobile.programming.android.finalproject.utils.ClearEditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/require_email"
+            android:inputType="textEmailAddress"
+            android:maxLength="30" />
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,7 +40,7 @@
             android:id="@+id/email_text_limit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:text=" / 30"
             android:textColor="@color/black"
             android:textSize="16sp" />
@@ -39,22 +49,33 @@
             android:id="@+id/email_text_edited"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/email_text_limit"
+            android:layout_toStartOf="@id/email_text_limit"
             android:text="0"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </RelativeLayout>
 
-    <gachon.mobile.programming.android.finalproject.utils.PasswordEditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/require_password"
-        android:imeActionId="@+id/login"
-        android:imeActionLabel="@string/login"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
-        android:maxLength="60" />
+    <LinearLayout
+        style="@style/defaultTextLayout"
+        android:layout_marginTop="@dimen/default_margin_top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="@string/password"/>
+
+        <gachon.mobile.programming.android.finalproject.utils.PasswordEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/require_password"
+            android:imeActionId="@+id/login"
+            android:imeActionLabel="@string/login"
+            android:imeOptions="actionUnspecified"
+            android:inputType="textPassword"
+            android:maxLength="60" />
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -84,6 +105,6 @@
         style="@style/defaultButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/login_button_margin_top"
+        android:layout_marginTop="@dimen/default_margin_top"
         android:text="@string/action_sign_in" />
 </LinearLayout>

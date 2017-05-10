@@ -16,103 +16,11 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <ScrollView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_main"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
-
-            <LinearLayout
-                android:id="@+id/content"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/message"
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-                <TextView
-                    style="@style/ListTextView"
-                    android:text="@string/title_home" />
-
-            </LinearLayout>
-        </ScrollView>
+            android:layout_height="match_parent"/>
     </com.baoyz.widget.PullRefreshLayout>
 
     <android.support.design.widget.BottomNavigationView
