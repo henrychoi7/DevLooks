@@ -17,6 +17,7 @@ import gachon.mobile.programming.android.finalproject.models.LoginData;
 import gachon.mobile.programming.android.finalproject.presenters.LoginActivityPresenter;
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
 import gachon.mobile.programming.android.finalproject.utils.ClearEditText;
+import gachon.mobile.programming.android.finalproject.utils.ExceptionHelper;
 import gachon.mobile.programming.android.finalproject.utils.PasswordEditText;
 import gachon.mobile.programming.android.finalproject.views.LoginActivityView;
 import io.reactivex.Observable;
@@ -142,7 +143,7 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
                                 DisplayCustomToast(getApplicationContext(), t.getData());
                             }
                         },
-                        e -> DisplayCustomToast(getApplicationContext(), e.getMessage()));
+                        e -> DisplayCustomToast(getApplicationContext(), ExceptionHelper.getApplicationExceptionMessage((Exception) e)));
     }
 
     @Override
