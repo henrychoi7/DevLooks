@@ -37,7 +37,7 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
     private ClearEditText mEmailView;
     private PasswordEditText mPasswordView;
 
-    LoginActivityView.UserInteractions loginActivityPresenter;
+    private LoginActivityView.UserInteractions mLoginActivityPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        loginActivityPresenter = new LoginActivityPresenter(getApplicationContext(), this);
+        mLoginActivityPresenter = new LoginActivityPresenter(getApplicationContext(), this);
 
         mEmailView = (ClearEditText) findViewById(R.id.email);
         TextView emailTextView = (TextView) findViewById(R.id.email_text_edited);
@@ -74,7 +74,7 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
         mPasswordView = (PasswordEditText) findViewById(R.id.password);
         TextView passwordTextView = (TextView) findViewById(R.id.password_text_edited);
         mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
-            loginActivityPresenter.attemptLogin();
+            mLoginActivityPresenter.attemptLogin();
             return true;
         });
         mPasswordView.addTextChangedListener(new TextWatcher() {
@@ -93,11 +93,11 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        //mEmailSignInButton.setOnClickListener(view -> loginActivityPresenter.attemptLogin());
+        //mEmailSignInButton.setOnClickListener(view -> mLoginActivityPresenter.attemptLogin());
         /*mEmailSignInButton.setOnClickListener(view -> {
             mEmailView.setText("dlsdud@dngus.com");
             mPasswordView.setText("dngus2929");
-            loginActivityPresenter.attemptLogin();
+            mLoginActivityPresenter.attemptLogin();
         });*/
         mEmailSignInButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), MainActivity.class)));
     }

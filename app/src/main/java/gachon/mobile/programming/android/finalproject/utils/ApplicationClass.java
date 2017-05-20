@@ -24,7 +24,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApplicationClass extends Application {
     public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
     public static final String BASE_URL =  "http://13.124.94.238/";
-    private static Boolean gIsBackPressedOnce = false;
+    private static Boolean mIsBackPressedOnce = false;
+    public static int HOME_VALUE = 0;
+    public static int MAX_BOTTOM_NAV_COUNT = 5;
 
     public static final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -43,15 +45,15 @@ public class ApplicationClass extends Application {
     }
 
     public static void handleUserApplicationExit(Context context, Activity activity) {
-        if (gIsBackPressedOnce) {
+        if (mIsBackPressedOnce) {
             activity.finish();
             return;
         }
 
-        gIsBackPressedOnce = true;
+        mIsBackPressedOnce = true;
         DisplayCustomToast(context, context.getResources().getString(R.string.dismiss_activity));
 
-        new Handler().postDelayed(() -> gIsBackPressedOnce = false, 2000);
+        new Handler().postDelayed(() -> mIsBackPressedOnce = false, 2000);
     }
 
     public static void DisplayCustomToast(Context context, String toastText) {

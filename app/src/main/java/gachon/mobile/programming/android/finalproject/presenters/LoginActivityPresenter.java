@@ -13,25 +13,25 @@ import gachon.mobile.programming.android.finalproject.views.LoginActivityView;
  */
 
 public class LoginActivityPresenter implements LoginActivityView.UserInteractions {
-    private final LoginActivityView loginActivityView;
+    private final LoginActivityView mLoginActivityView;
     private final Context mContext;
 
     public LoginActivityPresenter(Context context, LoginActivityView loginActivityView) {
         this.mContext = context;
-        this.loginActivityView = loginActivityView;
+        this.mLoginActivityView = loginActivityView;
     }
 
     private void validateAndLogin() {
-        String email = loginActivityView.getEmail();
-        String password = loginActivityView.getPassword();
+        String email = mLoginActivityView.getEmail();
+        String password = mLoginActivityView.getPassword();
 
         if (!isEmailValid(email)) {
-            loginActivityView.setEmailError(mContext.getString(R.string.error_invalid_email));
+            mLoginActivityView.setEmailError(mContext.getString(R.string.error_invalid_email));
             return;
         }
 
         if (!isPasswordValid(password)) {
-            loginActivityView.setPasswordError(mContext.getString(R.string.error_invalid_password));
+            mLoginActivityView.setPasswordError(mContext.getString(R.string.error_invalid_password));
             return;
         }
 
@@ -40,11 +40,11 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
             jsonObject.put("email", email);
             jsonObject.put("password", password);
         } catch (JSONException e) {
-            loginActivityView.validateFailure(e.getMessage());
+            mLoginActivityView.validateFailure(e.getMessage());
             return;
         }
 
-        loginActivityView.validateSuccess(jsonObject);
+        mLoginActivityView.validateSuccess(jsonObject);
     }
 
     private boolean isEmailValid(String email) {
