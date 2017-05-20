@@ -94,11 +94,12 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         //mEmailSignInButton.setOnClickListener(view -> loginActivityPresenter.attemptLogin());
-        mEmailSignInButton.setOnClickListener(view -> {
+        /*mEmailSignInButton.setOnClickListener(view -> {
             mEmailView.setText("dlsdud@dngus.com");
             mPasswordView.setText("dngus2929");
             loginActivityPresenter.attemptLogin();
-        });
+        });*/
+        mEmailSignInButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), MainActivity.class)));
     }
 
     @Override

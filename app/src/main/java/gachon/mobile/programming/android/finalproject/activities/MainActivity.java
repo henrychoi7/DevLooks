@@ -1,6 +1,5 @@
 package gachon.mobile.programming.android.finalproject.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,26 +14,25 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.animation.OvershootInterpolator;
+
+import com.baoyz.widget.PullRefreshLayout;
 
 import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
-import gachon.mobile.programming.android.finalproject.adapters.RecycleViewAdapter;
-import gachon.mobile.programming.android.finalproject.models.RecycleViewData;
+import gachon.mobile.programming.android.finalproject.adapters.RecyclerViewAdapter;
+import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.handleUserApplicationExit;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-09.
- */
-
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
-
     private DrawerLayout mDrawerLayout;
-    private TextView mTextMessage;
+    private ArrayList<RecyclerViewData> mRecyclerViewDataArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +41,7 @@ public class MainActivity extends BaseActivity
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
@@ -71,25 +69,223 @@ public class MainActivity extends BaseActivity
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        //mTextMessage = (TextView) findViewById(R.id.message);
+        setDisplayRecyclerView();
 
-        /*final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh);
+        final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh);
         pullRefreshLayout.setOnRefreshListener(() -> {
-            // Async 작업으로 true, false 주기
+            setDisplayRecyclerView();
             pullRefreshLayout.setRefreshing(false);
-        });*/
+        });
+    }
 
+    private void setDisplayRecyclerView() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_main);
+        recyclerView.setItemAnimator(new SlideInUpAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        ArrayList<RecycleViewData> recycleViewDataArrayList = new ArrayList<>();
-        RecycleViewAdapter recycleViewAdapter = new RecycleViewAdapter(recycleViewDataArrayList);
-        recyclerView.setAdapter(recycleViewAdapter);
+        mRecyclerViewDataArrayList = new ArrayList<>();
+        RecyclerViewAdapter mRecyclerViewAdapter = new RecyclerViewAdapter(mRecyclerViewDataArrayList);
+        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mRecyclerViewAdapter);
+        scaleInAnimationAdapter.setFirstOnly(true);
+        scaleInAnimationAdapter.setDuration(500);
+        scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator(1f));
+        setRecyclerViewData();
+        recyclerView.setAdapter(scaleInAnimationAdapter);
+    }
 
-        recycleViewDataArrayList.add(new RecycleViewData("#InsideOut", R.drawable.insideout));
-        recycleViewDataArrayList.add(new RecycleViewData("#Mini", R.drawable.mini));
-        recycleViewDataArrayList.add(new RecycleViewData("#ToyStroy", R.drawable.toystory));
+    private void setRecyclerViewData() {
+        RecyclerViewData recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.insideout);
+        recyclerViewData.setTitle("This is insideout Title...................................................................................");
+        recyclerViewData.setContent("This is insideout Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
+
+        recyclerViewData = new RecyclerViewData();
+        recyclerViewData.setImage_resources(R.drawable.toystory);
+        recyclerViewData.setTitle("This is toystory Title...................................................................................");
+        recyclerViewData.setContent("This is toystory Content...................................................................................");
+        mRecyclerViewDataArrayList.add(recyclerViewData);
     }
 
     @Override
@@ -133,19 +329,19 @@ public class MainActivity extends BaseActivity
             case R.id.nav_send:
                 break;
             case R.id.navigation_home:
-                //mTextMessage.setText(R.string.title_home);
+                setDisplayRecyclerView();
                 break;
             case 0:
-                //mTextMessage.setText(item.getTitle());
+                setDisplayRecyclerView();
                 break;
             case 1:
-                //mTextMessage.setText(item.getTitle());
+                setDisplayRecyclerView();
                 break;
             case 2:
-                //mTextMessage.setText(item.getTitle());
+                setDisplayRecyclerView();
                 break;
             case 3:
-                //mTextMessage.setText(item.getTitle());
+                setDisplayRecyclerView();
                 break;
         }
 
