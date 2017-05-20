@@ -16,7 +16,7 @@ public class ExceptionHelper {
             return "데이터 읽는 도중 오류가 발생하였습니다. (JSON 관련 오류).";
         }
         else if (e instanceof UnknownHostException) {
-            return "EPOS 서버에 접속을 실패하였습니다. 네트워크가 켜져있는지 확인해 주십시오.";
+            return "서버에 접속을 실패하였습니다. 네트워크가 켜져있는지 확인해 주십시오.";
         }
         else if (e instanceof SocketTimeoutException) {
             return "네트워크 요청 시간이 만료되었습니다. 네트워크 상태를 점검해 주십시오.";
