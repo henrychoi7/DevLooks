@@ -16,6 +16,8 @@
     <!-- Navigation -->
     <string name="title_home">Home</string>
     <string name="nav_main_image_view">네비게이션 메인 이미지</string>
+    <string name="nav_group_menu_icon">그룹메뉴아이콘</string>
+    <string name="nav_child_menu_icon">자식메뉴아이콘</string>
 
     <!-- Main -->
     <string name="main_image_view">카드뷰 메인화면 이미지</string>
@@ -32,4 +34,5 @@
     <string name="error_invalid_email">이메일 형식이 올바르지 않습니다.</string>
     <string name="error_invalid_password">비밀번호는 최소 6자리 이상이어야 합니다.</string>
     <string name="action_sign_in">커뮤니터 시작</string>
+
 </resources>

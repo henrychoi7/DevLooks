@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -14,7 +15,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
@@ -22,7 +25,10 @@ import com.baoyz.widget.PullRefreshLayout;
 import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
+import gachon.mobile.programming.android.finalproject.adapters.ExpandableMenuAdapter;
 import gachon.mobile.programming.android.finalproject.adapters.RecyclerViewAdapter;
+import gachon.mobile.programming.android.finalproject.models.ChildMenuData;
+import gachon.mobile.programming.android.finalproject.models.GroupMenuData;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 import gachon.mobile.programming.android.finalproject.presenters.MainActivityPresenter;
@@ -63,7 +69,23 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
         final NavigationView leftNavigationView = (NavigationView) findViewById(R.id.left_navigation);
-        leftNavigationView.setNavigationItemSelectedListener(this);
+        if (leftNavigationView != null) {
+            leftNavigationView.setNavigationItemSelectedListener(this);
+//            setupDrawerContent(leftNavigationView);
+        }
+
+        final ExpandableListView expandableMenu = (ExpandableListView) findViewById(R.id.expandable_menu);
+        ExpandableMenuAdapter expandableMenuAdapter = new ExpandableMenuAdapter(getExpandableMenuData());
+        expandableMenu.setAdapter(expandableMenuAdapter);
+
+        expandableMenu.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+            if (parent.isGroupExpanded(groupPosition)) {
+                v.findViewById(R.id.group_image_view).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_contracted_24dp));
+            } else {
+                v.findViewById(R.id.group_image_view).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_expanded_24dp));
+            }
+            return false;
+        });
 
         final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh);
         pullRefreshLayout.setOnRefreshListener(() -> {
@@ -78,6 +100,29 @@ public class MainActivity extends BaseActivity
         } else {
             DisplayCustomToast(getApplicationContext(), "권한이 없어서 자료를 불러오지 못했습니다.");
         }
+    }
+
+    private ArrayList<GroupMenuData> getExpandableMenuData() {
+        ArrayList<GroupMenuData> groupMenuDataArrayList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            GroupMenuData groupMenuData = new GroupMenuData();
+            groupMenuData.setGroupTitle("Group Test" + String.valueOf(i));
+            //groupMenuData.setGroupResourceIcon(R.drawable.ic_contracted_24dp);
+            groupMenuData.setGroupResourceIcon(null);
+
+            ArrayList<ChildMenuData> childMenuDataArrayList = new ArrayList<>();
+            for (int j = 0; j < 5; j++) {
+                ChildMenuData childMenuData = new ChildMenuData();
+                childMenuData.setChildTitle("Child Test" + String.valueOf(j));
+                childMenuData.setChildResourceIcon(R.drawable.ic_menu_share);
+                //childMenuData.setChildResourceIcon(null);
+                childMenuDataArrayList.add(childMenuData);
+            }
+            groupMenuData.setChildMenuDataArrayList(childMenuDataArrayList);
+            groupMenuDataArrayList.add(groupMenuData);
+        }
+
+        return groupMenuDataArrayList;
     }
 
     @Override
