@@ -5,6 +5,8 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
+import gachon.mobile.programming.android.finalproject.models.ChildMenuData;
+import gachon.mobile.programming.android.finalproject.models.GroupMenuData;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 import gachon.mobile.programming.android.finalproject.views.MainActivityView;
@@ -255,5 +257,29 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     public void refreshDisplay() {
         mMainActivityView.setBottomMenuItems(getMenuItems());
         mMainActivityView.setDisplayRecyclerView(getCategoryData(HOME_VALUE));
+    }
+
+    @Override
+    public ArrayList<GroupMenuData> getExpandableMenuData() {
+        ArrayList<GroupMenuData> groupMenuDataArrayList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            GroupMenuData groupMenuData = new GroupMenuData();
+            groupMenuData.setGroupTitle("Group Test" + String.valueOf(i));
+            //groupMenuData.setGroupResourceIcon(R.drawable.ic_contracted_24dp);
+            groupMenuData.setGroupResourceIcon(null);
+
+            ArrayList<ChildMenuData> childMenuDataArrayList = new ArrayList<>();
+            for (int j = 0; j < 5; j++) {
+                ChildMenuData childMenuData = new ChildMenuData();
+                childMenuData.setChildTitle("Child Test" + String.valueOf(j));
+                childMenuData.setChildResourceIcon(R.drawable.ic_menu_share);
+                //childMenuData.setChildResourceIcon(null);
+                childMenuDataArrayList.add(childMenuData);
+            }
+            groupMenuData.setChildMenuDataArrayList(childMenuDataArrayList);
+            groupMenuDataArrayList.add(groupMenuData);
+        }
+
+        return groupMenuDataArrayList;
     }
 }

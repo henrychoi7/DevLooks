@@ -2,6 +2,7 @@ package gachon.mobile.programming.android.finalproject.views;
 
 import java.util.ArrayList;
 
+import gachon.mobile.programming.android.finalproject.models.GroupMenuData;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 
@@ -15,10 +16,14 @@ public interface MainActivityView {
 
     void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList);
 
+    void setExpandableMenuItems(ArrayList<GroupMenuData> groupMenuDataArrayList);
+
     interface UserInteractions {
 
         void changeCategory(int categoryId);
 
         void refreshDisplay();
+
+        ArrayList<GroupMenuData> getExpandableMenuData();
     }
 }
