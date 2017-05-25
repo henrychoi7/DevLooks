@@ -1,6 +1,12 @@
 package gachon.mobile.programming.android.finalproject.presenters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
@@ -10,8 +16,13 @@ import gachon.mobile.programming.android.finalproject.models.MenuData;
 import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 import gachon.mobile.programming.android.finalproject.views.MainActivityView;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.HOME_VALUE;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MAX_BOTTOM_NAV_COUNT;
 
 /**
@@ -27,204 +38,6 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         this.mMainActivityView = mainActivityView;
     }
 
-    // 없앨거임 -- 테스트용
-    private ArrayList<RecyclerViewData> getRecyclerViewData(int categoryId) {
-        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
-        RecyclerViewData recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title" + String.valueOf(categoryId));
-        recyclerViewData.setContent("This is insideout Content" + String.valueOf(categoryId));
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.insideout);
-        recyclerViewData.setTitle("This is insideout Title");
-        recyclerViewData.setContent("This is insideout Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        recyclerViewData = new RecyclerViewData();
-        recyclerViewData.setImage_resources(R.drawable.toystory);
-        recyclerViewData.setTitle("This is toystory Title");
-        recyclerViewData.setContent("This is toystory Content");
-        recyclerViewDataArrayList.add(recyclerViewData);
-
-        return recyclerViewDataArrayList;
-    }
-
     private ArrayList<MenuData> getMenuItems() {
         ArrayList<MenuData> menuDataArrayList = new ArrayList<>();
         for (int i = 1; i < MAX_BOTTOM_NAV_COUNT; i++) {
@@ -238,9 +51,23 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         return menuDataArrayList;
     }
 
-    private ArrayList<RecyclerViewData> getCategoryData(int categoryId) {
-        return getRecyclerViewData(categoryId);
-    }
+    /*private ArrayList<RecyclerViewData> getCategoryData(int categoryId) {
+
+        *//*try {
+
+            for (Element element : elements) {
+                String a = element.addClass(".list-group-item-heading").text();
+                testList.add(a);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*//*
+
+
+        //return getRecyclerViewData(categoryId);
+        return recyclerViewDataArrayList;
+    }*/
 
     @Override
     public void changeCategory(int categoryId) {
@@ -250,13 +77,89 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         //카테고리 즐겨찾기는 꼭 다른 창에서 고를 수 있도록)
         //카테고리 즐겨찾기는 회원가입때 고를 수 있게하거나, 개인정보 수정창에서 고를 수 있도록하자!
         //mMainActivityView.setBottomMenuItems(getMenuItems());
-        mMainActivityView.setDisplayRecyclerView(getCategoryData(categoryId));
+
+        //mMainActivityView.setDisplayRecyclerView(getCategoryData(categoryId));
+
+        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+        ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
+
+        Observable.fromCallable(() -> {
+            Document document = Jsoup.connect("https://okky.kr/articles/tech").get();
+            return document.select("ul.list-group li.list-group-item");
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Elements>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Elements elements) {
+                        for (Element element : elements) {
+                            RecyclerViewData recyclerViewData = new RecyclerViewData();
+                            recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
+                            recyclerViewData.setContent(element.select("div.list-group-item-author.clearfix a.nickname").text());
+                            recyclerViewData.setImageUrl(element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
+                            recyclerViewDataArrayList.add(recyclerViewData);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+                });
+
     }
 
     @Override
     public void refreshDisplay() {
         mMainActivityView.setBottomMenuItems(getMenuItems());
-        mMainActivityView.setDisplayRecyclerView(getCategoryData(HOME_VALUE));
+
+        //mMainActivityView.setDisplayRecyclerView(getCategoryData(HOME_VALUE));
+        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+        ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
+
+        Observable.fromCallable(() -> {
+            Document document = Jsoup.connect("https://okky.kr/articles/tech").get();
+            return document.select("ul.list-group li.list-group-item");
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Elements>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Elements elements) {
+                        for (Element element : elements) {
+                            RecyclerViewData recyclerViewData = new RecyclerViewData();
+                            recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
+                            recyclerViewData.setContent(element.select("div.list-group-item-author.clearfix a.nickname").text());
+                            recyclerViewData.setImageUrl(element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
+                            recyclerViewDataArrayList.add(recyclerViewData);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+                });
     }
 
     @Override
@@ -274,8 +177,8 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                 NavigationMenuData childMenuData = new NavigationMenuData();
                 childMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
                 childMenuData.setTitle("Child Test" + String.valueOf(j));
-                //childMenuData.setImageResource(R.drawable.ic_menu_share);
-                childMenuData.setImageResource(null);
+                childMenuData.setImageResource(R.drawable.ic_menu_share);
+                //childMenuData.setImageResource(null);
                 childMenuDataArrayList.add(childMenuData);
             }
             groupMenuData.setInvisibleChildren(childMenuDataArrayList);

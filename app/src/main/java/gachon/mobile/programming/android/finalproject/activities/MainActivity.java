@@ -1,5 +1,6 @@
 package gachon.mobile.programming.android.finalproject.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -58,7 +59,8 @@ public class MainActivity extends BaseActivity
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
-        mMainActivityPresenter = new MainActivityPresenter(getApplicationContext(), this);
+        //mMainActivityPresenter = new MainActivityPresenter(getApplicationContext(), this);
+        mMainActivityPresenter = new MainActivityPresenter(MainActivity.this, this);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -80,7 +82,7 @@ public class MainActivity extends BaseActivity
 
         if (super.checkPermissionAndSetDisplayData()) {
             mMainActivityPresenter.refreshDisplay();
-            DisplayCustomToast(getApplicationContext(), "인터넷 권한얻음");
+            //DisplayCustomToast(getApplicationContext(), "인터넷 권한얻음");
         } else {
             DisplayCustomToast(getApplicationContext(), "권한이 없어서 자료를 불러오지 못했습니다.");
         }
@@ -98,6 +100,19 @@ public class MainActivity extends BaseActivity
         scaleInAnimationAdapter.setFirstOnly(true);
 
         expandableMenu.setAdapter(expandableMenuAdapter);
+    }
+
+    @Override
+    public void showProgressDialog(ProgressDialog subscribeProgressDialog) {
+        subscribeProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        subscribeProgressDialog.setMessage(getResources().getString(R.string.loading));
+        subscribeProgressDialog.setCancelable(false);
+        subscribeProgressDialog.show();
+    }
+
+    @Override
+    public void dismissProgressDialog(ProgressDialog subscribeProgressDialog) {
+        subscribeProgressDialog.dismiss();
     }
 
     @Override
@@ -123,7 +138,7 @@ public class MainActivity extends BaseActivity
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(recyclerViewDataArrayList);
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), recyclerViewDataArrayList);
         ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(recyclerViewAdapter);
         scaleInAnimationAdapter.setFirstOnly(true);
         scaleInAnimationAdapter.setDuration(500);

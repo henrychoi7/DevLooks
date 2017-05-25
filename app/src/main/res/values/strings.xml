@@ -26,6 +26,9 @@
     <!-- Toast Message -->
     <string name="dismiss_activity">"\"뒤로\"버튼을 한번 더 누르시면 종료됩니다."</string>
 
+    <!-- ProgressDialog Message -->
+    <string name="loading">데이터를 불러오고 있습니다.</string>
+
     <!-- Login -->
     <string name="email">Email</string>
     <string name="password">Password</string>

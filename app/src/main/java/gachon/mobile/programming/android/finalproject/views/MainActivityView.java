@@ -1,5 +1,7 @@
 package gachon.mobile.programming.android.finalproject.views;
 
+import android.app.ProgressDialog;
+
 import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.models.MenuData;
@@ -11,6 +13,10 @@ import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
  */
 
 public interface MainActivityView {
+
+    void showProgressDialog(ProgressDialog subscribeProgressDialog);
+
+    void dismissProgressDialog(ProgressDialog subscribeProgressDialog);
 
     void setBottomMenuItems(ArrayList<MenuData> menuDataArrayList);
 

@@ -1,5 +1,6 @@
 package gachon.mobile.programming.android.finalproject.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,15 +8,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+    private final Context mContext;
     private ArrayList<RecyclerViewData> mRecyclerViewDataArrayList;
 
-    public RecyclerViewAdapter(ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
+    public RecyclerViewAdapter(Context context , ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
+        this.mContext = context;
         this.mRecyclerViewDataArrayList = recyclerViewDataArrayList;
     }
 
@@ -42,7 +47,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
         RecyclerViewData recyclerViewData  = mRecyclerViewDataArrayList.get(position);
-        holder.mImageView.setImageResource(recyclerViewData.getImage_resources());
+        if (recyclerViewData.getImageResources() != null) {
+            holder.mImageView.setImageBitmap(recyclerViewData.getImageResources());
+        } else if (recyclerViewData.getImageUrl() != null) {
+            //Glide.with(mContext).load("http:" + recyclerViewData.getImageUrl()).into(holder.mImageView);
+            Glide.with(mContext).load("http:" + recyclerViewData.getImageUrl()).into(holder.mImageView);
+        }
+
         holder.mTitle.setText(recyclerViewData.getTitle());
         holder.mContent.setText(recyclerViewData.getContent());
     }
