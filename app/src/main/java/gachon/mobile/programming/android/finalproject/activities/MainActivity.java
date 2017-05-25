@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -15,12 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.animation.OvershootInterpolator;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.baoyz.widget.PullRefreshLayout;
 
@@ -29,9 +23,8 @@ import java.util.ArrayList;
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.adapters.ExpandableMenuAdapter;
 import gachon.mobile.programming.android.finalproject.adapters.RecyclerViewAdapter;
-import gachon.mobile.programming.android.finalproject.models.ChildMenuData;
-import gachon.mobile.programming.android.finalproject.models.GroupMenuData;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
+import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 import gachon.mobile.programming.android.finalproject.presenters.MainActivityPresenter;
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
@@ -93,38 +86,19 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void setExpandableMenuItems(ArrayList<GroupMenuData> groupMenuDataArrayList) {
-        final ExpandableListView expandableMenu = (ExpandableListView) findViewById(R.id.expandable_menu);
-        final ExpandableMenuAdapter expandableMenuAdapter = new ExpandableMenuAdapter(groupMenuDataArrayList);
+    public void setExpandableMenuItems(ArrayList<NavigationMenuData> navigationMenuDataArrayList) {
+        final RecyclerView expandableMenu = (RecyclerView) findViewById(R.id.expandable_menu);
+        expandableMenu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        expandableMenu.setItemAnimator(new SlideInUpAnimator());
+        expandableMenu.setHasFixedSize(true);
+
+        final ExpandableMenuAdapter expandableMenuAdapter = new ExpandableMenuAdapter(navigationMenuDataArrayList);
+        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(expandableMenuAdapter);
+        scaleInAnimationAdapter.setFirstOnly(true);
+        scaleInAnimationAdapter.setDuration(500);
+        scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator(1f));
+
         expandableMenu.setAdapter(expandableMenuAdapter);
-
-        /*expandableMenu.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return false;
-            }
-        });*/
-
-        expandableMenu.setOnGroupClickListener((parent, v, groupPosition, id) -> {
-            //RelativeLayout groupLayout = (RelativeLayout) expandableMenuAdapter.getGroup(groupPosition);
-            //RelativeLayout groupLayout = (RelativeLayout) expandableMenuAdapter.getGroupView(groupPosition, parent.isGroupExpanded(groupPosition), v, parent);
-            //ImageView groupImageView = (ImageView) groupLayout.findViewById(R.id.group_image_view);
-            //TextView groupTextView = (TextView) groupLayout.findViewById(R.id.group_text_view);
-            //String a = parent.getExpandableListAdapter().getGroup(groupPosition);
-            if (parent.isGroupExpanded(groupPosition)) {
-                //parent.getChildAt(groupPosition).findViewById(R.id.group_image_view).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_contracted_24dp));
-                parent.findViewById(R.id.group_image_view).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_contracted_24dp));
-                //groupImageView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_contracted_24dp));
-                //groupTextView.setText("contracted");
-                return false;
-            } else {
-                //parent.getChildAt(groupPosition).findViewById(R.id.group_image_view).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_expanded_24dp));
-                parent.findViewById(R.id.group_image_view).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_expanded_24dp));
-                //groupLayout.findViewById(R.id.group_image_view).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_expanded_24dp));
-                //groupTextView.setText("expanded");
-                return false;
-            }
-        });
     }
 
     @Override

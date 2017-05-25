@@ -5,22 +5,21 @@
     android:layout_height="30dp">
 
     <ImageView
-        android:id="@+id/child_image_view"
+        android:id="@+id/nav_image_view"
         android:layout_width="30dp"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_marginEnd="20dp"
-        android:layout_marginStart="50dp"
-        android:contentDescription="@string/nav_child_menu_icon"
-        tools:src="@drawable/ic_menu_gallery" />
+        tools:background="@drawable/ic_contracted_24dp"
+        android:contentDescription="@string/nav_group_menu_icon" />
 
     <TextView
-        android:id="@+id/child_text_view"
+        android:id="@+id/nav_text_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toEndOf="@id/child_image_view"
+        android:layout_toEndOf="@id/nav_image_view"
         android:gravity="center"
         android:textColor="@color/black"
-        android:textSize="16sp"
-        tools:text="@string/nav_child_menu_icon" />
+        android:textSize="20sp"
+        tools:text="@string/nav_group_menu_icon" />
 </RelativeLayout>

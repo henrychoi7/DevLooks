@@ -2,8 +2,8 @@ package gachon.mobile.programming.android.finalproject.views;
 
 import java.util.ArrayList;
 
-import gachon.mobile.programming.android.finalproject.models.GroupMenuData;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
+import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 
 /**
@@ -16,7 +16,7 @@ public interface MainActivityView {
 
     void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList);
 
-    void setExpandableMenuItems(ArrayList<GroupMenuData> groupMenuDataArrayList);
+    void setExpandableMenuItems(ArrayList<NavigationMenuData> groupMenuDataArrayList);
 
     interface UserInteractions {
 
@@ -24,6 +24,6 @@ public interface MainActivityView {
 
         void refreshDisplay();
 
-        ArrayList<GroupMenuData> getExpandableMenuData();
+        ArrayList<NavigationMenuData> getExpandableMenuData();
     }
 }

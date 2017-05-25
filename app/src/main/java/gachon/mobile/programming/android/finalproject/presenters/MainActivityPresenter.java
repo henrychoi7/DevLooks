@@ -5,9 +5,9 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
-import gachon.mobile.programming.android.finalproject.models.ChildMenuData;
-import gachon.mobile.programming.android.finalproject.models.GroupMenuData;
+import gachon.mobile.programming.android.finalproject.enums.ExpandableMenuEnum;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
+import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 import gachon.mobile.programming.android.finalproject.views.MainActivityView;
 
@@ -260,23 +260,25 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     @Override
-    public ArrayList<GroupMenuData> getExpandableMenuData() {
-        ArrayList<GroupMenuData> groupMenuDataArrayList = new ArrayList<>();
+    public ArrayList<NavigationMenuData> getExpandableMenuData() {
+        ArrayList<NavigationMenuData> groupMenuDataArrayList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            GroupMenuData groupMenuData = new GroupMenuData();
-            groupMenuData.setGroupTitle("Group Test" + String.valueOf(i));
-            //groupMenuData.setGroupResourceIcon(R.drawable.ic_contracted_24dp);
-            groupMenuData.setGroupResourceIcon(null);
+            NavigationMenuData groupMenuData = new NavigationMenuData();
+            groupMenuData.setType(ExpandableMenuEnum.GROUP.getTypeValue());
+            groupMenuData.setTitle("Group Test" + String.valueOf(i));
+            groupMenuData.setImageResource(R.drawable.ic_contracted_24dp);
+            //groupMenuData.setImageResource(null);
 
-            ArrayList<ChildMenuData> childMenuDataArrayList = new ArrayList<>();
+            ArrayList<NavigationMenuData> childMenuDataArrayList = new ArrayList<>();
             for (int j = 0; j < 5; j++) {
-                ChildMenuData childMenuData = new ChildMenuData();
-                childMenuData.setChildTitle("Child Test" + String.valueOf(j));
-                childMenuData.setChildResourceIcon(R.drawable.ic_menu_share);
+                NavigationMenuData childMenuData = new NavigationMenuData();
+                childMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
+                childMenuData.setTitle("Child Test" + String.valueOf(j));
+                childMenuData.setImageResource(R.drawable.ic_menu_share);
                 //childMenuData.setChildResourceIcon(null);
                 childMenuDataArrayList.add(childMenuData);
             }
-            groupMenuData.setChildMenuDataArrayList(childMenuDataArrayList);
+            groupMenuData.setInvisibleChildren(childMenuDataArrayList);
             groupMenuDataArrayList.add(groupMenuData);
         }
 

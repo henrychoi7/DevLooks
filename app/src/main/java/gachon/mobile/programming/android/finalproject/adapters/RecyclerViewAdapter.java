@@ -51,10 +51,4 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public int getItemCount() {
         return mRecyclerViewDataArrayList.size();
     }
-
-    public void add(RecyclerViewData recyclerViewData) {
-        mRecyclerViewDataArrayList.add(recyclerViewData);
-        //int max = mRecyclerViewDataArrayList.size();
-        notifyItemInserted(1);
-    }
 }

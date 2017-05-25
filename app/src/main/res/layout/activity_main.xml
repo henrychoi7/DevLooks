@@ -48,11 +48,10 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main">
 
-        <ExpandableListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/expandable_menu"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/nav_header_height"
-            android:groupIndicator="@null" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/nav_header_height" />
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
