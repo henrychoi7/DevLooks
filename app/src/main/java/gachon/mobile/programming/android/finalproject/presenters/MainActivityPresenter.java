@@ -274,8 +274,8 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                 NavigationMenuData childMenuData = new NavigationMenuData();
                 childMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
                 childMenuData.setTitle("Child Test" + String.valueOf(j));
-                childMenuData.setImageResource(R.drawable.ic_menu_share);
-                //childMenuData.setChildResourceIcon(null);
+                //childMenuData.setImageResource(R.drawable.ic_menu_share);
+                childMenuData.setImageResource(null);
                 childMenuDataArrayList.add(childMenuData);
             }
             groupMenuData.setInvisibleChildren(childMenuDataArrayList);

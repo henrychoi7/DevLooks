@@ -30,6 +30,7 @@ import gachon.mobile.programming.android.finalproject.presenters.MainActivityPre
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
 import gachon.mobile.programming.android.finalproject.views.MainActivityView;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.ScaleInRightAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.DisplayCustomToast;
@@ -89,14 +90,12 @@ public class MainActivity extends BaseActivity
     public void setExpandableMenuItems(ArrayList<NavigationMenuData> navigationMenuDataArrayList) {
         final RecyclerView expandableMenu = (RecyclerView) findViewById(R.id.expandable_menu);
         expandableMenu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        expandableMenu.setItemAnimator(new SlideInUpAnimator());
+        expandableMenu.setItemAnimator(new ScaleInRightAnimator());
         expandableMenu.setHasFixedSize(true);
 
         final ExpandableMenuAdapter expandableMenuAdapter = new ExpandableMenuAdapter(navigationMenuDataArrayList);
         ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(expandableMenuAdapter);
         scaleInAnimationAdapter.setFirstOnly(true);
-        scaleInAnimationAdapter.setDuration(500);
-        scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator(1f));
 
         expandableMenu.setAdapter(expandableMenuAdapter);
     }
