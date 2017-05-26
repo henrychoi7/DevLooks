@@ -116,6 +116,11 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
+    public void showCustomToast(String message) {
+        DisplayCustomToast(getApplicationContext(), message);
+    }
+
+    @Override
     public void setBottomMenuItems(ArrayList<MenuData> menuDataArrayList) {
         final BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.inflateMenu(R.menu.main_bottom_navigation);

@@ -18,6 +18,8 @@ public interface MainActivityView {
 
     void dismissProgressDialog(ProgressDialog subscribeProgressDialog);
 
+    void showCustomToast(String message);
+
     void setBottomMenuItems(ArrayList<MenuData> menuDataArrayList);
 
     void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList);

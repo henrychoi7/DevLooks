@@ -12,11 +12,9 @@ import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.enums.ExpandableMenuEnum;
-import gachon.mobile.programming.android.finalproject.models.LoginData;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
 import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
 import gachon.mobile.programming.android.finalproject.models.OnOffMixData;
-import gachon.mobile.programming.android.finalproject.models.OnOffMixErrorData;
 import gachon.mobile.programming.android.finalproject.models.OnOffMixEventListData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 import gachon.mobile.programming.android.finalproject.utils.RetrofitInterface;
@@ -27,14 +25,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MAX_BOTTOM_NAV_COUNT;
-import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
-import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
 /**
  * Created by JJSOFT-DESKTOP on 2017-05-21.
@@ -194,9 +189,9 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
-        //String onOffMixUrl = "http://onoffmix.com/";
+        String onOffMixUrl = "http://onoffmix.com/";
 
-        /*final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
+        final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
                 .baseUrl(onOffMixUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -216,8 +211,18 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
                     @Override
                     public void onNext(@NonNull OnOffMixData onOffMixData) {
-                        OnOffMixErrorData a = onOffMixData.getError();
-                        ArrayList<OnOffMixEventListData> d = onOffMixData.getEventList();
+                        if (onOffMixData.getError().getCode() == 0) {
+                            for (OnOffMixEventListData eventListData : onOffMixData.getEventList()) {
+                                RecyclerViewData recyclerViewData = new RecyclerViewData();
+                                recyclerViewData.setTitle(eventListData.getTitle());
+                                recyclerViewData.setContent(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMixAttend));
+                                recyclerViewData.setImageUrl(eventListData.getBannerUrl());
+
+                                recyclerViewDataArrayList.add(recyclerViewData);
+                            }
+                        } else {
+                            mMainActivityView.showCustomToast(onOffMixData.getError().getMessage());
+                        }
                     }
 
                     @Override
@@ -227,10 +232,10 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
                     @Override
                     public void onComplete() {
-                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        //mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
                     }
-                });*/
+                });
 
 
         Observable.fromCallable(() -> {
@@ -262,10 +267,12 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
                     @Override
                     public void onComplete() {
-                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        //mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
                     }
                 });
+
+        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
     }
 
     @Override

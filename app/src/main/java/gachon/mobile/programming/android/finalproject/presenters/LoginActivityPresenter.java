@@ -6,7 +6,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import gachon.mobile.programming.android.finalproject.R;
+import gachon.mobile.programming.android.finalproject.models.LoginData;
+import gachon.mobile.programming.android.finalproject.utils.ExceptionHelper;
 import gachon.mobile.programming.android.finalproject.views.LoginActivityView;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.RequestBody;
+
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
 /**
  * Created by JJSOFT-DESKTOP on 2017-05-09.
@@ -44,7 +53,17 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
             return;
         }
 
-        mLoginActivityView.validateSuccess(jsonObject);
+        Observable<LoginData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+        loginRx.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(t -> {
+                            if (t.isSuccess()) {
+                                mLoginActivityView.validateSuccess();
+                            } else {
+                                mLoginActivityView.validateFailure(t.getData());
+                            }
+                        },
+                        e -> mLoginActivityView.validateFailure(ExceptionHelper.getApplicationExceptionMessage((Exception) e)));
     }
 
     private boolean isEmailValid(String email) {
