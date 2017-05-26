@@ -50,8 +50,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (recyclerViewData.getImageResources() != null) {
             holder.mImageView.setImageBitmap(recyclerViewData.getImageResources());
         } else if (recyclerViewData.getImageUrl() != null) {
-            //Glide.with(mContext).load("http:" + recyclerViewData.getImageUrl()).into(holder.mImageView);
-            Glide.with(mContext).load("http:" + recyclerViewData.getImageUrl()).into(holder.mImageView);
+            Glide.with(mContext).load(recyclerViewData.getImageUrl()).into(holder.mImageView);
         }
 
         holder.mTitle.setText(recyclerViewData.getTitle());

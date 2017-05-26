@@ -12,9 +12,14 @@ import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.enums.ExpandableMenuEnum;
+import gachon.mobile.programming.android.finalproject.models.LoginData;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
 import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
+import gachon.mobile.programming.android.finalproject.models.OnOffMixData;
+import gachon.mobile.programming.android.finalproject.models.OnOffMixErrorData;
+import gachon.mobile.programming.android.finalproject.models.OnOffMixEventListData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
+import gachon.mobile.programming.android.finalproject.utils.RetrofitInterface;
 import gachon.mobile.programming.android.finalproject.views.MainActivityView;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -22,8 +27,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.RequestBody;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MAX_BOTTOM_NAV_COUNT;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
 /**
  * Created by JJSOFT-DESKTOP on 2017-05-21.
@@ -80,28 +91,50 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
         //mMainActivityView.setDisplayRecyclerView(getCategoryData(categoryId));
 
+        String baseUrl = "https://okky.kr/articles/tech";
+
+        switch (categoryId) {
+            case 1:
+                baseUrl = "http://onoffmix.com/";
+                break;
+            default:
+                return;
+        }
+
         ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
-        Observable.fromCallable(() -> {
-            Document document = Jsoup.connect("https://okky.kr/articles/tech").get();
-            return document.select("ul.list-group li.list-group-item");
-        }).subscribeOn(Schedulers.io())
+        final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final RetrofitInterface RETROFIT_INTERFACE = RETROFIT_BUILDER.create(RetrofitInterface.class);
+
+        Observable<OnOffMixData> onOffMixRx = RETROFIT_INTERFACE.OnOffMixRx("api.onoffmix.com/event/list", "json", 12,
+                "if(recruitEndDateTime-NOW()>0# 1# 0)|DESC,FIND_IN_SET('advance'#wayOfRegistration)|DESC,popularity|DESC,idx|DESC", 1, "", "", "", "true", "true", "true", "개발", "", "", 1);
+        onOffMixRx.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Elements>() {
+                .subscribe(new Observer<OnOffMixData>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         mMainActivityView.showProgressDialog(subscribeProgressDialog);
                     }
 
                     @Override
-                    public void onNext(@NonNull Elements elements) {
-                        for (Element element : elements) {
-                            RecyclerViewData recyclerViewData = new RecyclerViewData();
-                            recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
-                            recyclerViewData.setContent(element.select("div.list-group-item-author.clearfix a.nickname").text());
-                            recyclerViewData.setImageUrl(element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
-                            recyclerViewDataArrayList.add(recyclerViewData);
+                    public void onNext(@NonNull OnOffMixData onOffMixData) {
+                        if (onOffMixData.getError().getCode() == 0) {
+                            for (OnOffMixEventListData eventListData : onOffMixData.getEventList()) {
+                                RecyclerViewData recyclerViewData = new RecyclerViewData();
+                                recyclerViewData.setTitle(eventListData.getTitle());
+                                recyclerViewData.setContent(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMixAttend));
+                                recyclerViewData.setImageUrl(eventListData.getBannerUrl());
+
+                                recyclerViewDataArrayList.add(recyclerViewData);
+                            }
+                        } else {
+                            return;
                         }
                     }
 
@@ -117,6 +150,40 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                     }
                 });
 
+        /*Observable.fromCallable(() -> {
+            Document document = Jsoup.connect("https://okky.kr/articles/tech").get();
+            return document.select("ul.list-group li.list-group-item");
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Elements>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Elements elements) {
+                        for (Element element : elements) {
+                            RecyclerViewData recyclerViewData = new RecyclerViewData();
+                            recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
+                            recyclerViewData.setContent(element.select("div.list-group-item-author.clearfix a.nickname").text());
+                            recyclerViewData.setImageUrl("http:" + element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
+                            recyclerViewDataArrayList.add(recyclerViewData);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+                });*/
+
     }
 
     @Override
@@ -126,6 +193,45 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         //mMainActivityView.setDisplayRecyclerView(getCategoryData(HOME_VALUE));
         ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
+
+        //String onOffMixUrl = "http://onoffmix.com/";
+
+        /*final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
+                .baseUrl(onOffMixUrl)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final RetrofitInterface RETROFIT_INTERFACE = RETROFIT_BUILDER.create(RetrofitInterface.class);
+
+        Observable<OnOffMixData> onOffMixRx = RETROFIT_INTERFACE.OnOffMixRx("api.onoffmix.com/event/list", "json", 12,
+                "if(recruitEndDateTime-NOW()>0# 1# 0)|DESC,FIND_IN_SET('advance'#wayOfRegistration)|DESC,popularity|DESC,idx|DESC", 1, "", "", "", "true", "true", "true", "개발", "", "", 1);
+        onOffMixRx.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<OnOffMixData>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull OnOffMixData onOffMixData) {
+                        OnOffMixErrorData a = onOffMixData.getError();
+                        ArrayList<OnOffMixEventListData> d = onOffMixData.getEventList();
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+                });*/
+
 
         Observable.fromCallable(() -> {
             Document document = Jsoup.connect("https://okky.kr/articles/tech").get();
@@ -144,7 +250,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                             RecyclerViewData recyclerViewData = new RecyclerViewData();
                             recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
                             recyclerViewData.setContent(element.select("div.list-group-item-author.clearfix a.nickname").text());
-                            recyclerViewData.setImageUrl(element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
+                            recyclerViewData.setImageUrl("http:" + element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
                             recyclerViewDataArrayList.add(recyclerViewData);
                         }
                     }

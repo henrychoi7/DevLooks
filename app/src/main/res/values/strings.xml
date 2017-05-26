@@ -22,6 +22,7 @@
     <!-- Main -->
     <string name="main_image_view">카드뷰 메인화면 이미지</string>
     <string name="explain_permission">자료를 가져오기 위해선 인터넷을 사용해야 하므로 권한이 필요합니다.\n인터넷 권한을 허용해주세요.</string>
+    <string name="onOffMixAttend">명 신청가능</string>
 
     <!-- Toast Message -->
     <string name="dismiss_activity">"\"뒤로\"버튼을 한번 더 누르시면 종료됩니다."</string>
