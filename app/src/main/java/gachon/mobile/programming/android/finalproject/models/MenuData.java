@@ -9,7 +9,7 @@ public class MenuData {
     private int itemId;
     private int order;
     private String title;
-    private int resourceIcon;
+    private Integer resourceIcon;
 
     public MenuData(int groupId, int order) {
         this.groupId = groupId;
@@ -32,11 +32,11 @@ public class MenuData {
         this.title = title;
     }
 
-    public int getResourceIcon() {
+    public Integer getResourceIcon() {
         return resourceIcon;
     }
 
-    public void setResourceIcon(int resourceIcon) {
+    public void setResourceIcon(Integer resourceIcon) {
         this.resourceIcon = resourceIcon;
     }
 

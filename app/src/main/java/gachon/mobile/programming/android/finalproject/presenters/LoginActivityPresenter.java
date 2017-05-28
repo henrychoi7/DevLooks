@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import gachon.mobile.programming.android.finalproject.R;
-import gachon.mobile.programming.android.finalproject.models.LoginData;
+import gachon.mobile.programming.android.finalproject.models.SingleData;
 import gachon.mobile.programming.android.finalproject.utils.ExceptionHelper;
 import gachon.mobile.programming.android.finalproject.views.LoginActivityView;
 import io.reactivex.Observable;
@@ -53,7 +53,7 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
             return;
         }
 
-        Observable<LoginData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+        Observable<SingleData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
         loginRx.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(t -> {

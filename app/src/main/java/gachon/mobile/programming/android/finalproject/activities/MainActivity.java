@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity
 
         if (super.checkPermissionAndSetDisplayData()) {
             mMainActivityPresenter.refreshDisplay();
-            //DisplayCustomToast(getApplicationContext(), "인터넷 권한얻음");
+            DisplayCustomToast(getApplicationContext(), "인터넷 권한얻음");
         } else {
             DisplayCustomToast(getApplicationContext(), "권한이 없어서 자료를 불러오지 못했습니다.");
         }
@@ -130,7 +130,11 @@ public class MainActivity extends BaseActivity
         for (MenuData menuData : menuDataArrayList) {
             // MAX COUNT = 5 (즉, 4개만 추가가능)
             // groupId, itemId, order, CharSequence
-            menu.add(menuData.getGroupId(), menuData.getItemId(), menuData.getOrder(), menuData.getTitle()).setIcon(menuData.getResourceIcon());
+            if (menuData.getResourceIcon() == null) {
+                menu.add(menuData.getGroupId(), menuData.getItemId(), menuData.getOrder(), menuData.getTitle());
+            } else {
+                menu.add(menuData.getGroupId(), menuData.getItemId(), menuData.getOrder(), menuData.getTitle()).setIcon(menuData.getResourceIcon());
+            }
         }
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);

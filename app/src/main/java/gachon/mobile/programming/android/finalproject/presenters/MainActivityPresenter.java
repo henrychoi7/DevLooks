@@ -3,6 +3,8 @@ package gachon.mobile.programming.android.finalproject.presenters;
 import android.app.ProgressDialog;
 import android.content.Context;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,11 +14,14 @@ import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.enums.ExpandableMenuEnum;
+import gachon.mobile.programming.android.finalproject.models.FavoritesCategoryData;
+import gachon.mobile.programming.android.finalproject.models.FavoritesCategoryNameData;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
 import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
 import gachon.mobile.programming.android.finalproject.models.OnOffMixData;
 import gachon.mobile.programming.android.finalproject.models.OnOffMixEventListData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
+import gachon.mobile.programming.android.finalproject.utils.ExceptionHelper;
 import gachon.mobile.programming.android.finalproject.utils.RetrofitInterface;
 import gachon.mobile.programming.android.finalproject.views.MainActivityView;
 import io.reactivex.Observable;
@@ -25,11 +30,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MAX_BOTTOM_NAV_COUNT;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
 /**
  * Created by JJSOFT-DESKTOP on 2017-05-21.
@@ -43,37 +50,6 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         this.mContext = context;
         this.mMainActivityView = mainActivityView;
     }
-
-    private ArrayList<MenuData> getMenuItems() {
-        ArrayList<MenuData> menuDataArrayList = new ArrayList<>();
-        for (int i = 1; i < MAX_BOTTOM_NAV_COUNT; i++) {
-            MenuData menuData = new MenuData(0, 0);
-            menuData.setItemId(i);
-            menuData.setTitle(mContext.getString(R.string.app_name) + String.valueOf(i));
-            menuData.setResourceIcon(R.drawable.ic_search_white_24dp);
-            menuDataArrayList.add(menuData);
-        }
-
-        return menuDataArrayList;
-    }
-
-    /*private ArrayList<RecyclerViewData> getCategoryData(int categoryId) {
-
-        *//*try {
-
-            for (Element element : elements) {
-                String a = element.addClass(".list-group-item-heading").text();
-                testList.add(a);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*//*
-
-
-        //return getRecyclerViewData(categoryId);
-        return recyclerViewDataArrayList;
-    }*/
 
     @Override
     public void changeCategory(int categoryId) {
@@ -183,7 +159,40 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
     @Override
     public void refreshDisplay() {
-        mMainActivityView.setBottomMenuItems(getMenuItems());
+        ArrayList<MenuData> menuDataArrayList = new ArrayList<>();
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("email", "dngus@dngus.com");
+            jsonObject.put("password", "dngus2929");
+        } catch (JSONException e) {
+            mMainActivityView.showCustomToast(e.getMessage());
+            return;
+        }
+
+        Observable<FavoritesCategoryData> callCategoryRx = RETROFIT_INTERFACE.CallCategoryRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+        callCategoryRx.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(t -> {
+                            if (t.isSuccess()) {
+                                ArrayList<FavoritesCategoryNameData> categoryNameArrayList = t.getData();
+                                for (int i = 0; i < categoryNameArrayList.size(); i++) {
+                                    if (categoryNameArrayList.get(i).getCategoryName().equals("")) {
+                                        continue;
+                                    }
+                                    MenuData menuData = new MenuData(0, 0);
+                                    menuData.setItemId(i+1);
+                                    menuData.setTitle(categoryNameArrayList.get(i).getCategoryName());
+                                    //menuData.setResourceIcon(null);
+                                    menuData.setResourceIcon(R.drawable.ic_android_black_24dp);
+                                    menuDataArrayList.add(menuData);
+                                }
+                                mMainActivityView.setBottomMenuItems(menuDataArrayList);
+                            } else {
+                                mMainActivityView.showCustomToast(t.getData().get(0).getCategoryName());
+                            }
+                        },
+                        e -> mMainActivityView.showCustomToast(ExceptionHelper.getApplicationExceptionMessage((Exception) e)));
 
         //mMainActivityView.setDisplayRecyclerView(getCategoryData(HOME_VALUE));
         ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
@@ -232,13 +241,13 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
                     @Override
                     public void onComplete() {
-                        //mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
                     }
                 });
 
 
-        Observable.fromCallable(() -> {
+        /*Observable.fromCallable(() -> {
             Document document = Jsoup.connect("https://okky.kr/articles/tech").get();
             return document.select("ul.list-group li.list-group-item");
         }).subscribeOn(Schedulers.io())
@@ -270,9 +279,11 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                         //mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
                     }
-                });
+                });*/
 
-        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+        //TODO Observable Merge 작업해보기.
+        // http://www.introtorx.com/content/v1.0.10621.0/12_CombiningSequences.html
+        //mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
     }
 
     @Override
