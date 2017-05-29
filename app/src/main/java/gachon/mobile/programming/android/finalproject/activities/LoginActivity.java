@@ -82,14 +82,12 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
             }
         });
 
+        mEmailView.setText("dngus@dngus.com");
+        mPasswordView.setText("dngus2929");
+
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        //mEmailSignInButton.setOnClickListener(view -> mLoginActivityPresenter.attemptLogin());
-        /*mEmailSignInButton.setOnClickListener(view -> {
-            mEmailView.setText("dlsdud@dngus.com");
-            mPasswordView.setText("dngus2929");
-            mLoginActivityPresenter.attemptLogin();
-        });*/
-        mEmailSignInButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), MainActivity.class)));
+        mEmailSignInButton.setOnClickListener(view -> mLoginActivityPresenter.attemptLogin());
+        //mEmailSignInButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), MainActivity.class)));
     }
 
     @Override
