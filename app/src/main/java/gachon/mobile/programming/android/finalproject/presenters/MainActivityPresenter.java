@@ -184,7 +184,26 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                                     menuData.setItemId(i+1);
                                     menuData.setTitle(categoryNameArrayList.get(i).getCategoryName());
                                     //menuData.setResourceIcon(null);
-                                    menuData.setResourceIcon(R.drawable.ic_android_black_24dp);
+                                    switch (i) {
+                                        case 0:
+                                            menuData.setResourceIcon(R.drawable.ic_android_24dp);
+                                            break;
+                                        case 1:
+                                            menuData.setResourceIcon(R.drawable.ic_java_24dp);
+                                            break;
+                                        case 2:
+                                            menuData.setResourceIcon(R.drawable.ic_python_24dp);
+                                            break;
+                                        case 3:
+                                            menuData.setResourceIcon(R.drawable.ic_php_24dp);
+                                            break;
+                                        case 4:
+                                            menuData.setResourceIcon(R.drawable.ic_javascript_24dp);
+                                            break;
+                                        default:
+                                            menuData.setResourceIcon(R.drawable.ic_android_24dp);
+                                            break;
+                                    }
                                     menuDataArrayList.add(menuData);
                                 }
                                 mMainActivityView.setBottomMenuItems(menuDataArrayList);
