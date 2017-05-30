@@ -19,10 +19,19 @@
     <string name="nav_group_menu_icon">그룹메뉴아이콘</string>
     <string name="nav_child_menu_icon">자식메뉴아이콘</string>
 
+    <!-- Bottom Navigation Category -->
+    <string name="android">Android</string>
+    <string name="java">Java</string>
+    <string name="javascript">JavaScript</string>
+    <string name="python">Python</string>
+    <string name="php">PHP</string>
+    <string name="etc">ETC</string>
+
     <!-- Main -->
     <string name="main_image_view">카드뷰 메인화면 이미지</string>
     <string name="explain_permission">자료를 가져오기 위해선 인터넷을 사용해야 하므로 권한이 필요합니다.\n인터넷 권한을 허용해주세요.</string>
-    <string name="onOffMixAttend">명 신청가능</string>
+    <string name="onOffMix_attend">명 신청가능</string>
+    <string name="onOffMix_error">온오프믹스 데이터를 불러오는데 실패하였습니다.</string>
 
     <!-- Toast Message -->
     <string name="dismiss_activity">"\"뒤로\"버튼을 한번 더 누르시면 종료됩니다."</string>

@@ -45,6 +45,11 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             if (navigationMenuData.getImageResource() != null) {
                 navigationViewHolder.navigationImageView.setImageResource(navigationMenuData.getImageResource());
             }
+            if (navigationMenuData.isFavorite()) {
+                navigationViewHolder.navigationStarImageView.setImageResource(R.drawable.ic_star_fill_24dp);
+            } else {
+                navigationViewHolder.navigationStarImageView.setImageResource(R.drawable.ic_star_empty_24dp);
+            }
 
             navigationViewHolder.navigationTextView.setOnClickListener(v -> {
                 if (navigationMenuData.getInvisibleChildren() == null) {
@@ -85,11 +90,13 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static class ListNavigationViewHolder extends RecyclerView.ViewHolder {
         final TextView navigationTextView;
         final ImageView navigationImageView;
+        final ImageView navigationStarImageView;
 
         private ListNavigationViewHolder(View convertView) {
             super(convertView);
             navigationTextView = (TextView) convertView.findViewById(R.id.nav_text_view);
             navigationImageView = (ImageView) convertView.findViewById(R.id.nav_image_view);
+            navigationStarImageView = (ImageView) convertView.findViewById(R.id.nav_star_image_view);
         }
     }
 

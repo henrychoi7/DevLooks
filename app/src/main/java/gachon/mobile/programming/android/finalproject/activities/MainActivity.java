@@ -71,8 +71,6 @@ public class MainActivity extends BaseActivity
         final NavigationView leftNavigationView = (NavigationView) findViewById(R.id.left_navigation);
         leftNavigationView.setNavigationItemSelectedListener(this);
 
-        setExpandableMenuItems(mMainActivityPresenter.getExpandableMenuData());
-
         final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh);
         pullRefreshLayout.setOnRefreshListener(() -> {
             final BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);

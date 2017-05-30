@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class FavoritesCategoryData {
     private boolean isSuccess;
-    private ArrayList<FavoritesCategoryNameData> data;
+    private ArrayList<FavoritesCategoryCodeData> data;
 
-    public FavoritesCategoryData(boolean isSuccess, ArrayList<FavoritesCategoryNameData> data) {
+    public FavoritesCategoryData(boolean isSuccess, ArrayList<FavoritesCategoryCodeData> data) {
         this.isSuccess = isSuccess;
         this.data = data;
     }
@@ -19,7 +19,7 @@ public class FavoritesCategoryData {
         return isSuccess;
     }
 
-    public ArrayList<FavoritesCategoryNameData> getData() {
+    public ArrayList<FavoritesCategoryCodeData> getData() {
         return data;
     }
 }

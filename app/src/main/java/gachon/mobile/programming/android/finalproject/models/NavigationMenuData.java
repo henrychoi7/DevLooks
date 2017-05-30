@@ -10,6 +10,7 @@ public class NavigationMenuData {
     private int type;
     private String title;
     private Integer imageResource;
+    private boolean isFavorite = false;
     private ArrayList<NavigationMenuData> invisibleChildren;
 
     public int getType() {
@@ -42,5 +43,13 @@ public class NavigationMenuData {
 
     public void setInvisibleChildren(ArrayList<NavigationMenuData> invisibleChildren) {
         this.invisibleChildren = invisibleChildren;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

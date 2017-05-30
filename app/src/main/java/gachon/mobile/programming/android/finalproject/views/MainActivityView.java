@@ -31,7 +31,5 @@ public interface MainActivityView {
         void changeCategory(int categoryId);
 
         void refreshDisplay();
-
-        ArrayList<NavigationMenuData> getExpandableMenuData();
     }
 }
