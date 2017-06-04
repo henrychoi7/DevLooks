@@ -2,6 +2,7 @@ package gachon.mobile.programming.android.finalproject.presenters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.TypedArray;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,8 +17,8 @@ import java.util.Locale;
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.enums.CategoryMenuEnum;
 import gachon.mobile.programming.android.finalproject.enums.ExpandableMenuEnum;
-import gachon.mobile.programming.android.finalproject.models.FavoritesCategoryData;
 import gachon.mobile.programming.android.finalproject.models.FavoritesCategoryCodeData;
+import gachon.mobile.programming.android.finalproject.models.FavoritesCategoryData;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
 import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
 import gachon.mobile.programming.android.finalproject.models.OnOffMixData;
@@ -72,6 +73,8 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     private ArrayList<NavigationMenuData> getExpandableMenuData(ArrayList<MenuData> menuDataArrayList) {
+        TypedArray category_icon = mContext.getResources().obtainTypedArray(R.array.category_default_image);
+
         ArrayList<NavigationMenuData> groupMenuDataArrayList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             final NavigationMenuData groupMenuData = new NavigationMenuData();
@@ -85,21 +88,27 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                     groupMenuData.setFavorite(true);
                 }
             //groupMenuData.setImageResource(null);
+            int categoryResources = mContext.getResources().getIdentifier("category_" + i, "array", mContext.getPackageName());
+            String[] category_name = mContext.getResources().getStringArray(categoryResources);
 
             ArrayList<NavigationMenuData> childMenuDataArrayList = new ArrayList<>();
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < category_name.length; j++) {
                 //TODO 카테고리 세부 홈페이지 이름 및 아이콘 가져와서 세팅해주기.
                 NavigationMenuData childMenuData = new NavigationMenuData();
                 childMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
-                childMenuData.setTitle("Child Test" + String.valueOf(j));
-                childMenuData.setImageResource(R.drawable.ic_menu_share);
-                //childMenuData.setImageResource(null);
+                childMenuData.setTitle(category_name[j]);
+                if (j > category_icon.length() - 1) {
+                    childMenuData.setImageResource(R.drawable.ic_android_24dp);
+                } else {
+                    childMenuData.setImageResource(category_icon.getResourceId(j , R.drawable.ic_android_24dp));
+                }
                 childMenuDataArrayList.add(childMenuData);
             }
             groupMenuData.setInvisibleChildren(childMenuDataArrayList);
             groupMenuDataArrayList.add(groupMenuData);
         }
 
+        category_icon.recycle();
         return groupMenuDataArrayList;
     }
 
@@ -131,7 +140,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         return menuDataArrayList;
     }
 
-    private void setOnOffMixData(String baseUrl) {
+    private void setOnOffMixData(final String baseUrl) {
         ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
@@ -184,12 +193,12 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                 });
     }
 
-    private void setOKKYData(String baseUrl) {
+    private void setOKKYData(final String baseUrl) {
         ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
         Observable.fromCallable(() -> {
-            Document document = Jsoup.connect("https://okky.kr/articles/tech").get();
+            Document document = Jsoup.connect(baseUrl).get();
             return document.select("ul.list-group li.list-group-item");
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -224,30 +233,6 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     private void setLeftNavigationMenuItems() {
-
-    }
-
-    @Override
-    public void changeCategory(int categoryId) {
-        //2017.05.21
-        //이미 refreshDisplay 를 통해서 즐겨찾기가 구성되어있는 상태이므로 메뉴를 재구성 하지 못하도록하자
-        //(선택되어있던 카테고리가 즐겨찾기에서 제거됬었을경우, 메인화면을 일일히 refresh 하지 못하기 때문에 MainActivity 에 새로 접근할때만 메뉴 재구성하는것으로,
-        //카테고리 즐겨찾기는 꼭 다른 창에서 고를 수 있도록)
-        //카테고리 즐겨찾기는 회원가입때 고를 수 있게하거나, 개인정보 수정창에서 고를 수 있도록하자!
-        //mMainActivityView.setBottomMenuItems(getMenuItems());
-
-        switch (categoryId) {
-            case 1:
-                setOnOffMixData("http://onoffmix.com/");
-                break;
-            case 2:
-                setOKKYData("https://okky.kr/articles/tech");
-                break;
-        }
-    }
-
-    @Override
-    public void refreshDisplay() {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("email", "dngus@dngus.com");
@@ -273,14 +258,37 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                             }
                         },
                         e -> mMainActivityView.showCustomToast(ExceptionHelper.getApplicationExceptionMessage((Exception) e)));
+    }
 
+    @Override
+    public void changeCategory(int categoryId) {
+        //2017.05.21
+        //이미 refreshDisplay 를 통해서 즐겨찾기가 구성되어있는 상태이므로 메뉴를 재구성 하지 못하도록하자
+        //(선택되어있던 카테고리가 즐겨찾기에서 제거됬었을경우, 메인화면을 일일히 refresh 하지 못하기 때문에 MainActivity 에 새로 접근할때만 메뉴 재구성하는것으로,
+        //카테고리 즐겨찾기는 꼭 다른 창에서 고를 수 있도록)
+        //카테고리 즐겨찾기는 회원가입때 고를 수 있게하거나, 개인정보 수정창에서 고를 수 있도록하자!
+        //mMainActivityView.setBottomMenuItems(getMenuItems());
+
+        switch (categoryId) {
+            case 1:
+                setOnOffMixData("http://onoffmix.com/");
+                break;
+            case 2:
+                setOKKYData("https://okky.kr/articles/tech");
+                break;
+        }
+    }
+
+    @Override
+    public void refreshDisplay() {
         //mMainActivityView.setDisplayRecyclerView(getCategoryData(HOME_VALUE));
         ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
-        String onOffMixUrl = "http://onoffmix.com/";
+        setLeftNavigationMenuItems();
+        setOnOffMixData("http://onoffmix.com/");
 
-        final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
+        /*final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
                 .baseUrl(onOffMixUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -325,7 +333,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                         mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
                     }
-                });
+                });*/
 
 
         /*Observable.fromCallable(() -> {

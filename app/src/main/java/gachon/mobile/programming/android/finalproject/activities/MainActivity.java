@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity
         expandableMenu.setItemAnimator(new ScaleInRightAnimator());
         expandableMenu.setHasFixedSize(true);
 
-        final ExpandableMenuAdapter expandableMenuAdapter = new ExpandableMenuAdapter(navigationMenuDataArrayList);
+        final ExpandableMenuAdapter expandableMenuAdapter = new ExpandableMenuAdapter(getApplicationContext(), this , mMainActivityPresenter, navigationMenuDataArrayList);
         ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(expandableMenuAdapter);
         scaleInAnimationAdapter.setFirstOnly(true);
 

@@ -53,6 +53,7 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
             return;
         }
 
+        //Observable<SingleData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
         Observable<SingleData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
         loginRx.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -18,6 +18,7 @@
     <string name="nav_main_image_view">네비게이션 메인 이미지</string>
     <string name="nav_group_menu_icon">그룹메뉴아이콘</string>
     <string name="nav_child_menu_icon">자식메뉴아이콘</string>
+    <string name="set_category_favorites_error">카테고리 즐겨찾기에 실패하였습니다.</string>
 
     <!-- Bottom Navigation Category -->
     <string name="android">Android</string>
@@ -48,4 +49,47 @@
     <string name="error_invalid_password">비밀번호는 최소 6자리 이상이어야 합니다.</string>
     <string name="action_sign_in">커뮤니터 시작</string>
 
+    <integer-array name="category_default_image">
+        <item>@drawable/ic_stack_overflow_24dp</item>
+        <item>@drawable/ic_okky_logo_24dp</item>
+        <item>@drawable/ic_okky_logo_24dp</item>
+    </integer-array>
+
+    <!-- Android Data -->
+    <string-array name="category_0">
+        <item>안드로이드 - Stack Overflow</item>
+        <item>안드로이드 - OKKY Tech</item>
+        <item>안드로이드 - OKKY Q <![CDATA[&]]]> A</item>
+        <item>안드로이드사이드</item>
+        <item>안드로이드펍</item>
+        <item>칸드로이드</item>
+    </string-array>
+
+    <!-- Java Data -->
+    <string-array name="category_1">
+        <item>자바 - Stack Overflow</item>
+        <item>자바 - OKKY Tech</item>
+        <item>자바 - OKKY Q <![CDATA[&]]]> A</item>
+    </string-array>
+
+    <!-- Python Data -->
+    <string-array name="category_2">
+        <item>파이썬 - Stack Overflow</item>
+        <item>파이썬 - OKKY Tech</item>
+        <item>파이썬 - OKKY Q <![CDATA[&]]]> A</item>
+    </string-array>
+
+    <!-- PHP Data -->
+    <string-array name="category_3">
+        <item>PHP - Stack Overflow</item>
+        <item>PHP - OKKY Tech</item>
+        <item>PHP - OKKY Q <![CDATA[&]]]> A</item>
+    </string-array>
+
+    <!-- JavaScript Data -->
+    <string-array name="category_4">
+        <item>JS - Stack Overflow</item>
+        <item>JS - OKKY Tech</item>
+        <item>JS - OKKY Q <![CDATA[&]]]> A</item>
+    </string-array>
 </resources>

@@ -31,5 +31,7 @@ public interface MainActivityView {
         void changeCategory(int categoryId);
 
         void refreshDisplay();
+
+        //boolean setCategoryFavorites(boolean isSelected);
     }
 }
