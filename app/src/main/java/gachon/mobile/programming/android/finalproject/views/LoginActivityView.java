@@ -10,6 +10,8 @@ public interface LoginActivityView {
 
     String getPassword();
 
+    boolean getAutoLoginCheckBox();
+
     void setEmailError(String message);
 
     void setPasswordError(String message);

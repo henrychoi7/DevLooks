@@ -4,24 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_marginBottom="@dimen/activity_vertical_margin"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     app:refreshType="material"
     tools:context="gachon.mobile.programming.android.finalproject.activities.LoginActivity"
     tools:showIn="@layout/activity_login">
 
-    <LinearLayout
-        style="@style/defaultTextLayout">
+    <LinearLayout style="@style/defaultTextLayout">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:text="@string/email"/>
+            android:text="@string/email"
+            android:textSize="14sp" />
 
         <gachon.mobile.programming.android.finalproject.utils.ClearEditText
             android:id="@+id/email"
@@ -62,8 +61,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:text="@string/password"/>
+            android:text="@string/password"
+            android:textSize="14sp" />
 
         <gachon.mobile.programming.android.finalproject.utils.PasswordEditText
             android:id="@+id/password"
@@ -99,6 +98,13 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
     </RelativeLayout>
+
+    <CheckBox
+        android:id="@+id/auto_login_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/auto_login"
+        android:textColor="@color/black" />
 
     <Button
         android:id="@+id/email_sign_in_button"

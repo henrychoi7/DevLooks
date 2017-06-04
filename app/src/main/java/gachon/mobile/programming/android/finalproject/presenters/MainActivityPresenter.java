@@ -87,26 +87,31 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                 if (menuData.getTitle().equals(groupMenuTitle)) {
                     groupMenuData.setFavorite(true);
                 }
-            //groupMenuData.setImageResource(null);
-            int categoryResources = mContext.getResources().getIdentifier("category_" + i, "array", mContext.getPackageName());
-            String[] category_name = mContext.getResources().getStringArray(categoryResources);
+
+            String[] category_name = mContext.getResources().getStringArray(R.array.category_default_title);
 
             ArrayList<NavigationMenuData> childMenuDataArrayList = new ArrayList<>();
             for (int j = 0; j < category_name.length; j++) {
-                //TODO 카테고리 세부 홈페이지 이름 및 아이콘 가져와서 세팅해주기.
                 NavigationMenuData childMenuData = new NavigationMenuData();
                 childMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
                 childMenuData.setTitle(category_name[j]);
-                if (j > category_icon.length() - 1) {
+                childMenuData.setImageResource(category_icon.getResourceId(j , -1));
+                /*if (j > category_icon.length() - 1) {
                     childMenuData.setImageResource(R.drawable.ic_android_24dp);
                 } else {
                     childMenuData.setImageResource(category_icon.getResourceId(j , R.drawable.ic_android_24dp));
-                }
+                }*/
                 childMenuDataArrayList.add(childMenuData);
             }
             groupMenuData.setInvisibleChildren(childMenuDataArrayList);
             groupMenuDataArrayList.add(groupMenuData);
         }
+
+        /*final NavigationMenuData logOutMenuData = new NavigationMenuData();
+        logOutMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
+        logOutMenuData.setTitle("로그아웃");
+        logOutMenuData.setImageResource(null);
+        groupMenuDataArrayList.add(logOutMenuData);*/
 
         category_icon.recycle();
         return groupMenuDataArrayList;

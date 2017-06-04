@@ -38,14 +38,12 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private ArrayList<NavigationMenuData> mNavigationMenuDataArrayList;
     private final Context mContext;
     private final MainActivityView mMainActivityView;
-    private final MainActivityView.UserInteractions mMainActivityPresenter;
     private final int ENUM_GROUP = ExpandableMenuEnum.GROUP.getTypeValue();
     private final int ENUM_CHILD = ExpandableMenuEnum.CHILD.getTypeValue();
 
-    public ExpandableMenuAdapter(Context context, MainActivityView mainActivityView, MainActivityView.UserInteractions mainActivityPresenter, ArrayList<NavigationMenuData> navigationMenuDataArrayList) {
+    public ExpandableMenuAdapter(Context context, MainActivityView mainActivityView, ArrayList<NavigationMenuData> navigationMenuDataArrayList) {
         this.mContext = context;
         this.mMainActivityView = mainActivityView;
-        this.mMainActivityPresenter = mainActivityPresenter;
         this.mNavigationMenuDataArrayList = navigationMenuDataArrayList;
     }
 
@@ -125,6 +123,8 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 layoutParams.setMargins(50, 10, 30, 10);
                 navigationViewHolder.navigationImageView.setLayoutParams(layoutParams);
             }
+
+            navigationViewHolder.navigationTextView.setOnClickListener(v -> mMainActivityView.showCustomToast("자식클릭"));
         }
     }
 
@@ -156,7 +156,7 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyItemRemoved(position);
     }
 
-    public void setCategoryFavorites(boolean isSelected, final ListNavigationViewHolder navigationViewHolder) {
+    private void setCategoryFavorites(boolean isSelected, final ListNavigationViewHolder navigationViewHolder) {
         if (isSelected) {
             navigationViewHolder.navigationCategoryFavoritesImageView.setTag(true);
             navigationViewHolder.navigationCategoryFavoritesImageView.setImageResource(R.drawable.ic_favorites_fill_24dp);

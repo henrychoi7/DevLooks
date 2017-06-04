@@ -26,7 +26,7 @@ public class ApplicationClass extends Application {
     public static final String BASE_URL =  "http://13.124.94.238/";
     private static Boolean mIsBackPressedOnce = false;
     public static int HOME_VALUE = 0;
-    public static int MAX_BOTTOM_NAV_COUNT = 5;
+    public static String PREF_ID = "DEV_LOOKS";
 
     public static final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
             .baseUrl(BASE_URL)

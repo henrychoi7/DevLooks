@@ -1,7 +1,9 @@
 package gachon.mobile.programming.android.finalproject.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -36,6 +38,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.DisplayCustomToast;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.HOME_VALUE;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.handleUserApplicationExit;
 
 public class MainActivity extends BaseActivity
@@ -80,7 +83,7 @@ public class MainActivity extends BaseActivity
 
         if (super.checkPermissionAndSetDisplayData()) {
             mMainActivityPresenter.refreshDisplay();
-            DisplayCustomToast(getApplicationContext(), "인터넷 권한얻음");
+            //DisplayCustomToast(getApplicationContext(), "인터넷 권한얻음");
         } else {
             DisplayCustomToast(getApplicationContext(), "권한이 없어서 자료를 불러오지 못했습니다.");
         }
@@ -93,7 +96,7 @@ public class MainActivity extends BaseActivity
         expandableMenu.setItemAnimator(new ScaleInRightAnimator());
         expandableMenu.setHasFixedSize(true);
 
-        final ExpandableMenuAdapter expandableMenuAdapter = new ExpandableMenuAdapter(getApplicationContext(), this , mMainActivityPresenter, navigationMenuDataArrayList);
+        final ExpandableMenuAdapter expandableMenuAdapter = new ExpandableMenuAdapter(getApplicationContext(), this, navigationMenuDataArrayList);
         ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(expandableMenuAdapter);
         scaleInAnimationAdapter.setFirstOnly(true);
 
@@ -171,10 +174,21 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_search) {
-            startActivity(new Intent(getApplicationContext(), SearchActivity.class));
-        }
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+                break;
+            case R.id.action_logout:
+                SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE).edit();
+                sharedPreferencesEditor.putBoolean("is_checked_auto_login", false);
+                sharedPreferencesEditor.putString("email", null);
+                sharedPreferencesEditor.putString("password", null);
+                sharedPreferencesEditor.apply();
 
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
+                finish();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 

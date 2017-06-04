@@ -1,6 +1,8 @@
 package gachon.mobile.programming.android.finalproject.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +11,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import gachon.mobile.programming.android.finalproject.R;
@@ -19,6 +22,7 @@ import gachon.mobile.programming.android.finalproject.utils.PasswordEditText;
 import gachon.mobile.programming.android.finalproject.views.LoginActivityView;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.DisplayCustomToast;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 
 /**
  * Created by JJSOFT-DESKTOP on 2017-05-09.
@@ -27,6 +31,7 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 public class LoginActivity extends BaseActivity implements LoginActivityView {
     private ClearEditText mEmailView;
     private PasswordEditText mPasswordView;
+    private CheckBox mAutoLoginCheckBox;
 
     private LoginActivityView.UserInteractions mLoginActivityPresenter;
 
@@ -45,6 +50,8 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
         }
 
         mLoginActivityPresenter = new LoginActivityPresenter(getApplicationContext(), this);
+
+        mAutoLoginCheckBox = (CheckBox) findViewById(R.id.auto_login_check_box);
 
         mEmailView = (ClearEditText) findViewById(R.id.email);
         TextView emailTextView = (TextView) findViewById(R.id.email_text_edited);
@@ -83,12 +90,18 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
             }
         });
 
-        mEmailView.setText("dngus@dngus.com");
-        mPasswordView.setText("dngus2929");
+        SharedPreferences sharedPreferences = getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+        boolean isCheckedAutoLogin = sharedPreferences.getBoolean("is_checked_auto_login", false);
+        mAutoLoginCheckBox.setChecked(isCheckedAutoLogin);
+
+        if (isCheckedAutoLogin) {
+            mEmailView.setText(sharedPreferences.getString("email", null));
+            mPasswordView.setText(sharedPreferences.getString("password", null));
+            mLoginActivityPresenter.attemptLogin();
+        }
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(view -> mLoginActivityPresenter.attemptLogin());
-        //mEmailSignInButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), MainActivity.class)));
     }
 
     @Override
@@ -104,6 +117,11 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean getAutoLoginCheckBox() {
+        return mAutoLoginCheckBox.isChecked();
     }
 
     @Override

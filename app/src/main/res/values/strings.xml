@@ -1,9 +1,9 @@
 <resources>
     <!-- App name, Init -->
-    <string name="app_name">커뮤니터</string>
-    <string name="init_header_first">WEIRD</string>
-    <string name="init_header_second">MEETUP</string>
-    <string name="init_header_third">Just do meetup</string>
+    <string name="app_name">개발다봐</string>
+    <string name="init_header_first">DEV</string>
+    <string name="init_header_second">LOOKS</string>
+    <string name="init_header_third">Look At ALL</string>
     <string name="login">로그인</string>
     <string name="register">가입하기</string>
 
@@ -12,6 +12,7 @@
 
     <!-- Menu -->
     <string name="action_search">검색</string>
+    <string name="action_logout">로그아웃</string>
 
     <!-- Navigation -->
     <string name="title_home">Home</string>
@@ -48,6 +49,7 @@
     <string name="error_invalid_email">이메일 형식이 올바르지 않습니다.</string>
     <string name="error_invalid_password">비밀번호는 최소 6자리 이상이어야 합니다.</string>
     <string name="action_sign_in">커뮤니터 시작</string>
+    <string name="auto_login">자동 로그인</string>
 
     <integer-array name="category_default_image">
         <item>@drawable/ic_stack_overflow_24dp</item>
@@ -55,41 +57,9 @@
         <item>@drawable/ic_okky_logo_24dp</item>
     </integer-array>
 
-    <!-- Android Data -->
-    <string-array name="category_0">
-        <item>안드로이드 - Stack Overflow</item>
-        <item>안드로이드 - OKKY Tech</item>
-        <item>안드로이드 - OKKY Q <![CDATA[&]]]> A</item>
-        <item>안드로이드사이드</item>
-        <item>안드로이드펍</item>
-        <item>칸드로이드</item>
-    </string-array>
-
-    <!-- Java Data -->
-    <string-array name="category_1">
-        <item>자바 - Stack Overflow</item>
-        <item>자바 - OKKY Tech</item>
-        <item>자바 - OKKY Q <![CDATA[&]]]> A</item>
-    </string-array>
-
-    <!-- Python Data -->
-    <string-array name="category_2">
-        <item>파이썬 - Stack Overflow</item>
-        <item>파이썬 - OKKY Tech</item>
-        <item>파이썬 - OKKY Q <![CDATA[&]]]> A</item>
-    </string-array>
-
-    <!-- PHP Data -->
-    <string-array name="category_3">
-        <item>PHP - Stack Overflow</item>
-        <item>PHP - OKKY Tech</item>
-        <item>PHP - OKKY Q <![CDATA[&]]]> A</item>
-    </string-array>
-
-    <!-- JavaScript Data -->
-    <string-array name="category_4">
-        <item>JS - Stack Overflow</item>
-        <item>JS - OKKY Tech</item>
-        <item>JS - OKKY Q <![CDATA[&]]]> A</item>
+    <string-array name="category_default_title">
+        <item>Stack Overflow</item>
+        <item>OKKY Tech</item>
+        <item>OKKY Q <![CDATA[&]]]> A</item>
     </string-array>
 </resources>

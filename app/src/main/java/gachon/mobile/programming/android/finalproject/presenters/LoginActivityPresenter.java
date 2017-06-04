@@ -1,6 +1,8 @@
 package gachon.mobile.programming.android.finalproject.presenters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
 /**
@@ -33,6 +36,7 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
     private void validateAndLogin() {
         String email = mLoginActivityView.getEmail();
         String password = mLoginActivityView.getPassword();
+        boolean isCheckedAutoLogin = mLoginActivityView.getAutoLoginCheckBox();
 
         if (!isEmailValid(email)) {
             mLoginActivityView.setEmailError(mContext.getString(R.string.error_invalid_email));
@@ -59,6 +63,13 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(t -> {
                             if (t.isSuccess()) {
+                                SharedPreferences.Editor sharedPreferencesEditors = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE).edit();
+                                sharedPreferencesEditors.putBoolean("is_checked_auto_login", isCheckedAutoLogin);
+                                if (isCheckedAutoLogin) {
+                                    sharedPreferencesEditors.putString("email", email);
+                                    sharedPreferencesEditors.putString("password", password);
+                                }
+                                sharedPreferencesEditors.apply();
                                 mLoginActivityView.validateSuccess();
                             } else {
                                 mLoginActivityView.validateFailure(t.getData());
