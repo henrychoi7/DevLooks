@@ -8,25 +8,18 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     app:refreshType="material"
     tools:context="gachon.mobile.programming.android.finalproject.activities.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_sub">
 
     <com.baoyz.widget.PullRefreshLayout
-        android:id="@+id/pull_to_refresh_main"
+        android:id="@+id/pull_to_refresh_sub"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_main"
+            android:id="@+id/recycler_view_sub"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </com.baoyz.widget.PullRefreshLayout>
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="?android:attr/windowBackground" />
 </LinearLayout>

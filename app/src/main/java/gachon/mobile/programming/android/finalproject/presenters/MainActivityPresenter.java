@@ -1,7 +1,9 @@
 package gachon.mobile.programming.android.finalproject.presenters;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 
 import org.json.JSONException;
@@ -39,6 +41,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
 /**
@@ -76,7 +79,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         TypedArray category_icon = mContext.getResources().obtainTypedArray(R.array.category_default_image);
 
         ArrayList<NavigationMenuData> groupMenuDataArrayList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             final NavigationMenuData groupMenuData = new NavigationMenuData();
             groupMenuData.setType(ExpandableMenuEnum.GROUP.getTypeValue());
             String categoryCode = String.format(Locale.KOREAN, "%03d", i + 1);
@@ -88,14 +91,20 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                     groupMenuData.setFavorite(true);
                 }
 
-            String[] category_name = mContext.getResources().getStringArray(R.array.category_default_title);
-
             ArrayList<NavigationMenuData> childMenuDataArrayList = new ArrayList<>();
+            String[] category_name;
+            if (CategoryMenuEnum.ETC.getValue().equals(categoryCode)) {
+                category_name = mContext.getResources().getStringArray(R.array.category_etc_title);
+                category_icon = mContext.getResources().obtainTypedArray(R.array.category_etc_image);
+            } else {
+                category_name = mContext.getResources().getStringArray(R.array.category_default_title);
+            }
+
             for (int j = 0; j < category_name.length; j++) {
                 NavigationMenuData childMenuData = new NavigationMenuData();
                 childMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
                 childMenuData.setTitle(category_name[j]);
-                childMenuData.setImageResource(category_icon.getResourceId(j , -1));
+                childMenuData.setImageResource(category_icon.getResourceId(j, -1));
                 /*if (j > category_icon.length() - 1) {
                     childMenuData.setImageResource(R.drawable.ic_android_24dp);
                 } else {
@@ -238,10 +247,14 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     private void setLeftNavigationMenuItems() {
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+        String email = sharedPreferences.getString("email", null);
+        String password = sharedPreferences.getString("password", null);
+
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("email", "dngus@dngus.com");
-            jsonObject.put("password", "dngus2929");
+            jsonObject.put("email", email);
+            jsonObject.put("password", password);
         } catch (JSONException e) {
             mMainActivityView.showCustomToast(e.getMessage());
             return;

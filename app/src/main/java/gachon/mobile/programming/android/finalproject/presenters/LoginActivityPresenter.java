@@ -65,10 +65,8 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
                             if (t.isSuccess()) {
                                 SharedPreferences.Editor sharedPreferencesEditors = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE).edit();
                                 sharedPreferencesEditors.putBoolean("is_checked_auto_login", isCheckedAutoLogin);
-                                if (isCheckedAutoLogin) {
-                                    sharedPreferencesEditors.putString("email", email);
-                                    sharedPreferencesEditors.putString("password", password);
-                                }
+                                sharedPreferencesEditors.putString("email", email);
+                                sharedPreferencesEditors.putString("password", password);
                                 sharedPreferencesEditors.apply();
                                 mLoginActivityView.validateSuccess();
                             } else {

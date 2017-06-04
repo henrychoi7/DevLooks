@@ -51,6 +51,12 @@
     <string name="action_sign_in">커뮤니터 시작</string>
     <string name="auto_login">자동 로그인</string>
 
+    <!-- Community Name -->
+    <string name="stack_overflow">Stack Overflow</string>
+    <string name="okky_tech">OKKY Tech</string>
+    <string name="okky_qna">OKKY Q <![CDATA[&]]]> A</string>
+    <string name="onOffMix">온오프믹스</string>
+
     <integer-array name="category_default_image">
         <item>@drawable/ic_stack_overflow_24dp</item>
         <item>@drawable/ic_okky_logo_24dp</item>
@@ -61,5 +67,13 @@
         <item>Stack Overflow</item>
         <item>OKKY Tech</item>
         <item>OKKY Q <![CDATA[&]]]> A</item>
+    </string-array>
+
+    <integer-array name="category_etc_image">
+        <item>@drawable/ic_onoffmix_24dp</item>
+    </integer-array>
+
+    <string-array name="category_etc_title">
+        <item>온오프믹스</item>
     </string-array>
 </resources>

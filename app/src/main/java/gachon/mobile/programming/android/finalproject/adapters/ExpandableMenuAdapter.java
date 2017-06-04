@@ -1,6 +1,9 @@
 package gachon.mobile.programming.android.finalproject.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
+import gachon.mobile.programming.android.finalproject.activities.SubActivity;
 import gachon.mobile.programming.android.finalproject.enums.CategoryMenuEnum;
 import gachon.mobile.programming.android.finalproject.enums.ExpandableMenuEnum;
 import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
@@ -28,6 +32,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
 /**
@@ -71,10 +76,13 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 final boolean isSelected = (boolean) v.getTag();
                 final String favoritesCode = CategoryMenuEnum.findValueByName(navigationViewHolder.navigationTextView.getText().toString(), mContext);
 
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+                String email = sharedPreferences.getString("email", null);
+                String password = sharedPreferences.getString("password", null);
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("email", "dngus@dngus.com");
-                    jsonObject.put("password", "dngus2929");
+                    jsonObject.put("email", email);
+                    jsonObject.put("password", password);
                     jsonObject.put("favorites_code", favoritesCode);
                     jsonObject.put("is_selected", !isSelected);
                 } catch (JSONException e) {
@@ -116,7 +124,8 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             });
         } else {
             final ListNavigationViewHolder navigationViewHolder = (ListNavigationViewHolder) holder;
-            navigationViewHolder.navigationTextView.setText(navigationMenuData.getTitle());
+            String childMenuTitle = navigationMenuData.getTitle();
+            navigationViewHolder.navigationTextView.setText(childMenuTitle);
             if (navigationMenuData.getImageResource() != null) {
                 navigationViewHolder.navigationImageView.setImageResource(navigationMenuData.getImageResource());
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -124,7 +133,13 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 navigationViewHolder.navigationImageView.setLayoutParams(layoutParams);
             }
 
-            navigationViewHolder.navigationTextView.setOnClickListener(v -> mMainActivityView.showCustomToast("자식클릭"));
+            if (childMenuTitle.equals(mContext.getString(R.string.onOffMix))) {
+                navigationViewHolder.navigationTextView.setOnClickListener(v -> {
+                    Intent subIntent = new Intent(mContext, SubActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    subIntent.putExtra("title", childMenuTitle);
+                    mContext.startActivity(subIntent);
+                });
+            }
         }
     }
 
@@ -144,6 +159,7 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             navigationImageView = (ImageView) convertView.findViewById(R.id.nav_image_view);
             navigationCategoryFavoritesImageView = (ImageView) convertView.findViewById(R.id.nav_category_favorites_image_view);
         }
+
     }
 
     private void addChild(NavigationMenuData navigationMenuData, int position) {

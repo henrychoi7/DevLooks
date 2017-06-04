@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity
         final NavigationView leftNavigationView = (NavigationView) findViewById(R.id.left_navigation);
         leftNavigationView.setNavigationItemSelectedListener(this);
 
-        final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh);
+        final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh_main);
         pullRefreshLayout.setOnRefreshListener(() -> {
             final BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
             mMainActivityPresenter.changeCategory(bottomNavigationView.getSelectedItemId());
@@ -194,39 +194,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_camera:
-                break;
-            case R.id.nav_gallery:
-                break;
-            case R.id.nav_slideshow:
-                break;
-            case R.id.nav_manage:
-                break;
-            case R.id.nav_share:
-                break;
-            case R.id.nav_send:
-                break;
-            default:
-                DisplayCustomToast(getApplicationContext(), String.valueOf(item.getItemId()));
-                mMainActivityPresenter.changeCategory(item.getItemId());
-                break;
-            /*case R.id.nav_home:
-                mMainActivityPresenter.changeCategory(item.getItemId());
-                break;
-            case 0:
-                mMainActivityPresenter.changeCategory(item.getItemId());
-                break;
-            case 1:
-                mMainActivityPresenter.changeCategory(item.getItemId());
-                break;
-            case 2:
-                mMainActivityPresenter.changeCategory(R.id.nav_home);
-                break;
-            case 3:
-                mMainActivityPresenter.changeCategory(R.id.nav_home);
-                break;*/
-        }
+        mMainActivityPresenter.changeCategory(item.getItemId());
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
