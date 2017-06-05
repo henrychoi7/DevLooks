@@ -186,6 +186,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                                 recyclerViewData.setTitle(eventListData.getTitle());
                                 recyclerViewData.setContent(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMix_attend));
                                 recyclerViewData.setImageUrl(eventListData.getBannerUrl());
+                                recyclerViewData.setContentUrl(eventListData.getEventUrl());
 
                                 recyclerViewDataArrayList.add(recyclerViewData);
                             }
@@ -228,8 +229,9 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                         for (Element element : elements) {
                             RecyclerViewData recyclerViewData = new RecyclerViewData();
                             recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
-                            recyclerViewData.setContent(element.select("div.list-group-item-author.clearfix a.nickname").text());
+                            recyclerViewData.setContent(element.select("div.list-title-wrapper.clearfix a.list-group-item-text item-tag label label-info").text());
                             recyclerViewData.setImageUrl("http:" + element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
+                            recyclerViewData.setContentUrl("https://okky.kr/articles/" + element.select("div.list-title-wrapper.clearfix span.list-group-item-text article-id").text().replace("#", ""));
                             recyclerViewDataArrayList.add(recyclerViewData);
                         }
                     }
@@ -292,10 +294,10 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
         switch (categoryId) {
             case 1:
-                setOnOffMixData("http://onoffmix.com/");
+                //setOnOffMixData("http://onoffmix.com/");
                 break;
             case 2:
-                setOKKYData("https://okky.kr/articles/tech");
+                //setOKKYData("https://okky.kr/articles/tech");
                 break;
         }
     }
@@ -307,7 +309,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
         setLeftNavigationMenuItems();
-        setOnOffMixData("http://onoffmix.com/");
+        //setOnOffMixData("http://onoffmix.com/");
 
         /*Observable.merge(Observable.fromCallable(() -> {
             Document document = Jsoup.connect("https://stackoverflow.com/questions/tagged/android").get();

@@ -8,6 +8,7 @@ public class OnOffMixEventListData {
     private String title;
     private int totalCanAttend;
     private String bannerUrl;
+    private String eventUrl;
 
     public String getTitle() {
         return title;
@@ -31,5 +32,13 @@ public class OnOffMixEventListData {
 
     public void setTotalCanAttend(int totalCanAttend) {
         this.totalCanAttend = totalCanAttend;
+    }
+
+    public String getEventUrl() {
+        return eventUrl;
+    }
+
+    public void setEventUrl(String eventUrl) {
+        this.eventUrl = eventUrl;
     }
 }

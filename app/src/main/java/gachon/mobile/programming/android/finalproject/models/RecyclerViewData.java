@@ -7,6 +7,8 @@ public class RecyclerViewData {
     private Bitmap imageResources;
     private String title;
     private String content;
+    private String contentUrl;
+    private String type;
 
     public RecyclerViewData() {}
 
@@ -40,5 +42,21 @@ public class RecyclerViewData {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getContentUrl() {
+        return contentUrl;
+    }
+
+    public void setContentUrl(String contentUrl) {
+        this.contentUrl = contentUrl;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

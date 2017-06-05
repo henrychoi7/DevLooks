@@ -37,6 +37,9 @@
         <activity
             android:name=".activities.SubActivity"
             android:theme="@style/AppTheme.ActionBarNoTitle" />
+        <activity
+            android:name=".activities.DetailActivity"
+            android:theme="@style/AppTheme.ActionBarNoTitle" />
     </application>
 
 </manifest>

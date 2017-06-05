@@ -28,6 +28,9 @@ public class ApplicationClass extends Application {
     public static int HOME_VALUE = 0;
     public static String PREF_ID = "DEV_LOOKS";
     public static int EXPANDABLE_MENU_COUNT = 6;
+    public static String STACK_OVERFLOW = "stackOverflow";
+    public static String OKKY = "okky";
+    public static String ON_OFF_MIX = "onOffMix";
 
     public static final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
             .baseUrl(BASE_URL)
