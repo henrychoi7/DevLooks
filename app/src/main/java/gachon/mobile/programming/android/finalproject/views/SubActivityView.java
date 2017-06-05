@@ -23,6 +23,6 @@ public interface SubActivityView {
     void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList);
 
     interface UserInteractions {
-        void refreshDisplay();
+        void refreshDisplay(int groupValue, String childTitle);
     }
 }

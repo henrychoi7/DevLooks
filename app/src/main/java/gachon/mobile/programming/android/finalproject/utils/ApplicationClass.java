@@ -27,6 +27,7 @@ public class ApplicationClass extends Application {
     private static Boolean mIsBackPressedOnce = false;
     public static int HOME_VALUE = 0;
     public static String PREF_ID = "DEV_LOOKS";
+    public static int EXPANDABLE_MENU_COUNT = 6;
 
     public static final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
             .baseUrl(BASE_URL)

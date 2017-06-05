@@ -124,7 +124,7 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             });
         } else {
             final ListNavigationViewHolder navigationViewHolder = (ListNavigationViewHolder) holder;
-            String childMenuTitle = navigationMenuData.getTitle();
+            final String childMenuTitle = navigationMenuData.getTitle();
             navigationViewHolder.navigationTextView.setText(childMenuTitle);
             if (navigationMenuData.getImageResource() != null) {
                 navigationViewHolder.navigationImageView.setImageResource(navigationMenuData.getImageResource());
@@ -133,13 +133,12 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 navigationViewHolder.navigationImageView.setLayoutParams(layoutParams);
             }
 
-            if (childMenuTitle.equals(mContext.getString(R.string.onOffMix))) {
-                navigationViewHolder.navigationTextView.setOnClickListener(v -> {
-                    Intent subIntent = new Intent(mContext, SubActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    subIntent.putExtra("title", childMenuTitle);
-                    mContext.startActivity(subIntent);
-                });
-            }
+            navigationViewHolder.navigationTextView.setOnClickListener(v -> {
+                Intent subIntent = new Intent(mContext, SubActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                subIntent.putExtra("child_title", childMenuTitle);
+                subIntent.putExtra("group_value", navigationMenuData.getType());
+                mContext.startActivity(subIntent);
+            });
         }
     }
 

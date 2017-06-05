@@ -40,6 +40,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.EXPANDABLE_MENU_COUNT;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
@@ -79,10 +80,10 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         TypedArray category_icon = mContext.getResources().obtainTypedArray(R.array.category_default_image);
 
         ArrayList<NavigationMenuData> groupMenuDataArrayList = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < EXPANDABLE_MENU_COUNT; i++) {
             final NavigationMenuData groupMenuData = new NavigationMenuData();
             groupMenuData.setType(ExpandableMenuEnum.GROUP.getTypeValue());
-            String categoryCode = String.format(Locale.KOREAN, "%03d", i + 1);
+            final String categoryCode = String.format(Locale.KOREAN, "%03d", i + 1);
             final String groupMenuTitle = CategoryMenuEnum.findNameByValue(categoryCode, mContext);
             groupMenuData.setTitle(groupMenuTitle);
             groupMenuData.setImageResource(R.drawable.ic_contracted_24dp);
@@ -91,7 +92,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                     groupMenuData.setFavorite(true);
                 }
 
-            ArrayList<NavigationMenuData> childMenuDataArrayList = new ArrayList<>();
+            final ArrayList<NavigationMenuData> childMenuDataArrayList = new ArrayList<>();
             String[] category_name;
             if (CategoryMenuEnum.ETC.getValue().equals(categoryCode)) {
                 category_name = mContext.getResources().getStringArray(R.array.category_etc_title);
@@ -102,7 +103,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
             for (int j = 0; j < category_name.length; j++) {
                 NavigationMenuData childMenuData = new NavigationMenuData();
-                childMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
+                childMenuData.setType(i + 1);
                 childMenuData.setTitle(category_name[j]);
                 childMenuData.setImageResource(category_icon.getResourceId(j, -1));
                 /*if (j > category_icon.length() - 1) {
@@ -286,6 +287,8 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         //카테고리 즐겨찾기는 꼭 다른 창에서 고를 수 있도록)
         //카테고리 즐겨찾기는 회원가입때 고를 수 있게하거나, 개인정보 수정창에서 고를 수 있도록하자!
         //mMainActivityView.setBottomMenuItems(getMenuItems());
+        //2017.06.05
+        //인텐트 FLAG -> CLEAR_TOP 을 써서 해결
 
         switch (categoryId) {
             case 1:
@@ -306,8 +309,55 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         setLeftNavigationMenuItems();
         setOnOffMixData("http://onoffmix.com/");
 
+        /*Observable.merge(Observable.fromCallable(() -> {
+            Document document = Jsoup.connect("https://stackoverflow.com/questions/tagged/android").get();
+            return document.select("div#questions.content-padding div.question-summary");
+        }), Observable.fromCallable(() -> {
+            Document document = Jsoup.connect("https://okky.kr/articles/tech?query=android&sort=id&order=desc").get();
+            return document.select("ul.list-group li.list-group-item");
+        }), Observable.fromCallable(() -> {
+            Document document = Jsoup.connect("https://okky.kr/articles/questions?query=android&sort=id&order=desc").get();
+            return document.select("ul.list-group li.list-group-item");
+        }))*/
+        /*Observable.merge(Observable.fromCallable(() -> {
+            Document document = Jsoup.connect("https://okky.kr/articles/tech?query=android&sort=id&order=desc").get();
+            return document.select("ul.list-group li.list-group-item");
+        }), Observable.fromCallable(() -> {
+            Document document = Jsoup.connect("https://okky.kr/articles/questions?query=android&sort=id&order=desc").get();
+            return document.select("ul.list-group li.list-group-item");
+        })).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Elements>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Elements elements) {
+                        for (Element element : elements) {
+                            RecyclerViewData recyclerViewData = new RecyclerViewData();
+                            recyclerViewData.setTitle(element.select("div.summary h3 a.question-hyperlink").text());
+                            recyclerViewData.setContent(element.select("div.summary div.excerpt").text());
+                            recyclerViewData.setImageUrl(element.select("div div.user-info div.user-gravatar32 a div.gravatar-wrapper-32 img").attr("src"));
+                            recyclerViewDataArrayList.add(recyclerViewData);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+                });*/
+
         /*final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
-                .baseUrl(onOffMixUrl)
+                .baseUrl("http://onoffmix.com/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -351,10 +401,10 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                         mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
                     }
-                });*/
+                });
 
 
-        /*Observable.fromCallable(() -> {
+        Observable.fromCallable(() -> {
             Document document = Jsoup.connect("https://okky.kr/articles/tech").get();
             return document.select("ul.list-group li.list-group-item");
         }).subscribeOn(Schedulers.io())

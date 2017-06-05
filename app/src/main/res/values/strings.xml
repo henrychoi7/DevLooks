@@ -33,7 +33,9 @@
     <string name="main_image_view">카드뷰 메인화면 이미지</string>
     <string name="explain_permission">자료를 가져오기 위해선 인터넷을 사용해야 하므로 권한이 필요합니다.\n인터넷 권한을 허용해주세요.</string>
     <string name="onOffMix_attend">명 신청가능</string>
-    <string name="onOffMix_error">온오프믹스 데이터를 불러오는데 실패하였습니다.</string>
+
+    <!-- Sub -->
+    <string name="load_error">데이터를 불러오는데 실패하였습니다.</string>
 
     <!-- Toast Message -->
     <string name="dismiss_activity">"\"뒤로\"버튼을 한번 더 누르시면 종료됩니다."</string>
@@ -54,7 +56,7 @@
     <!-- Community Name -->
     <string name="stack_overflow">Stack Overflow</string>
     <string name="okky_tech">OKKY Tech</string>
-    <string name="okky_qna">OKKY Q <![CDATA[&]]]> A</string>
+    <string name="okky_qna">OKKY Q <![CDATA[&]]> A</string>
     <string name="onOffMix">온오프믹스</string>
 
     <integer-array name="category_default_image">
@@ -66,7 +68,7 @@
     <string-array name="category_default_title">
         <item>Stack Overflow</item>
         <item>OKKY Tech</item>
-        <item>OKKY Q <![CDATA[&]]]> A</item>
+        <item>OKKY Q <![CDATA[&]]> A</item>
     </string-array>
 
     <integer-array name="category_etc_image">

@@ -33,6 +33,8 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 
 public class SubActivity extends BaseActivity implements SubActivityView {
     private SubActivityView.UserInteractions mSubActivityPresenter;
+    private int mSelectedGroupValue = 0;
+    private String mSelectedTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,15 +50,22 @@ public class SubActivity extends BaseActivity implements SubActivityView {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        Intent selectedIntent = getIntent();
+        mSelectedTitle = getString(R.string.app_name);
+        if (selectedIntent != null) {
+            mSelectedGroupValue = selectedIntent.getIntExtra("group_value", 0);
+            mSelectedTitle = selectedIntent.getStringExtra("child_title");
+        }
+
         TextView subTitle = (TextView) findViewById(R.id.text_view_sub_title);
-        subTitle.setText(getIntent().getStringExtra("title"));
+        subTitle.setText(mSelectedTitle);
 
         mSubActivityPresenter = new SubActivityPresenter(SubActivity.this, this);
-        mSubActivityPresenter.refreshDisplay();
+        mSubActivityPresenter.refreshDisplay(mSelectedGroupValue, mSelectedTitle);
 
         final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh_sub);
         pullRefreshLayout.setOnRefreshListener(() -> {
-            mSubActivityPresenter.refreshDisplay();
+            mSubActivityPresenter.refreshDisplay(mSelectedGroupValue, mSelectedTitle);
             pullRefreshLayout.setRefreshing(false);
         });
     }
