@@ -107,7 +107,7 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 if (navigationMenuData.getInvisibleChildren() == null) {
                     navigationMenuData.setInvisibleChildren(new ArrayList<>());
                     int selectedPosition = mNavigationMenuDataArrayList.indexOf(navigationMenuData);
-                    while (mNavigationMenuDataArrayList.size() > selectedPosition + 1 && mNavigationMenuDataArrayList.get(selectedPosition + 1).getType() == ENUM_CHILD) {
+                    while (mNavigationMenuDataArrayList.size() > selectedPosition + 1 && mNavigationMenuDataArrayList.get(selectedPosition + 1).getType() != ENUM_GROUP) {
                         removeChild(navigationMenuData, selectedPosition + 1);
                     }
                     navigationViewHolder.navigationImageView.setImageResource(R.drawable.ic_contracted_24dp);

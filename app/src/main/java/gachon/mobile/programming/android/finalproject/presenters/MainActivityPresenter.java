@@ -103,6 +103,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
             for (int j = 0; j < category_name.length; j++) {
                 NavigationMenuData childMenuData = new NavigationMenuData();
+                //childMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
                 childMenuData.setType(i + 1);
                 childMenuData.setTitle(category_name[j]);
                 childMenuData.setImageResource(category_icon.getResourceId(j, -1));
@@ -309,7 +310,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
         setLeftNavigationMenuItems();
-        //setOnOffMixData("http://onoffmix.com/");
+        setOnOffMixData("http://onoffmix.com/");
 
         /*Observable.merge(Observable.fromCallable(() -> {
             Document document = Jsoup.connect("https://stackoverflow.com/questions/tagged/android").get();
