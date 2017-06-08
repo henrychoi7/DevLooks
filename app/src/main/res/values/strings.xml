@@ -43,6 +43,20 @@
     <!-- ProgressDialog Message -->
     <string name="loading">데이터를 불러오고 있습니다.</string>
 
+    <!-- Register -->
+    <string name="username">Username</string>
+    <string name="password_confirm">Password Confirm</string>
+    <string name="phone">Phone</string>
+    <string name="register_username">영문, 숫자만 허용(4~20자)</string>
+    <string name="register_email">이메일 주소</string>
+    <string name="register_password">영문, 숫자, 특수문자(6자 이상)</string>
+    <string name="register_password_confirm">비밀번호 재확인</string>
+    <string name="register_phone">휴대폰 번호("-"자 제외)</string>
+    <string name="error_invalid_username">사용자 이름은 영문, 숫자 4자 이상이어야 합니다.</string>
+    <string name="error_invalid_password_confirm">입력한 비밀번호가 일치하지 않습니다.</string>
+    <string name="error_invalid_phone">휴대폰 번호 형식이 올바르지 않습니다.</string>
+    <string name="action_sign_up">가입완료</string>
+
     <!-- Login -->
     <string name="email">Email</string>
     <string name="password">Password</string>

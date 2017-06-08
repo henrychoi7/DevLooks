@@ -19,8 +19,8 @@ public interface RetrofitInterface {
     @POST("auth/login")
     Observable<SingleData> LoginRx(@Body RequestBody params);
 
-    //@POST("auth/register")
-    //Observable<SingleData> RegisterRx(@Body RequestBody params);
+    @POST("auth/register")
+    Observable<SingleData> RegisterRx(@Body RequestBody params);
 
     @POST("auth/favorites/content/call")
     Observable<FavoritesContentData> CallContentRx(@Body RequestBody params);
