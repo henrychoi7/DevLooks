@@ -1,6 +1,7 @@
 package gachon.mobile.programming.android.finalproject.views;
 
 import android.app.ProgressDialog;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,7 @@ public interface MainActivityView {
 
     interface UserInteractions {
 
-        void changeCategory(int categoryId);
+        void changeCategory(MenuItem item);
 
         void refreshDisplay();
     }

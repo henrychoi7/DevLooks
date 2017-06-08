@@ -6,12 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.presenters.DetailActivityPresenter;
@@ -51,45 +48,33 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
         Intent selectedIntent = getIntent();
         if (selectedIntent != null) {
             String selectedUrl = selectedIntent.getStringExtra("selectedUrl");
-            //mHtmlTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
+            String selectedType = selectedIntent.getStringExtra("selectedType");
+            //mHtmlWebView.setHorizontalScrollBarEnabled(false);
+            //mHtmlWebView.setVerticalScrollBarEnabled(false);
             mHtmlWebView.getSettings().setJavaScriptEnabled(true);
-
-            mHtmlWebView.setHorizontalScrollBarEnabled(false);
-            mHtmlWebView.setVerticalScrollBarEnabled(false);
+            //배경색
             mHtmlWebView.setBackgroundColor(0);
+            //웹뷰 컨텐츠 사이즈 맞추기
+            mHtmlWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            //Zoom 허용
+            mHtmlWebView.getSettings().setBuiltInZoomControls(true);
+            //Zoom 허용
+            mHtmlWebView.getSettings().setSupportZoom(true);
+            //웹뷰 확대된것 비율맞추기 %
+            mHtmlWebView.setInitialScale(1);
+            //meata 태그의 viewport 사용 가능
+            mHtmlWebView.getSettings().setLoadWithOverviewMode(true);
+            //html 스크린크기를 웹뷰에 맞춰줌
+            mHtmlWebView.getSettings().setUseWideViewPort(true);
+            //웹뷰의 뒤로가기
+            mHtmlWebView.goBack();
 
-            mDetailActivityPresenter.refreshDisplay(selectedUrl);
-
-            //String selectedType = selectedIntent.getStringExtra("selectedType");
-            /*if (selectedType.equals(STACK_OVERFLOW)) {
-                textView.setText(STACK_OVERFLOW + selectedUrl);
-            } else if (selectedType.equals(OKKY)) {
-                textView.setText(OKKY + selectedUrl);
-            } else if (selectedType.equals(ON_OFF_MIX)) {
-                textView.setText(ON_OFF_MIX + selectedUrl);
-            } else {
-                textView.setText("ELSE" + selectedUrl);
-            }*/
-
-            /*textView.setText(fromHtml("<b><font color=#ff0000> Html View using TextView" +
-                    "</font></b><br><br><a href='http://m.naver.com'>naver.com</a>" +
-                    "<br><br><a href='http://mainia.tistory.com'>mainia.tistory.com</a>"));*/
-
+            mDetailActivityPresenter.refreshDisplay(selectedUrl, selectedType);
         }
-    }
-
-    private static Spanned fromHtml(String source) {
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
-            // noinspection deprecation
-            return Html.fromHtml(source);
-        }
-        return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
     }
 
     @Override
     public void onBackPressed() {
-        //startActivity(new Intent(getApplicationContext(), SubActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         finish();
         super.onBackPressed();
     }
@@ -97,7 +82,6 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            //startActivity(new Intent(getApplicationContext(), SubActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             finish();
         }
 
@@ -123,13 +107,16 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
     }
 
     @Override
-    public void setTextViewFromHtml(String htmlSources) {
-        //mHtmlTextView.setText(fromHtml(htmlSources));
-
-        // 버전 4.0이하
-        //mHtmlWebView.loadData(htmlSources, "text/html", "UTF-8");
-
-        // 버전 4.1이상
-        mHtmlWebView.loadData(htmlSources, "text/html; charset=UTF-8", null);
+    public void setWebViewFromHtml(String baseUrl, String htmlSources) {
+        //mHtmlWebView.loadData(htmlSources, "text/html; charset=UTF-8", null);
+        mHtmlWebView.loadDataWithBaseURL(baseUrl, htmlSources, "text/html", "charset=UTF-8", null);
+        // 현재 타겟 API가 17이므로 안써도됨.
+        /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            // 버전 4.0이하
+            mHtmlWebView.loadData(htmlSources, "text/html", "UTF-8");
+        } else {
+            // 버전 4.1이상
+            mHtmlWebView.loadData(htmlSources, "text/html; charset=UTF-8", null);
+        }*/
     }
 }

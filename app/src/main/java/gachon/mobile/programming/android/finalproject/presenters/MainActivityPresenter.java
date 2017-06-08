@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.view.MenuItem;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,8 +43,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.EXPANDABLE_MENU_COUNT;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.OKKY;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.ON_OFF_MIX;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.STACK_OVERFLOW;
 
 /**
  * Created by JJSOFT-DESKTOP on 2017-05-21.
@@ -118,12 +122,6 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
             groupMenuDataArrayList.add(groupMenuData);
         }
 
-        /*final NavigationMenuData logOutMenuData = new NavigationMenuData();
-        logOutMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
-        logOutMenuData.setTitle("로그아웃");
-        logOutMenuData.setImageResource(null);
-        groupMenuDataArrayList.add(logOutMenuData);*/
-
         category_icon.recycle();
         return groupMenuDataArrayList;
     }
@@ -135,8 +133,6 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
             if (categoryNameArrayList.get(i).getCategoryCode().equals("")) {
                 continue;
             }
-            MenuData menuData = new MenuData(0, 0);
-            menuData.setItemId(i + 1);
 
             String categoryCode = categoryNameArrayList.get(i).getCategoryCode();
             if (categoryCode.equals("")) {
@@ -148,6 +144,8 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                 continue;
             }
 
+            MenuData menuData = new MenuData(0, 0);
+            menuData.setItemId(Integer.parseInt(categoryCode));
             menuData.setTitle(categoryTitle);
             menuData.setResourceIcon(getCategoryIcon(categoryCode));
             menuDataArrayList.add(menuData);
@@ -156,9 +154,52 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         return menuDataArrayList;
     }
 
+    private void setStackOverflowData(final String baseUrl) {
+        final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+        final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
+
+        Observable.fromCallable(() -> {
+            final Document document = Jsoup.connect(baseUrl).get();
+            return document.select("div#questions.content-padding div.question-summary");
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Elements>() {
+                    @Override
+                    public void onSubscribe(@NonNull final Disposable d) {
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull final Elements elements) {
+                        for (final Element element : elements) {
+                            final RecyclerViewData recyclerViewData = new RecyclerViewData();
+                            recyclerViewData.setTitle(element.select("div.summary h3 a.question-hyperlink").text());
+                            recyclerViewData.setContent(element.select("div.summary div.excerpt").text());
+                            recyclerViewData.setImageUrl(element.select("div.started.fr div.user-info div.user-gravatar32 a div.gravatar-wrapper-32 img").attr("src"));
+                            recyclerViewData.setContentUrl("https://stackoverflow.com" + element.select("div.summary h3 a.question-hyperlink").attr("href"));
+                            recyclerViewData.setType(STACK_OVERFLOW);
+
+                            recyclerViewDataArrayList.add(recyclerViewData);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull final Throwable e) {
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mMainActivityView.showCustomToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+                });
+    }
+
     private void setOnOffMixData(final String baseUrl) {
-        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
-        ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
+        final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+        final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
         final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
                 .baseUrl(baseUrl)
@@ -168,26 +209,26 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
         final RetrofitInterface RETROFIT_INTERFACE = RETROFIT_BUILDER.create(RetrofitInterface.class);
 
-
-        Observable<OnOffMixData> onOffMixRx = RETROFIT_INTERFACE.OnOffMixRx("api.onoffmix.com/event/list", "json", 12,
-                "if(recruitEndDateTime-NOW()>0# 1# 0)|DESC,FIND_IN_SET('advance'#wayOfRegistration)|DESC,popularity|DESC,idx|DESC", 1, "", "", "", "true", "true", "true", "개발", "", "", 1);
-        onOffMixRx.subscribeOn(Schedulers.io())
+        RETROFIT_INTERFACE.OnOffMixRx("api.onoffmix.com/event/list", "json", 12,
+                "if(recruitEndDateTime-NOW()>0# 1# 0)|DESC,FIND_IN_SET('advance'#wayOfRegistration)|DESC,popularity|DESC,idx|DESC", 1, "", "", "", "true", "true", "true", "개발", "", "", 1)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<OnOffMixData>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
+                    public void onSubscribe(@NonNull final Disposable d) {
                         mMainActivityView.showProgressDialog(subscribeProgressDialog);
                     }
 
                     @Override
-                    public void onNext(@NonNull OnOffMixData onOffMixData) {
+                    public void onNext(@NonNull final OnOffMixData onOffMixData) {
                         if (onOffMixData.getError().getCode() == 0) {
-                            for (OnOffMixEventListData eventListData : onOffMixData.getEventList()) {
-                                RecyclerViewData recyclerViewData = new RecyclerViewData();
+                            for (final OnOffMixEventListData eventListData : onOffMixData.getEventList()) {
+                                final RecyclerViewData recyclerViewData = new RecyclerViewData();
                                 recyclerViewData.setTitle(eventListData.getTitle());
                                 recyclerViewData.setContent(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMix_attend));
                                 recyclerViewData.setImageUrl(eventListData.getBannerUrl());
                                 recyclerViewData.setContentUrl(eventListData.getEventUrl());
+                                recyclerViewData.setType(ON_OFF_MIX);
 
                                 recyclerViewDataArrayList.add(recyclerViewData);
                             }
@@ -198,8 +239,9 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
+                    public void onError(@NonNull final Throwable e) {
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mMainActivityView.showCustomToast(e.getMessage());
                     }
 
                     @Override
@@ -211,35 +253,37 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     private void setOKKYData(final String baseUrl) {
-        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
-        ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
+        final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+        final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
         Observable.fromCallable(() -> {
-            Document document = Jsoup.connect(baseUrl).get();
+            final Document document = Jsoup.connect(baseUrl).get();
             return document.select("ul.list-group li.list-group-item");
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Elements>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
+                    public void onSubscribe(@NonNull final Disposable d) {
                         mMainActivityView.showProgressDialog(subscribeProgressDialog);
                     }
 
                     @Override
-                    public void onNext(@NonNull Elements elements) {
-                        for (Element element : elements) {
-                            RecyclerViewData recyclerViewData = new RecyclerViewData();
+                    public void onNext(@NonNull final Elements elements) {
+                        for (final Element element : elements) {
+                            final RecyclerViewData recyclerViewData = new RecyclerViewData();
                             recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
                             recyclerViewData.setContent(element.select("div.list-title-wrapper.clearfix a.list-group-item-text item-tag label label-info").text());
                             recyclerViewData.setImageUrl("http:" + element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
-                            recyclerViewData.setContentUrl("https://okky.kr/articles/" + element.select("div.list-title-wrapper.clearfix span.list-group-item-text article-id").text().replace("#", ""));
+                            recyclerViewData.setContentUrl("https://okky.kr/articles/" + element.select("div.list-title-wrapper.clearfix span.list-group-item-text.article-id").text().replace("#", ""));
+                            recyclerViewData.setType(OKKY);
                             recyclerViewDataArrayList.add(recyclerViewData);
                         }
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
+                    public void onError(@NonNull final Throwable e) {
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mMainActivityView.showCustomToast(e.getMessage());
                     }
 
                     @Override
@@ -283,7 +327,8 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     @Override
-    public void changeCategory(int categoryId) {
+    //public void changeCategory(int categoryId) {
+    public void changeCategory(MenuItem item) {
         //2017.05.21
         //이미 refreshDisplay 를 통해서 즐겨찾기가 구성되어있는 상태이므로 메뉴를 재구성 하지 못하도록하자
         //(선택되어있던 카테고리가 즐겨찾기에서 제거됬었을경우, 메인화면을 일일히 refresh 하지 못하기 때문에 MainActivity 에 새로 접근할때만 메뉴 재구성하는것으로,
@@ -293,12 +338,40 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         //2017.06.05
         //인텐트 FLAG -> CLEAR_TOP 을 써서 해결
 
-        switch (categoryId) {
+        String categoryParam = "";
+        if (item.getTitle().equals(mContext.getString(R.string.android))) {
+            categoryParam = "android";
+        } else if (item.getTitle().equals(mContext.getString(R.string.java))) {
+            categoryParam = "java";
+        } else if (item.getTitle().equals(mContext.getString(R.string.python))) {
+            categoryParam = "python";
+        } else if (item.getTitle().equals(mContext.getString(R.string.php))) {
+            categoryParam = "php";
+        } else if (item.getTitle().equals(mContext.getString(R.string.javascript))) {
+            categoryParam = "javascript";
+        }
+
+        switch (item.getItemId()) {
+            case 0:
+                setOnOffMixData("http://onoffmix.com/");
+                break;
             case 1:
-                //setOnOffMixData("http://onoffmix.com/");
+                setStackOverflowData("https://stackoverflow.com/questions/tagged/" + categoryParam);
                 break;
             case 2:
-                //setOKKYData("https://okky.kr/articles/tech");
+                setStackOverflowData("https://stackoverflow.com/questions/tagged/" + categoryParam);
+                break;
+            case 3:
+                setStackOverflowData("https://stackoverflow.com/questions/tagged/" + categoryParam);
+                break;
+            case 4:
+                setStackOverflowData("https://stackoverflow.com/questions/tagged/" + categoryParam);
+                break;
+            case 5:
+                setStackOverflowData("https://stackoverflow.com/questions/tagged/" + categoryParam);
+                break;
+            case 6:
+                setOnOffMixData("http://onoffmix.com/");
                 break;
         }
     }

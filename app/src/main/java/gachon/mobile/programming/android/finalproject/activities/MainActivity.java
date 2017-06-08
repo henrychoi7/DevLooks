@@ -78,7 +78,8 @@ public class MainActivity extends BaseActivity
         final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh_main);
         pullRefreshLayout.setOnRefreshListener(() -> {
             final BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-            mMainActivityPresenter.changeCategory(bottomNavigationView.getSelectedItemId());
+            //mMainActivityPresenter.changeCategory(bottomNavigationView.getSelectedItemId());
+            mMainActivityPresenter.changeCategory(bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId()));
             pullRefreshLayout.setRefreshing(false);
         });
 
@@ -195,7 +196,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        mMainActivityPresenter.changeCategory(item.getItemId());
+        mMainActivityPresenter.changeCategory(item);
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
