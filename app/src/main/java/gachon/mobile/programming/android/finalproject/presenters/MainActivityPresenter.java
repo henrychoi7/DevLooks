@@ -383,41 +383,96 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
         setLeftNavigationMenuItems();
-        setOnOffMixData("http://onoffmix.com/");
+        //setOnOffMixData("http://onoffmix.com/");
 
-        /*Observable.merge(Observable.fromCallable(() -> {
+        Observable<ArrayList<RecyclerViewData>> stackOverflowData = Observable.fromCallable(() -> {
             Document document = Jsoup.connect("https://stackoverflow.com/questions/tagged/android").get();
-            return document.select("div#questions.content-padding div.question-summary");
-        }), Observable.fromCallable(() -> {
-            Document document = Jsoup.connect("https://okky.kr/articles/tech?query=android&sort=id&order=desc").get();
-            return document.select("ul.list-group li.list-group-item");
-        }), Observable.fromCallable(() -> {
-            Document document = Jsoup.connect("https://okky.kr/articles/questions?query=android&sort=id&order=desc").get();
-            return document.select("ul.list-group li.list-group-item");
-        }))*/
-        /*Observable.merge(Observable.fromCallable(() -> {
-            Document document = Jsoup.connect("https://okky.kr/articles/tech?query=android&sort=id&order=desc").get();
-            return document.select("ul.list-group li.list-group-item");
-        }), Observable.fromCallable(() -> {
-            Document document = Jsoup.connect("https://okky.kr/articles/questions?query=android&sort=id&order=desc").get();
-            return document.select("ul.list-group li.list-group-item");
-        })).subscribeOn(Schedulers.io())
+            Elements elements = document.select("div#questions.content-padding div.question-summary");
+            for (Element element : elements) {
+                RecyclerViewData recyclerViewData = new RecyclerViewData();
+                recyclerViewData.setTitle(element.select("div.summary h3 a.question-hyperlink").text());
+                recyclerViewData.setContent(element.select("div.summary div.excerpt").text());
+                recyclerViewData.setImageUrl(element.select("div.started.fr div.user-info div.user-gravatar32 a div.gravatar-wrapper-32 img").attr("src"));
+                recyclerViewData.setContentUrl("https://stackoverflow.com" + element.select("div.summary h3 a.question-hyperlink").attr("href"));
+                recyclerViewData.setType(STACK_OVERFLOW);
+                recyclerViewDataArrayList.add(recyclerViewData);
+            }
+
+            return recyclerViewDataArrayList;
+        });
+
+        Observable<ArrayList<RecyclerViewData>> okkyData = Observable.fromCallable(() -> {
+            final Document document = Jsoup.connect("https://okky.kr/articles/tech").get();
+            Elements elements = document.select("ul.list-group li.list-group-item");
+            for (final Element element : elements) {
+                final RecyclerViewData recyclerViewData = new RecyclerViewData();
+                recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
+                recyclerViewData.setContent(element.select("div.list-title-wrapper.clearfix a.list-group-item-text item-tag label label-info").text());
+                recyclerViewData.setImageUrl("http:" + element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
+                recyclerViewData.setContentUrl("https://okky.kr/articles/" + element.select("div.list-title-wrapper.clearfix span.list-group-item-text.article-id").text().replace("#", ""));
+                recyclerViewData.setType(OKKY);
+                recyclerViewDataArrayList.add(recyclerViewData);
+            }
+            return recyclerViewDataArrayList;
+        });
+
+        Observable<ArrayList<RecyclerViewData>> mergedData = Observable.merge(stackOverflowData, okkyData);
+
+        mergedData.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Elements>() {
+                .subscribe(new Observer<ArrayList<RecyclerViewData>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         mMainActivityView.showProgressDialog(subscribeProgressDialog);
                     }
 
                     @Override
-                    public void onNext(@NonNull Elements elements) {
-                        for (Element element : elements) {
-                            RecyclerViewData recyclerViewData = new RecyclerViewData();
-                            recyclerViewData.setTitle(element.select("div.summary h3 a.question-hyperlink").text());
-                            recyclerViewData.setContent(element.select("div.summary div.excerpt").text());
-                            recyclerViewData.setImageUrl(element.select("div div.user-info div.user-gravatar32 a div.gravatar-wrapper-32 img").attr("src"));
-                            recyclerViewDataArrayList.add(recyclerViewData);
-                        }
+                    public void onNext(@NonNull ArrayList<RecyclerViewData> recyclerViewDatas) {
+                        final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
+                                .baseUrl("http://onoffmix.com/")
+                                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+
+                        final RetrofitInterface RETROFIT_INTERFACE = RETROFIT_BUILDER.create(RetrofitInterface.class);
+
+                        RETROFIT_INTERFACE.OnOffMixRx("api.onoffmix.com/event/list", "json", 12,
+                                "if(recruitEndDateTime-NOW()>0# 1# 0)|DESC,FIND_IN_SET('advance'#wayOfRegistration)|DESC,popularity|DESC,idx|DESC", 1, "", "", "", "true", "true", "true", "개발", "", "", 1)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<OnOffMixData>() {
+                                    @Override
+                                    public void onSubscribe(@NonNull final Disposable d) {
+                                    }
+
+                                    @Override
+                                    public void onNext(@NonNull final OnOffMixData onOffMixData) {
+                                        if (onOffMixData.getError().getCode() == 0) {
+                                            for (final OnOffMixEventListData eventListData : onOffMixData.getEventList()) {
+                                                final RecyclerViewData recyclerViewData = new RecyclerViewData();
+                                                recyclerViewData.setTitle(eventListData.getTitle());
+                                                recyclerViewData.setContent(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMix_attend));
+                                                recyclerViewData.setImageUrl(eventListData.getBannerUrl());
+                                                recyclerViewData.setContentUrl(eventListData.getEventUrl());
+                                                recyclerViewData.setType(ON_OFF_MIX);
+
+                                                recyclerViewDatas.add(recyclerViewData);
+                                            }
+                                        } else {
+                                            mMainActivityView.showCustomToast(onOffMixData.getError().getMessage());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(@NonNull final Throwable e) {
+                                        mMainActivityView.showCustomToast(e.getMessage());
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        mMainActivityView.setDisplayRecyclerView(recyclerViewDatas);
+                                    }
+                                });
                     }
 
                     @Override
@@ -427,10 +482,10 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
                     @Override
                     public void onComplete() {
-                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        //mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
                     }
-                });*/
+                });
 
         /*final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
                 .baseUrl("http://onoffmix.com/")
