@@ -9,6 +9,8 @@ public class RecyclerViewData {
     private String content;
     private String contentUrl;
     private String type;
+    private String favoritesCount;
+    private String subInfo;
 
     public RecyclerViewData() {}
 
@@ -58,5 +60,21 @@ public class RecyclerViewData {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getFavoritesCount() {
+        return favoritesCount;
+    }
+
+    public void setFavoritesCount(String favoritesCount) {
+        this.favoritesCount = favoritesCount;
+    }
+
+    public String getSubInfo() {
+        return subInfo;
+    }
+
+    public void setSubInfo(String subInfo) {
+        this.subInfo = subInfo;
     }
 }

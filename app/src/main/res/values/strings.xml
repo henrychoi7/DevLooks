@@ -9,6 +9,8 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="notification">notification</string>
+    <string name="minus">-</string>
 
     <!-- Menu -->
     <string name="action_search">검색</string>
@@ -32,7 +34,6 @@
     <!-- Main -->
     <string name="main_image_view">카드뷰 메인화면 이미지</string>
     <string name="explain_permission">자료를 가져오기 위해선 인터넷을 사용해야 하므로 권한이 필요합니다.\n인터넷 권한을 허용해주세요.</string>
-    <string name="onOffMix_attend">명 신청가능</string>
 
     <!-- Sub -->
     <string name="load_error">데이터를 불러오는데 실패하였습니다.</string>

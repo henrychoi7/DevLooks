@@ -59,7 +59,7 @@ public class DetailActivityPresenter implements DetailActivityView.UserInteracti
                             htmlSources += "</div>";*/
                             String htmlSources = element.html();
                             //mDetailActivityView.setWebViewFromHtml("https://stackoverflow.com", htmlSources);
-                            mDetailActivityView.setWebViewFromHtml("http://jwh1269.dothome.co.kr/project2/index.html", htmlSources);
+                            mDetailActivityView.setWebViewFromHtml(baseUrl, htmlSources);
                         }
                     }
 

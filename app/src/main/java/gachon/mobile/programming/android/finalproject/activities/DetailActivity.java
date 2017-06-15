@@ -69,7 +69,9 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
             //웹뷰의 뒤로가기
             mHtmlWebView.goBack();
 
-            mDetailActivityPresenter.refreshDisplay(selectedUrl, selectedType);
+            mHtmlWebView.loadUrl(selectedUrl);
+
+            //mDetailActivityPresenter.refreshDisplay(selectedUrl, selectedType);
         }
     }
 
@@ -109,7 +111,8 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
     @Override
     public void setWebViewFromHtml(String baseUrl, String htmlSources) {
         //mHtmlWebView.loadData(htmlSources, "text/html; charset=UTF-8", null);
-        mHtmlWebView.loadDataWithBaseURL(baseUrl, htmlSources, "text/html", "charset=UTF-8", null);
+        //mHtmlWebView.loadDataWithBaseURL(baseUrl, htmlSources, "text/html", "charset=UTF-8", null);
+        mHtmlWebView.loadUrl(baseUrl);
         // 현재 타겟 API가 17이므로 안써도됨.
         /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             // 버전 4.0이하

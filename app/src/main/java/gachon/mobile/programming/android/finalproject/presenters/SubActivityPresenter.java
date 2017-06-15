@@ -159,7 +159,7 @@ public class SubActivityPresenter implements SubActivityView.UserInteractions {
                             for (final OnOffMixEventListData eventListData : onOffMixData.getEventList()) {
                                 final RecyclerViewData recyclerViewData = new RecyclerViewData();
                                 recyclerViewData.setTitle(eventListData.getTitle());
-                                recyclerViewData.setContent(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMix_attend));
+                                //recyclerViewData.setContent(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMix_attend));
                                 recyclerViewData.setImageUrl(eventListData.getBannerUrl());
                                 recyclerViewData.setContentUrl(eventListData.getEventUrl());
                                 recyclerViewData.setType(ON_OFF_MIX);
