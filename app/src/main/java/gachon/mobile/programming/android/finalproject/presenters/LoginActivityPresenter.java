@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import gachon.mobile.programming.android.finalproject.R;
-import gachon.mobile.programming.android.finalproject.models.SingleData;
+import gachon.mobile.programming.android.finalproject.models.FavoritesContentData;
+import gachon.mobile.programming.android.finalproject.models.UserData;
+import gachon.mobile.programming.android.finalproject.models.UserInfoData;
 import gachon.mobile.programming.android.finalproject.utils.ExceptionHelper;
 import gachon.mobile.programming.android.finalproject.views.LoginActivityView;
 import io.reactivex.Observable;
@@ -58,7 +60,7 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
         }
 
         //Observable<SingleData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
-        Observable<SingleData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+        Observable<UserData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
         loginRx.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(t -> {
@@ -67,10 +69,13 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
                                 sharedPreferencesEditors.putBoolean("is_checked_auto_login", isCheckedAutoLogin);
                                 sharedPreferencesEditors.putString("email", email);
                                 sharedPreferencesEditors.putString("password", password);
+                                UserInfoData userInfoData = t.getData().get(0);
+                                sharedPreferencesEditors.putString("name", userInfoData.getName());
+                                sharedPreferencesEditors.putString("phone_number", userInfoData.getPhoneNumber());
                                 sharedPreferencesEditors.apply();
                                 mLoginActivityView.validateSuccess();
                             } else {
-                                mLoginActivityView.validateFailure(t.getData());
+                                mLoginActivityView.validateFailure(t.getData().get(0).getName());
                             }
                         },
                         e -> mLoginActivityView.validateFailure(ExceptionHelper.getApplicationExceptionMessage((Exception) e)));

@@ -4,6 +4,7 @@ import gachon.mobile.programming.android.finalproject.models.FavoritesCategoryDa
 import gachon.mobile.programming.android.finalproject.models.FavoritesContentData;
 import gachon.mobile.programming.android.finalproject.models.SingleData;
 import gachon.mobile.programming.android.finalproject.models.OnOffMixData;
+import gachon.mobile.programming.android.finalproject.models.UserData;
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -17,7 +18,7 @@ import retrofit2.http.Query;
 
 public interface RetrofitInterface {
     @POST("auth/login")
-    Observable<SingleData> LoginRx(@Body RequestBody params);
+    Observable<UserData> LoginRx(@Body RequestBody params);
 
     @POST("auth/register")
     Observable<SingleData> RegisterRx(@Body RequestBody params);

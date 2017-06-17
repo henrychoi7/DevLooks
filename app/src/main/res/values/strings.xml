@@ -1,4 +1,6 @@
 <resources>
+    <string name="app_version">Version 1.0.0</string>
+    
     <!-- App name, Init -->
     <string name="app_name">개발다봐</string>
     <string name="init_header_first">DEV</string>
@@ -9,15 +11,16 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="notification">notification</string>
-    <string name="minus">-</string>
 
     <!-- Menu -->
     <string name="action_search">검색</string>
     <string name="action_logout">로그아웃</string>
+    <string name="action_share">앱 공유하기</string>
+    <string name="action_copy">주소 복사</string>
 
     <!-- Navigation -->
     <string name="title_home">Home</string>
+    <string name="title_category">카테고리</string>
     <string name="nav_main_image_view">네비게이션 메인 이미지</string>
     <string name="nav_group_menu_icon">그룹메뉴아이콘</string>
     <string name="nav_child_menu_icon">자식메뉴아이콘</string>
@@ -34,12 +37,16 @@
     <!-- Main -->
     <string name="main_image_view">카드뷰 메인화면 이미지</string>
     <string name="explain_permission">자료를 가져오기 위해선 인터넷을 사용해야 하므로 권한이 필요합니다.\n인터넷 권한을 허용해주세요.</string>
+    <string name="onOffMix_attend">명 신청가능</string>
 
     <!-- Sub -->
     <string name="load_error">데이터를 불러오는데 실패하였습니다.</string>
 
     <!-- Toast Message -->
     <string name="dismiss_activity">"\"뒤로\"버튼을 한번 더 누르시면 종료됩니다."</string>
+    <string name="complete_to_copy">해당 게시물의 주소 복사에 성공하였습니다.</string>
+    <string name="from_devLooks">"\"개발다봐\"에서 "</string>
+    <string name="share_data">님이 자료를 공유하였습니다.</string>
 
     <!-- ProgressDialog Message -->
     <string name="loading">데이터를 불러오고 있습니다.</string>
@@ -57,6 +64,7 @@
     <string name="error_invalid_password_confirm">입력한 비밀번호가 일치하지 않습니다.</string>
     <string name="error_invalid_phone">휴대폰 번호 형식이 올바르지 않습니다.</string>
     <string name="action_sign_up">가입완료</string>
+    <string name="complete_to_sign_up">회원가입에 성공했습니다.</string>
 
     <!-- Login -->
     <string name="email">Email</string>

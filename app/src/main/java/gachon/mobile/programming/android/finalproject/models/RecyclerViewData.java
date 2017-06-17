@@ -9,8 +9,10 @@ public class RecyclerViewData {
     private String content;
     private String contentUrl;
     private String type;
+    private String watchCount;
     private String favoritesCount;
     private String subInfo;
+    private String tags;
 
     public RecyclerViewData() {}
 
@@ -76,5 +78,21 @@ public class RecyclerViewData {
 
     public void setSubInfo(String subInfo) {
         this.subInfo = subInfo;
+    }
+
+    public String getWatchCount() {
+        return watchCount;
+    }
+
+    public void setWatchCount(String watchCount) {
+        this.watchCount = watchCount;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }

@@ -18,9 +18,6 @@ public interface DetailActivityView {
 
     void showCustomToast(String message);
 
-    void setWebViewFromHtml(String baseUrl, String htmlSources);
+    void setWebViewFromHtml(String baseUrl);
 
-    interface UserInteractions {
-        void refreshDisplay(String selectedUrl, String selectedType);
-    }
 }

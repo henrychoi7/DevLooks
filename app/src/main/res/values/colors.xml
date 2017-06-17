@@ -9,4 +9,9 @@
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="greyHard">#96989A</color>
+    <color name="greyMedium">#BDBFC1</color>
+    <color name="greySoft">#F5F5F5</color>
+    <color name="greyDark">#262626</color>
 </resources>

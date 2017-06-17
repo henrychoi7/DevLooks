@@ -27,10 +27,12 @@ public interface MainActivityView {
 
     void setExpandableMenuItems(ArrayList<NavigationMenuData> groupMenuDataArrayList);
 
+    void addAdditionalData(final ArrayList<RecyclerViewData> additionalRecyclerViewData);
+
     interface UserInteractions {
 
-        void changeCategory(MenuItem item);
+        void changeCategory(final MenuItem item, final int pageCount);
 
-        void refreshDisplay();
+        void refreshDisplay(final ArrayList<RecyclerViewData> finalRecyclerViewData);
     }
 }

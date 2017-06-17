@@ -19,8 +19,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.TextView;
 
 import com.baoyz.widget.PullRefreshLayout;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -47,7 +50,11 @@ public class MainActivity extends BaseActivity
         BottomNavigationView.OnNavigationItemSelectedListener,
         MainActivityView {
     private DrawerLayout mDrawerLayout;
-
+    private ArrayList<RecyclerViewData> mFinalRecyclerViewData = new ArrayList<>();
+    private RecyclerViewAdapter mRecyclerViewAdapter;
+    private RecyclerView mRecyclerView;
+    private int pageCount = 1;
+    private BottomNavigationView mBottomNavigationView;
     private MainActivityView.UserInteractions mMainActivityPresenter;
 
     @Override
@@ -75,20 +82,54 @@ public class MainActivity extends BaseActivity
         final NavigationView leftNavigationView = (NavigationView) findViewById(R.id.left_navigation);
         leftNavigationView.setNavigationItemSelectedListener(this);
 
+        mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_main);
+        mRecyclerView.setItemAnimator(new SlideInUpAnimator());
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (mBottomNavigationView.getSelectedItemId() == 0 || mFinalRecyclerViewData.size() == 0) {
+                    return;
+                }
+
+                int lastVisibleItemPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+                int itemTotalCount = mFinalRecyclerViewData.size() - 1;
+
+                if (lastVisibleItemPosition == itemTotalCount) {
+                    pageCount++;
+                    mMainActivityPresenter.changeCategory(mBottomNavigationView.getMenu().findItem(mBottomNavigationView.getSelectedItemId()), pageCount);
+                }
+            }
+        });
+
         final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh_main);
         pullRefreshLayout.setOnRefreshListener(() -> {
-            final BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-            //mMainActivityPresenter.changeCategory(bottomNavigationView.getSelectedItemId());
-            mMainActivityPresenter.changeCategory(bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId()));
+            clearStackedData();
+            mMainActivityPresenter.changeCategory(mBottomNavigationView.getMenu().findItem(mBottomNavigationView.getSelectedItemId()), pageCount);
             pullRefreshLayout.setRefreshing(false);
         });
 
         if (super.checkPermissionAndSetDisplayData()) {
-            mMainActivityPresenter.refreshDisplay();
+            mMainActivityPresenter.refreshDisplay(mFinalRecyclerViewData);
             //DisplayCustomToast(getApplicationContext(), "인터넷 권한얻음");
         } else {
             DisplayCustomToast(getApplicationContext(), "권한이 없어서 자료를 불러오지 못했습니다.");
         }
+
+        final TextView logoutTextView = (TextView) findViewById(R.id.action_logout);
+        logoutTextView.setOnClickListener(v -> {
+            SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE).edit();
+            sharedPreferencesEditor.putBoolean("is_checked_auto_login", false);
+            sharedPreferencesEditor.putString("email", null);
+            sharedPreferencesEditor.putString("password", null);
+            sharedPreferencesEditor.apply();
+
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
+            finish();
+        });
     }
 
     @Override
@@ -126,7 +167,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void setBottomMenuItems(ArrayList<MenuData> menuDataArrayList) {
         final BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        bottomNavigationView.inflateMenu(R.menu.main_bottom_navigation);
+        bottomNavigationView.inflateMenu(R.menu.menu_main_bottom_navigation);
         final Menu menu = bottomNavigationView.getMenu();
         menu.add(0, HOME_VALUE, 0, getString(R.string.title_home)).setIcon(R.drawable.ic_home_black_24dp);
 
@@ -145,17 +186,20 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_main);
-        recyclerView.setItemAnimator(new SlideInUpAnimator());
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), recyclerViewDataArrayList);
-        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(recyclerViewAdapter);
+        for (RecyclerViewData recyclerViewData : recyclerViewDataArrayList) {
+            mFinalRecyclerViewData.add(recyclerViewData);
+        }
+        mRecyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mFinalRecyclerViewData);
+        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mRecyclerViewAdapter);
         scaleInAnimationAdapter.setFirstOnly(true);
         scaleInAnimationAdapter.setDuration(500);
         scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator(1f));
-        recyclerView.setAdapter(scaleInAnimationAdapter);
+        mRecyclerView.setAdapter(scaleInAnimationAdapter);
+    }
+
+    @Override
+    public void addAdditionalData(final ArrayList<RecyclerViewData> additionalRecyclerViewData) {
+        mFinalRecyclerViewData = mRecyclerViewAdapter.add(additionalRecyclerViewData, mFinalRecyclerViewData.size());
     }
 
     @Override
@@ -170,7 +214,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -180,25 +224,21 @@ public class MainActivity extends BaseActivity
             case R.id.action_search:
                 startActivity(new Intent(getApplicationContext(), SearchActivity.class));
                 break;
-            case R.id.action_logout:
-                SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE).edit();
-                sharedPreferencesEditor.putBoolean("is_checked_auto_login", false);
-                sharedPreferencesEditor.putString("email", null);
-                sharedPreferencesEditor.putString("password", null);
-                sharedPreferencesEditor.apply();
-
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
-                finish();
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        mMainActivityPresenter.changeCategory(item);
+        clearStackedData();
+        mMainActivityPresenter.changeCategory(item, pageCount);
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void clearStackedData() {
+        pageCount = 1;
+        mFinalRecyclerViewData = new ArrayList<>();
     }
 }

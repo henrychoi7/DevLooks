@@ -17,6 +17,8 @@ import com.tsengvn.typekit.Typekit;
 
 import gachon.mobile.programming.android.finalproject.R;
 
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.CUSTOM_FONT;
+
 /**
  * Created by JJSoft on 2017-05-10.
  */
@@ -87,7 +89,7 @@ public class PasswordEditText extends AppCompatEditText implements TextWatcher, 
                 } else {
                     setInputType(InputType.TYPE_CLASS_TEXT);
                 }
-                setTypeface(Typekit.createFromAsset(getContext(), "fonts/BMJUA_ttf.ttf"));
+                setTypeface(Typekit.createFromAsset(getContext(), CUSTOM_FONT));
             }
             return true;
         }

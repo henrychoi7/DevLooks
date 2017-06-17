@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -100,7 +101,7 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
         });
 
         mRegisterPasswordConfirmView = (PasswordEditText) findViewById(R.id.password_confirm);
-        TextView passwordconfirmTextView = (TextView) findViewById(R.id.password_confirm_text_edited);
+        TextView passwordConfirmTextView = (TextView) findViewById(R.id.password_confirm_text_edited);
 
         mRegisterPasswordConfirmView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -113,7 +114,7 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
 
             @Override
             public void afterTextChanged(Editable s) {
-                passwordconfirmTextView.setText(String.valueOf(s.length()));
+                passwordConfirmTextView.setText(String.valueOf(s.length()));
             }
         });
 
@@ -140,12 +141,6 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
 
         Button mRegisterSignUpButton = (Button) findViewById(R.id.register_sign_up_button);
         mRegisterSignUpButton.setOnClickListener(view -> mRegisterActivityPresenter.attemptSignUp());
-    }
-
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(), InitActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
-        super.onBackPressed();
     }
 
     @Override
@@ -205,11 +200,27 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
 
     @Override
     public void validateSuccess() {
-        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        DisplayCustomToast(getApplicationContext(), getString(R.string.complete_to_sign_up));
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
     }
 
     @Override
     public void validateFailure(String message) {
         DisplayCustomToast(getApplicationContext(), message);
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), InitActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            startActivity(new Intent(getApplicationContext(), InitActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

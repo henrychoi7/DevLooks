@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import com.tsengvn.typekit.Typekit;
 
+import java.text.Collator;
+import java.util.Comparator;
+
 import gachon.mobile.programming.android.finalproject.R;
 import okhttp3.MediaType;
 import retrofit2.Retrofit;
@@ -29,14 +32,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApplicationClass extends Application {
     public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
-    public static final String BASE_URL =  "http://13.124.94.238/";
+    public static final String BASE_URL = "http://13.124.94.238/";
     private static Boolean mIsBackPressedOnce = false;
     public static int HOME_VALUE = 0;
     public static String PREF_ID = "DEV_LOOKS";
     public static int EXPANDABLE_MENU_COUNT = 6;
     public static String STACK_OVERFLOW = "stackOverflow";
+    public static String STACK_OVERFLOW_MAIN = "stackOverflowMain";
     public static String OKKY = "okky";
     public static String ON_OFF_MIX = "onOffMix";
+    public static String CUSTOM_FONT = "fonts/gyeonggi_ch_title_Medium.ttf";
 
     public static final Retrofit RETROFIT_BUILDER = new Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -50,8 +55,10 @@ public class ApplicationClass extends Application {
     public void onCreate() {
         super.onCreate();
         Typekit.getInstance()
-                .addNormal(Typekit.createFromAsset(this, "fonts/BMJUA_ttf.ttf"))
-                .addBold(Typekit.createFromAsset(this, "fonts/BMJUA_ttf.ttf"));
+                //.addNormal(Typekit.createFromAsset(this, "fonts/BMJUA_ttf.ttf"))
+                //.addBold(Typekit.createFromAsset(this, "fonts/BMJUA_ttf.ttf"));
+                .addNormal(Typekit.createFromAsset(this, CUSTOM_FONT))
+                .addBold(Typekit.createFromAsset(this, CUSTOM_FONT));
     }
 
     public static void handleUserApplicationExit(Context context, Activity activity) {
@@ -72,7 +79,7 @@ public class ApplicationClass extends Application {
 
         TextView customTextView = (TextView) customToastLayout.findViewById(R.id.custom_tv);
         customTextView.setText(toastText);
-        customTextView.setTypeface(Typekit.createFromAsset(context, "fonts/BMJUA_ttf.ttf"));
+        customTextView.setTypeface(Typekit.createFromAsset(context, CUSTOM_FONT));
         Toast customToast = new Toast(context);
         customToast.setView(customToastLayout);
         customToast.setDuration(Toast.LENGTH_SHORT);

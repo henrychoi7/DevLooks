@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
-import android.graphics.BitmapFactory;
 import android.view.MenuItem;
 
 import org.json.JSONException;
@@ -15,7 +14,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 
 import gachon.mobile.programming.android.finalproject.R;
@@ -49,6 +51,7 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.STACK_OVERFLOW;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.STACK_OVERFLOW_MAIN;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.getBitmapFromVectorDrawable;
 
 /**
@@ -58,6 +61,17 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 public class MainActivityPresenter implements MainActivityView.UserInteractions {
     private final MainActivityView mMainActivityView;
     private final Context mContext;
+
+    private final Comparator mComparator = new Comparator() {
+        private final Collator collator = Collator.getInstance();
+
+        @Override
+        public int compare(Object objectFront, Object objectBack) {
+            RecyclerViewData recyclerViewDataFront = (RecyclerViewData) objectFront;
+            RecyclerViewData recyclerViewDataBack = (RecyclerViewData) objectBack;
+            return collator.compare(String.valueOf(recyclerViewDataBack.getFavoritesCount().length()), String.valueOf(recyclerViewDataFront.getFavoritesCount().length()));
+        }
+    };
 
     public MainActivityPresenter(Context context, MainActivityView mainActivityView) {
         this.mContext = context;
@@ -156,50 +170,234 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         return menuDataArrayList;
     }
 
-    private void setStackOverflowData(final String baseUrl) {
-        final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+    private void setHomeData() {
+        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
-        Observable.fromCallable(() -> {
-            final Document document = Jsoup.connect(baseUrl).get();
-            return document.select("div#questions.content-padding div.question-summary");
-        }).subscribeOn(Schedulers.io())
+        Observable<ArrayList<RecyclerViewData>> onOffMixData = Observable.fromCallable(() -> {
+            final Document document = Jsoup.connect("http://onoffmix.com/event?s=개발").get();
+            Elements elements = document.select("div#content.content > div.eventMain > div.sideLeft > div.contentBox.todayEventArea > ul:not(.todayEvent.noneEvent, .todayEvent.alwaysShow)");
+            for (final Element element : elements) {
+                final RecyclerViewData recyclerViewData = new RecyclerViewData();
+                recyclerViewData.setTitle(element.select("li.eventTitle").text());
+                recyclerViewData.setTags(null);
+                recyclerViewData.setContent(null);
+                recyclerViewData.setWatchCount(element.select("li.eventBottomArea ul li.eventPersonnel a span:not(.entered)").text());
+                recyclerViewData.setFavoritesCount(element.select("li.eventBottomArea ul li.eventPin span.pinNumber").text());
+                recyclerViewData.setImageResources(getBitmapFromVectorDrawable(mContext, R.drawable.ic_onoffmix_24dp));
+                recyclerViewData.setImageUrl(element.select("li.eventThumbnail a img").attr("src"));
+                recyclerViewData.setContentUrl(element.select("li.eventThumbnail a").attr("href").replace("http://onoffmix", "http://m.onoffmix"));
+                recyclerViewData.setType(ON_OFF_MIX);
+                recyclerViewDataArrayList.add(recyclerViewData);
+            }
+            return recyclerViewDataArrayList;
+        });
+
+        Observable<ArrayList<RecyclerViewData>> stackOverflowData = Observable.fromCallable(() -> {
+            Document document = Jsoup.connect("https://stackoverflow.com/?tab=month").get();
+            Elements elements = document.select("div#question-mini-list div.question-summary.narrow");
+            for (int i = 0; i <= 15; i++) {
+                Element element = elements.get(i);
+                RecyclerViewData recyclerViewData = new RecyclerViewData();
+                recyclerViewData.setTitle(element.select("div.summary h3").text());
+                Elements tagElements = element.select("div.summary div.tags a");
+                String tagString = "";
+                for (Element tagElement : tagElements) {
+                    tagString += " [" + tagElement.text() + "]";
+                }
+                recyclerViewData.setTags(tagString);
+                recyclerViewData.setContent(element.select("div.summary h3").text());
+                recyclerViewData.setSubInfo(element.select("div.summary div.started").text());
+                recyclerViewData.setWatchCount(element.select("div.views span").text());
+                recyclerViewData.setFavoritesCount(element.select("div.cp div.votes span").text());
+                recyclerViewData.setImageResources(getBitmapFromVectorDrawable(mContext, R.drawable.ic_stack_overflow_24dp));
+                recyclerViewData.setImageUrl(null);
+                recyclerViewData.setContentUrl("https://stackoverflow.com" + element.select("div.summary h3 a").attr("href"));
+                recyclerViewData.setType(STACK_OVERFLOW_MAIN);
+                recyclerViewDataArrayList.add(recyclerViewData);
+            }
+
+            return recyclerViewDataArrayList;
+        });
+
+        Observable<ArrayList<RecyclerViewData>> okkyData = Observable.fromCallable(() -> {
+            final Document document = Jsoup.connect("https://okky.kr/articles/tech?query=&sort=scrapCount&order=desc").get();
+            Elements elements = document.select("ul.list-group li.list-group-item");
+            for (final Element element : elements) {
+                final RecyclerViewData recyclerViewData = new RecyclerViewData();
+                recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
+                Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
+                String tagString = "";
+                for (Element tagElement : tagElements) {
+                    tagString += " [" + tagElement.text() + "]";
+                }
+                recyclerViewData.setTags(tagString);
+                recyclerViewData.setContent(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
+                recyclerViewData.setWatchCount(element.select("div.list-summary-wrapper.clearfix ul li").get(2).text());
+                recyclerViewData.setFavoritesCount(element.select("div.list-summary-wrapper.clearfix ul li").get(1).text());
+                recyclerViewData.setImageUrl("http:" + element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
+                recyclerViewData.setContentUrl("https://okky.kr/article/" + element.select("div.list-title-wrapper.clearfix span.list-group-item-text.article-id").text().replace("#", ""));
+                recyclerViewData.setType(OKKY);
+                recyclerViewDataArrayList.add(recyclerViewData);
+            }
+            return recyclerViewDataArrayList;
+        });
+
+        // merge 참고
+        // http://www.introtorx.com/content/v1.0.10621.0/12_CombiningSequences.html
+        Observable<ArrayList<RecyclerViewData>> mergedData = Observable.merge(onOffMixData, stackOverflowData, okkyData);
+
+        mergedData.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Elements>() {
+                .subscribe(new Observer<ArrayList<RecyclerViewData>>() {
+                    ArrayList<RecyclerViewData> finalRecyclerViewData = new ArrayList<>();
+
                     @Override
-                    public void onSubscribe(@NonNull final Disposable d) {
+                    public void onSubscribe(@NonNull Disposable d) {
                         mMainActivityView.showProgressDialog(subscribeProgressDialog);
                     }
 
                     @Override
-                    public void onNext(@NonNull final Elements elements) {
-                        for (final Element element : elements) {
-                            final RecyclerViewData recyclerViewData = new RecyclerViewData();
-                            recyclerViewData.setTitle(element.select("div.summary h3 a.question-hyperlink").text());
-                            recyclerViewData.setContent(element.select("div.summary div.excerpt").text());
-                            recyclerViewData.setImageUrl(element.select("div.started.fr div.user-info div.user-gravatar32 a div.gravatar-wrapper-32 img").attr("src"));
-                            recyclerViewData.setContentUrl("https://stackoverflow.com" + element.select("div.summary h3 a.question-hyperlink").attr("href"));
-                            recyclerViewData.setType(STACK_OVERFLOW);
-
-                            recyclerViewDataArrayList.add(recyclerViewData);
-                        }
+                    public void onNext(@NonNull ArrayList<RecyclerViewData> recyclerViewTotalData) {
+                        finalRecyclerViewData = recyclerViewTotalData;
                     }
 
                     @Override
-                    public void onError(@NonNull final Throwable e) {
+                    public void onError(@NonNull Throwable e) {
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
-                        mMainActivityView.showCustomToast(e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
-                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        Collections.sort(finalRecyclerViewData, mComparator);
+                        mMainActivityView.setDisplayRecyclerView(finalRecyclerViewData);
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
                     }
                 });
     }
 
-    private void setOnOffMixData(final String baseUrl) {
+    private void setCategoryData(final String categoryParam, final int pageCount) {
+        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+        final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
+
+        String stackOverflowUrl = "https://stackoverflow.com/questions/tagged/" + categoryParam + "?page=" + pageCount + "&sort=frequent&pagesize=15";
+
+        Observable<ArrayList<RecyclerViewData>> stackOverflowData = Observable.fromCallable(() -> {
+            Document document = Jsoup.connect(stackOverflowUrl).get();
+            Elements elements = document.select("div#questions.content-padding div.question-summary");
+            for (final Element element : elements) {
+                final RecyclerViewData recyclerViewData = new RecyclerViewData();
+                recyclerViewData.setTitle(element.select("div.summary h3 a.question-hyperlink").text());
+                Elements tagElements = element.select("div.summary div.tags a");
+                String tagString = "";
+                for (Element tagElement : tagElements) {
+                    tagString += " [" + tagElement.text() + "]";
+                }
+                recyclerViewData.setTags(tagString);
+                recyclerViewData.setSubInfo(element.select("div.started.fr div.user-info div.user-action-time").text());
+                recyclerViewData.setContent(element.select("div.summary div.excerpt").text());
+                recyclerViewData.setWatchCount(element.select("div.statscontainer div.views").text());
+                recyclerViewData.setFavoritesCount(element.select("div.statscontainer div.stats div.vote div.votes span strong").text());
+                recyclerViewData.setImageUrl(element.select("div.started.fr div.user-info div.user-gravatar32 a div.gravatar-wrapper-32 img").attr("src"));
+                recyclerViewData.setContentUrl("https://stackoverflow.com" + element.select("div.summary h3 a.question-hyperlink").attr("href"));
+                recyclerViewData.setType(STACK_OVERFLOW);
+
+                recyclerViewDataArrayList.add(recyclerViewData);
+            }
+
+            return recyclerViewDataArrayList;
+        });
+
+        int okkyOffsetCount = (pageCount - 1) * 20;
+        String okkyTechUrl = "https://okky.kr/articles/tech?offset=" + okkyOffsetCount + "&max=20&sort=voteCount&order=desc&query=" + categoryParam;
+
+        Observable<ArrayList<RecyclerViewData>> okkyTechData = Observable.fromCallable(() -> {
+            final Document document = Jsoup.connect(okkyTechUrl).get();
+            Elements elements = document.select("ul.list-group li.list-group-item");
+            for (final Element element : elements) {
+                final RecyclerViewData recyclerViewData = new RecyclerViewData();
+                recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
+                Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
+                String tagString = "";
+                for (Element tagElement : tagElements) {
+                    tagString += " [" + tagElement.text() + "]";
+                }
+                recyclerViewData.setTags(tagString);
+                recyclerViewData.setContent(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
+                recyclerViewData.setWatchCount(element.select("div.list-summary-wrapper.clearfix ul li").get(2).text());
+                recyclerViewData.setFavoritesCount(element.select("div.list-summary-wrapper.clearfix ul li").get(1).text());
+                recyclerViewData.setImageUrl("http:" + element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
+                recyclerViewData.setContentUrl("https://okky.kr/article/" + element.select("div.list-title-wrapper.clearfix span.list-group-item-text.article-id").text().replace("#", ""));
+                recyclerViewData.setType(OKKY);
+                recyclerViewDataArrayList.add(recyclerViewData);
+            }
+            return recyclerViewDataArrayList;
+        });
+
+        String okkyQnAUrl = "https://okky.kr/articles/questions?offset=" + okkyOffsetCount + "&max=20&sort=voteCount&order=desc&query=" + categoryParam;
+
+        Observable<ArrayList<RecyclerViewData>> okkyQnAData = Observable.fromCallable(() -> {
+            final Document document = Jsoup.connect(okkyQnAUrl).get();
+            Elements elements = document.select("ul.list-group li.list-group-item");
+            for (final Element element : elements) {
+                final RecyclerViewData recyclerViewData = new RecyclerViewData();
+                recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
+                Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
+                String tagString = "";
+                for (Element tagElement : tagElements) {
+                    tagString += " [" + tagElement.text() + "]";
+                }
+                recyclerViewData.setTags(tagString);
+                recyclerViewData.setContent(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
+                recyclerViewData.setWatchCount(element.select("div.list-summary-wrapper.clearfix > div.item-evaluate-wrapper > div.item-evaluate > div.item-evaluate-count").get(1).text());
+                recyclerViewData.setFavoritesCount(element.select("div.list-summary-wrapper.clearfix > div.item-evaluate-wrapper > div.item-evaluate > div.item-evaluate-count").get(0).text());
+                recyclerViewData.setImageUrl("http:" + element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
+                recyclerViewData.setContentUrl("https://okky.kr/article/" + element.select("div.list-title-wrapper.clearfix span.list-group-item-text.article-id").text().replace("#", ""));
+                recyclerViewData.setType(OKKY);
+                recyclerViewDataArrayList.add(recyclerViewData);
+            }
+            return recyclerViewDataArrayList;
+        });
+
+        // merge 참고
+        // http://www.introtorx.com/content/v1.0.10621.0/12_CombiningSequences.html
+        Observable<ArrayList<RecyclerViewData>> mergedData = Observable.merge(stackOverflowData, okkyTechData, okkyQnAData);
+
+        mergedData.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ArrayList<RecyclerViewData>>() {
+                    ArrayList<RecyclerViewData> finalRecyclerViewData = new ArrayList<>();
+
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull ArrayList<RecyclerViewData> recyclerViewTotalData) {
+                        finalRecyclerViewData = recyclerViewTotalData;
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Collections.sort(finalRecyclerViewData, mComparator);
+                        if (pageCount == 1) {
+                            mMainActivityView.setDisplayRecyclerView(finalRecyclerViewData);
+                        } else {
+                            mMainActivityView.addAdditionalData(finalRecyclerViewData);
+                        }
+
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                    }
+                });
+    }
+
+    private void setOnOffMixData(final String baseUrl, int pageCount) {
         final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
@@ -212,7 +410,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         final RetrofitInterface RETROFIT_INTERFACE = RETROFIT_BUILDER.create(RetrofitInterface.class);
 
         RETROFIT_INTERFACE.OnOffMixRx("api.onoffmix.com/event/list", "json", 12,
-                "if(recruitEndDateTime-NOW()>0# 1# 0)|DESC,FIND_IN_SET('advance'#wayOfRegistration)|DESC,popularity|DESC,idx|DESC", 1, "", "", "", "true", "true", "true", "개발", "", "", 1)
+                "if(recruitEndDateTime-NOW()>0# 1# 0)|DESC,FIND_IN_SET('advance'#wayOfRegistration)|DESC,popularity|DESC,idx|DESC", pageCount, "", "", "", "true", "true", "true", "개발", "", "", 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<OnOffMixData>() {
@@ -227,12 +425,14 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                             for (final OnOffMixEventListData eventListData : onOffMixData.getEventList()) {
                                 final RecyclerViewData recyclerViewData = new RecyclerViewData();
                                 recyclerViewData.setTitle(eventListData.getTitle());
-                                //recyclerViewData.setContent(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMix_attend));
+                                recyclerViewData.setContent(null);
+                                recyclerViewData.setWatchCount(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMix_attend));
+                                recyclerViewData.setFavoritesCount(eventListData.getCategoryIdx());
+                                recyclerViewData.setSubInfo(eventListData.getUsePayment().equals("n") ? "무료" : "유료");
                                 recyclerViewData.setImageResources(getBitmapFromVectorDrawable(mContext, R.drawable.ic_onoffmix_24dp));
                                 recyclerViewData.setImageUrl(eventListData.getBannerUrl());
-                                recyclerViewData.setContentUrl(eventListData.getEventUrl());
+                                recyclerViewData.setContentUrl(eventListData.getEventUrl().replace("http://onoffmix", "http://m.onoffmix"));
                                 recyclerViewData.setType(ON_OFF_MIX);
-
                                 recyclerViewDataArrayList.add(recyclerViewData);
                             }
                         } else {
@@ -249,49 +449,12 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
                     @Override
                     public void onComplete() {
-                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
-                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
-                    }
-                });
-    }
-
-    private void setOKKYData(final String baseUrl) {
-        final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
-        final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
-
-        Observable.fromCallable(() -> {
-            final Document document = Jsoup.connect(baseUrl).get();
-            return document.select("ul.list-group li.list-group-item");
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Elements>() {
-                    @Override
-                    public void onSubscribe(@NonNull final Disposable d) {
-                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull final Elements elements) {
-                        for (final Element element : elements) {
-                            final RecyclerViewData recyclerViewData = new RecyclerViewData();
-                            recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
-                            recyclerViewData.setContent(element.select("div.list-title-wrapper.clearfix a.list-group-item-text item-tag label label-info").text());
-                            recyclerViewData.setImageUrl("http:" + element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
-                            recyclerViewData.setContentUrl("https://okky.kr/articles/" + element.select("div.list-title-wrapper.clearfix span.list-group-item-text.article-id").text().replace("#", ""));
-                            recyclerViewData.setType(OKKY);
-                            recyclerViewDataArrayList.add(recyclerViewData);
+                        if (pageCount == 1) {
+                            mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        } else {
+                            mMainActivityView.addAdditionalData(recyclerViewDataArrayList);
                         }
-                    }
 
-                    @Override
-                    public void onError(@NonNull final Throwable e) {
-                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
-                        mMainActivityView.showCustomToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
                     }
                 });
@@ -330,8 +493,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     @Override
-    //public void changeCategory(int categoryId) {
-    public void changeCategory(MenuItem item) {
+    public void changeCategory(final MenuItem item, final int pageCount) {
         //2017.05.21
         //이미 refreshDisplay 를 통해서 즐겨찾기가 구성되어있는 상태이므로 메뉴를 재구성 하지 못하도록하자
         //(선택되어있던 카테고리가 즐겨찾기에서 제거됬었을경우, 메인화면을 일일히 refresh 하지 못하기 때문에 MainActivity 에 새로 접근할때만 메뉴 재구성하는것으로,
@@ -356,116 +518,25 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
         switch (item.getItemId()) {
             case 0:
-                setOnOffMixData("http://onoffmix.com/");
-                break;
-            case 1:
-                setStackOverflowData("https://stackoverflow.com/questions/tagged/" + categoryParam);
-                break;
-            case 2:
-                setStackOverflowData("https://stackoverflow.com/questions/tagged/" + categoryParam);
-                break;
-            case 3:
-                setStackOverflowData("https://stackoverflow.com/questions/tagged/" + categoryParam);
-                break;
-            case 4:
-                setStackOverflowData("https://stackoverflow.com/questions/tagged/" + categoryParam);
-                break;
-            case 5:
-                setStackOverflowData("https://stackoverflow.com/questions/tagged/" + categoryParam);
+                setHomeData();
                 break;
             case 6:
-                setOnOffMixData("http://onoffmix.com/");
+                setOnOffMixData("http://onoffmix.com/", pageCount);
+                break;
+            default:
+                setCategoryData(categoryParam, pageCount);
+                //setStackOverflowData("https://stackoverflow.com/questions/tagged/" +  + "?page=" + pageCount + "&sort=frequent&pagesize=15");
                 break;
         }
     }
 
     @Override
-    public void refreshDisplay() {
-        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
-        ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
-
+    public void refreshDisplay(final ArrayList<RecyclerViewData> finalRecyclerViewData) {
+        // 서버에서 가져온 유저의 즐겨찾기 데이터를 바탕으로
+        // 확장가능한 카테고리 네비게이션 메뉴 데이터 값 세팅해주기
         setLeftNavigationMenuItems();
 
-        Observable<ArrayList<RecyclerViewData>> onOffMixData = Observable.fromCallable(() -> {
-            final Document document = Jsoup.connect("http://onoffmix.com/event?s=개발").get();
-            Elements elements = document.select("div#content.content > div.eventMain > div.sideLeft > div.contentBox.todayEventArea > ul:not(.todayEvent.noneEvent, .todayEvent.alwaysShow)");
-            for (final Element element : elements) {
-                final RecyclerViewData recyclerViewData = new RecyclerViewData();
-                recyclerViewData.setTitle(element.select("li.eventTitle").text());
-                recyclerViewData.setContent(null);
-                recyclerViewData.setSubInfo(element.select("li.eventBottomArea ul li.eventPersonnel a span:not(.entered)").text());
-                recyclerViewData.setFavoritesCount(element.select("li.eventBottomArea ul li.eventPin span.pinNumber").text());
-                recyclerViewData.setImageResources(getBitmapFromVectorDrawable(mContext, R.drawable.ic_onoffmix_24dp));
-                recyclerViewData.setImageUrl(element.select("li.eventThumbnail a img").attr("src"));
-                recyclerViewData.setContentUrl(element.select("li.eventThumbnail a").attr("href"));
-                recyclerViewData.setType(ON_OFF_MIX);
-                recyclerViewDataArrayList.add(recyclerViewData);
-            }
-            return recyclerViewDataArrayList;
-        });
-
-        Observable<ArrayList<RecyclerViewData>> stackOverflowData = Observable.fromCallable(() -> {
-            Document document = Jsoup.connect("https://stackoverflow.com/questions/tagged/android").get();
-            Elements elements = document.select("div#questions.content-padding div.question-summary");
-            for (Element element : elements) {
-                RecyclerViewData recyclerViewData = new RecyclerViewData();
-                recyclerViewData.setTitle(element.select("div.summary h3 a.question-hyperlink").text());
-                recyclerViewData.setContent(element.select("div.summary div.excerpt").text());
-                recyclerViewData.setImageUrl(element.select("div.started.fr div.user-info div.user-gravatar32 a div.gravatar-wrapper-32 img").attr("src"));
-                recyclerViewData.setContentUrl("https://stackoverflow.com" + element.select("div.summary h3 a.question-hyperlink").attr("href"));
-                recyclerViewData.setType(STACK_OVERFLOW);
-                recyclerViewDataArrayList.add(recyclerViewData);
-            }
-
-            return recyclerViewDataArrayList;
-        });
-
-        Observable<ArrayList<RecyclerViewData>> okkyData = Observable.fromCallable(() -> {
-            final Document document = Jsoup.connect("https://okky.kr/articles/tech").get();
-            Elements elements = document.select("ul.list-group li.list-group-item");
-            for (final Element element : elements) {
-                final RecyclerViewData recyclerViewData = new RecyclerViewData();
-                recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
-                recyclerViewData.setContent(element.select("div.list-title-wrapper.clearfix a.list-group-item-text item-tag label label-info").text());
-                recyclerViewData.setImageUrl("http:" + element.select("div.list-group-item-author.clearfix a.avatar-photo img").attr("src"));
-                recyclerViewData.setContentUrl("https://okky.kr/articles/" + element.select("div.list-title-wrapper.clearfix span.list-group-item-text.article-id").text().replace("#", ""));
-                recyclerViewData.setType(OKKY);
-                recyclerViewDataArrayList.add(recyclerViewData);
-            }
-            return recyclerViewDataArrayList;
-        });
-
-        Observable<ArrayList<RecyclerViewData>> mergedData = Observable.merge(onOffMixData, stackOverflowData, okkyData);
-
-        mergedData.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ArrayList<RecyclerViewData>>() {
-                    ArrayList<RecyclerViewData> finalRecyclerViewData = new ArrayList<>();
-
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull ArrayList<RecyclerViewData> recyclerViewTotalData) {
-                        finalRecyclerViewData = recyclerViewTotalData;
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        mMainActivityView.setDisplayRecyclerView(finalRecyclerViewData);
-                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
-                    }
-                });
-
-        //TODO Observable Merge 작업해보기.
-        // http://www.introtorx.com/content/v1.0.10621.0/12_CombiningSequences.html
-        //mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+        // 홈 카테고리일때 OnOffMix, StackOverflow, OKKY 사이트들의 인기글들을 세팅해주기
+        setHomeData();
     }
 }
