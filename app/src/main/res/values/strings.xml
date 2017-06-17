@@ -26,6 +26,10 @@
     <string name="nav_child_menu_icon">자식메뉴아이콘</string>
     <string name="set_category_favorites_error">카테고리 즐겨찾기에 실패하였습니다.</string>
 
+    <!-- Search -->
+    <string name="search">검색하기</string>
+    <string name="require_search">검색어를 입력해주세요.</string>
+
     <!-- Bottom Navigation Category -->
     <string name="android">Android</string>
     <string name="java">Java</string>
