@@ -22,7 +22,9 @@ public interface SubActivityView {
 
     void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList);
 
+    void addAdditionalData(final ArrayList<RecyclerViewData> additionalRecyclerViewData);
+
     interface UserInteractions {
-        void refreshDisplay(int groupValue, String childTitle);
+        void refreshDisplay(int groupValue, String childTitle, int pageCount);
     }
 }

@@ -1,116 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     app:refreshType="material"
     tools:context="gachon.mobile.programming.android.finalproject.activities.LoginActivity"
     tools:showIn="@layout/activity_login">
 
-    <LinearLayout style="@style/defaultTextLayout">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/email"
-            android:textSize="14sp" />
-
-        <gachon.mobile.programming.android.finalproject.utils.ClearEditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/require_email"
-            android:inputType="textEmailAddress"
-            android:maxLength="30" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/email_text_limit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text=" / 30"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/email_text_edited"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/email_text_limit"
-            android:text="0"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-    </RelativeLayout>
-
     <LinearLayout
-        style="@style/defaultTextLayout"
-        android:layout_marginTop="@dimen/default_margin_top">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
 
-        <TextView
+        <LinearLayout style="@style/defaultTextLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textSize="14sp" />
+
+            <gachon.mobile.programming.android.finalproject.utils.ClearEditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/require_email"
+                android:inputType="textEmailAddress"
+                android:maxLength="30" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/email_text_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text=" / 30"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/email_text_edited"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/email_text_limit"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            style="@style/defaultTextLayout"
+            android:layout_marginTop="@dimen/default_margin_top">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/password"
+                android:textSize="14sp" />
+
+            <gachon.mobile.programming.android.finalproject.utils.PasswordEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/require_password"
+                android:imeActionId="@+id/login"
+                android:imeActionLabel="@string/login"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLength="60" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/password_text_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text=" / 60"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/password_text_edited"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/password_text_limit"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <CheckBox
+            android:id="@+id/auto_login_check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/password"
-            android:textSize="14sp" />
+            android:text="@string/auto_login"
+            android:textColor="@color/black" />
 
-        <gachon.mobile.programming.android.finalproject.utils.PasswordEditText
-            android:id="@+id/password"
+        <Button
+            android:id="@+id/email_sign_in_button"
+            style="@style/defaultButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/require_password"
-            android:imeActionId="@+id/login"
-            android:imeActionLabel="@string/login"
-            android:imeOptions="actionUnspecified"
-            android:inputType="textPassword"
-            android:maxLength="60" />
+            android:layout_marginTop="@dimen/default_margin_top"
+            android:text="@string/action_sign_in" />
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/password_text_limit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text=" / 60"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/password_text_edited"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/password_text_limit"
-            android:text="0"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-    </RelativeLayout>
-
-    <CheckBox
-        android:id="@+id/auto_login_check_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/auto_login"
-        android:textColor="@color/black" />
-
-    <Button
-        android:id="@+id/email_sign_in_button"
-        style="@style/defaultButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin_top"
-        android:text="@string/action_sign_in" />
-</LinearLayout>
+</RelativeLayout>

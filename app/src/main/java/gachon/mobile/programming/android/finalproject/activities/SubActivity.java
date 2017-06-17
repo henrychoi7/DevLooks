@@ -35,6 +35,10 @@ public class SubActivity extends BaseActivity implements SubActivityView {
     private SubActivityView.UserInteractions mSubActivityPresenter;
     private int mSelectedGroupValue = 0;
     private String mSelectedTitle;
+    private RecyclerView mRecyclerView;
+    private RecyclerViewAdapter mRecyclerViewAdapter;
+    private ArrayList<RecyclerViewData> mFinalRecyclerViewData = new ArrayList<>();
+    private int pageCount = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,11 +65,33 @@ public class SubActivity extends BaseActivity implements SubActivityView {
         subTitle.setText(mSelectedTitle);
 
         mSubActivityPresenter = new SubActivityPresenter(SubActivity.this, this);
-        mSubActivityPresenter.refreshDisplay(mSelectedGroupValue, mSelectedTitle);
+        mSubActivityPresenter.refreshDisplay(mSelectedGroupValue, mSelectedTitle, pageCount);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_sub);
+        mRecyclerView.setItemAnimator(new SlideInUpAnimator());
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                /*if (mFinalRecyclerViewData.size() == 0) {
+                    return;
+                }*/
+
+                int lastVisibleItemPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+                int itemTotalCount = mFinalRecyclerViewData.size() - 1;
+
+                if (lastVisibleItemPosition == itemTotalCount) {
+                    pageCount++;
+                    mSubActivityPresenter.refreshDisplay(mSelectedGroupValue, mSelectedTitle, pageCount);
+                }
+            }
+        });
 
         final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh_sub);
         pullRefreshLayout.setOnRefreshListener(() -> {
-            mSubActivityPresenter.refreshDisplay(mSelectedGroupValue, mSelectedTitle);
+            clearStackedData();
+            mSubActivityPresenter.refreshDisplay(mSelectedGroupValue, mSelectedTitle, pageCount);
             pullRefreshLayout.setRefreshing(false);
         });
     }
@@ -90,17 +116,20 @@ public class SubActivity extends BaseActivity implements SubActivityView {
 
     @Override
     public void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_sub);
-        recyclerView.setItemAnimator(new SlideInUpAnimator());
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), recyclerViewDataArrayList);
-        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(recyclerViewAdapter);
+        for (RecyclerViewData recyclerViewData : recyclerViewDataArrayList) {
+            mFinalRecyclerViewData.add(recyclerViewData);
+        }
+        mRecyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mFinalRecyclerViewData);
+        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mRecyclerViewAdapter);
         scaleInAnimationAdapter.setFirstOnly(true);
         scaleInAnimationAdapter.setDuration(500);
         scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator(1f));
-        recyclerView.setAdapter(scaleInAnimationAdapter);
+        mRecyclerView.setAdapter(scaleInAnimationAdapter);
+    }
+
+    @Override
+    public void addAdditionalData(ArrayList<RecyclerViewData> additionalRecyclerViewData) {
+        mFinalRecyclerViewData = mRecyclerViewAdapter.add(additionalRecyclerViewData, mFinalRecyclerViewData.size());
     }
 
     @Override
@@ -116,5 +145,10 @@ public class SubActivity extends BaseActivity implements SubActivityView {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void clearStackedData() {
+        pageCount = 1;
+        mFinalRecyclerViewData = new ArrayList<>();
     }
 }

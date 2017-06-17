@@ -244,6 +244,5 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin_top"
             android:text="@string/action_sign_up" />
-
     </LinearLayout>
 </ScrollView>
