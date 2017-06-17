@@ -28,6 +28,8 @@
 
     <!-- Search -->
     <string name="search">검색하기</string>
+    <string name="required_search_value">자료를 검색해주세요.</string>
+    <string name="empty_search_value">자료가 존재하지 않습니다.</string>
     <string name="require_search">검색어를 입력해주세요.</string>
 
     <!-- Bottom Navigation Category -->

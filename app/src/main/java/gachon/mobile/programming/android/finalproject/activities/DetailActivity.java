@@ -17,6 +17,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import java.io.File;
+
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
 import gachon.mobile.programming.android.finalproject.views.DetailActivityView;
@@ -125,8 +127,19 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
         //mHtmlWebView.setHorizontalScrollBarEnabled(false);
         //mHtmlWebView.setVerticalScrollBarEnabled(false);
 
+        WebSettings webSettings = mHtmlWebView.getSettings();
         //자바스크립트 허용
-        mHtmlWebView.getSettings().setJavaScriptEnabled(true);
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+
+        File cacheDir = getCacheDir();
+        if (!cacheDir.exists()) {
+            cacheDir.mkdirs();
+        }
+        webSettings.setAppCachePath(cacheDir.getPath());
+        webSettings.setAppCacheEnabled(true);
+
         //배경색
         mHtmlWebView.setBackgroundColor(0);
         //웹뷰 컨텐츠 사이즈 맞추기

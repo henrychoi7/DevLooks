@@ -11,7 +11,9 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -87,7 +89,19 @@ public class SearchActivity extends BaseActivity implements SearchActivityView {
 
     @Override
     public void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
+        TextView textViewSearchContent = (TextView) findViewById(R.id.text_view_search_content);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_search);
+
+        if (recyclerViewDataArrayList.size() == 0) {
+            textViewSearchContent.setVisibility(View.VISIBLE);
+            textViewSearchContent.setText(getString(R.string.empty_search_value));
+            recyclerView.setVisibility(View.GONE);
+            return;
+        } else {
+            textViewSearchContent.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
         recyclerView.setItemAnimator(new SlideInUpAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
