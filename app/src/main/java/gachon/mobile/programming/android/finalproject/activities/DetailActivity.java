@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -31,27 +30,25 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
  */
 
 public class DetailActivity extends BaseActivity implements DetailActivityView {
-    private WebView mHtmlWebView;
     private String mSelectedUrl = "";
     private String mSelectedTitle = "";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
         final Toolbar toolbarLogin = (Toolbar) findViewById(R.id.toolbar_detail);
         setSupportActionBar(toolbarLogin);
 
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        TextView detailTitle = (TextView) findViewById(R.id.text_view_detail_title);
-        mHtmlWebView = (WebView) findViewById(R.id.html_web_view);
+        final TextView detailTitle = (TextView) findViewById(R.id.text_view_detail_title);
 
-        Intent selectedIntent = getIntent();
+        final Intent selectedIntent = getIntent();
         if (selectedIntent != null) {
             mSelectedUrl = selectedIntent.getStringExtra("selectedUrl");
             mSelectedTitle = selectedIntent.getStringExtra("selectedTitle");
@@ -67,42 +64,39 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_sub, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
             case R.id.action_copy:
-                ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText("text", mSelectedUrl));
+                final ClipboardManager clipboardManager = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboardManager.setPrimaryClip(ClipData.newPlainText("text", mSelectedUrl));
                 DisplayCustomToast(getApplicationContext(), getApplicationContext().getString(R.string.complete_to_copy));
                 break;
             case R.id.action_share:
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
-                String userName = sharedPreferences.getString("name", null);
+                final SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+                final String userName = sharedPreferences.getString("name", null);
 
-                Intent intentForShare = new Intent(Intent.ACTION_SEND);
-
-                intentForShare.addCategory(Intent.CATEGORY_DEFAULT);
-
+                final Intent intentForShare = new Intent(Intent.ACTION_SEND);
                 intentForShare.putExtra(Intent.EXTRA_SUBJECT, getApplicationContext().getString(R.string.from_devLooks) + userName + getApplicationContext().getString(R.string.share_data) + "\n");
-                intentForShare.putExtra(Intent.EXTRA_TEXT, "제목 : " + mSelectedTitle + "\n\n" + mSelectedUrl);
+                intentForShare.putExtra(Intent.EXTRA_TEXT, getString(R.string.title) + " : " + mSelectedTitle + "\n\n" + mSelectedUrl);
                 intentForShare.setType("text/plain");
 
-                getApplicationContext().startActivity(Intent.createChooser(intentForShare, "공유").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                getApplicationContext().startActivity(Intent.createChooser(intentForShare, getString(R.string.share)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void showProgressDialog(ProgressDialog subscribeProgressDialog) {
+    public void showProgressDialog(final ProgressDialog subscribeProgressDialog) {
         subscribeProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         subscribeProgressDialog.setMessage(getResources().getString(R.string.loading));
         subscribeProgressDialog.setCancelable(false);
@@ -110,30 +104,27 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
     }
 
     @Override
-    public void dismissProgressDialog(ProgressDialog subscribeProgressDialog) {
+    public void dismissProgressDialog(final ProgressDialog subscribeProgressDialog) {
         subscribeProgressDialog.dismiss();
     }
 
     @Override
-    public void showCustomToast(String message) {
+    public void showCustomToast(final String message) {
         DisplayCustomToast(getApplicationContext(), message);
     }
 
     @Override
-    public void setWebViewFromHtml(String baseUrl) {
-        //showCustomToast(mSelectedUrl);
-        //String selectedType = selectedIntent.getStringExtra("selectedType");
+    public void setWebViewFromHtml(final String baseUrl) {
+        final WebView htmlWebView = (WebView) findViewById(R.id.html_web_view);
 
-        //mHtmlWebView.setHorizontalScrollBarEnabled(false);
-        //mHtmlWebView.setVerticalScrollBarEnabled(false);
-
-        WebSettings webSettings = mHtmlWebView.getSettings();
-        //자바스크립트 허용
+        final WebSettings webSettings = htmlWebView.getSettings();
+        // 자바스크립트 허용
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setDatabaseEnabled(true);
 
-        File cacheDir = getCacheDir();
+        // 캐시추가
+        final File cacheDir = getCacheDir();
         if (!cacheDir.exists()) {
             cacheDir.mkdirs();
         }
@@ -141,32 +132,32 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
         webSettings.setAppCacheEnabled(true);
 
         //배경색
-        mHtmlWebView.setBackgroundColor(0);
+        htmlWebView.setBackgroundColor(0);
         //웹뷰 컨텐츠 사이즈 맞추기
-        mHtmlWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        htmlWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         //Zoom 허용
-        mHtmlWebView.getSettings().setBuiltInZoomControls(true);
+        htmlWebView.getSettings().setBuiltInZoomControls(true);
         //Zoom 허용
-        mHtmlWebView.getSettings().setSupportZoom(true);
+        htmlWebView.getSettings().setSupportZoom(true);
         //웹뷰 확대된것 비율맞추기 %
-        mHtmlWebView.setInitialScale(1);
+        htmlWebView.setInitialScale(1);
         //meata 태그의 viewport 사용 가능
-        mHtmlWebView.getSettings().setLoadWithOverviewMode(true);
+        htmlWebView.getSettings().setLoadWithOverviewMode(true);
         //html 스크린크기를 웹뷰에 맞춰줌
-        mHtmlWebView.getSettings().setUseWideViewPort(true);
+        htmlWebView.getSettings().setUseWideViewPort(true);
         //웹뷰의 뒤로가기
-        mHtmlWebView.goBack();
+        htmlWebView.goBack();
 
         //콘텐츠 URL로 이동
-        mHtmlWebView.loadUrl(baseUrl);
+        htmlWebView.loadUrl(baseUrl);
 
         // 현재 타겟 API가 17이므로 안써도됨.
         /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             // 버전 4.0이하
-            mHtmlWebView.loadData(htmlSources, "text/html", "UTF-8");
+            htmlWebView.loadData(htmlSources, "text/html", "UTF-8");
         } else {
             // 버전 4.1이상
-            mHtmlWebView.loadData(htmlSources, "text/html; charset=UTF-8", null);
+            htmlWebView.loadData(htmlSources, "text/html; charset=UTF-8", null);
         }*/
     }
 }

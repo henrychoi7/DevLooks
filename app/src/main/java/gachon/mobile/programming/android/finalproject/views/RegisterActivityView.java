@@ -8,9 +8,9 @@ import android.app.ProgressDialog;
 
 public interface RegisterActivityView {
 
-    void showProgressDialog(ProgressDialog subscribeProgressDialog);
+    void showProgressDialog(final ProgressDialog subscribeProgressDialog);
 
-    void dismissProgressDialog(ProgressDialog subscribeProgressDialog);
+    void dismissProgressDialog(final ProgressDialog subscribeProgressDialog);
 
     String getUsername();
 
@@ -22,19 +22,19 @@ public interface RegisterActivityView {
 
     String getPhone();
 
-    void setUsernameError(String message);
+    void setUsernameError(final String message);
 
-    void setEmailError(String message);
+    void setEmailError(final String message);
 
-    void setPasswordError(String message);
+    void setPasswordError(final String message);
 
-    void setPasswordConfirmError(String message);
+    void setPasswordConfirmError(final String message);
 
-    void setPhoneError(String message);
+    void setPhoneError(final String message);
 
     void validateSuccess();
 
-    void validateFailure(String message);
+    void validateFailure(final String message);
 
     interface UserInteractions{
         void attemptSignUp();

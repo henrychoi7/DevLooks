@@ -14,15 +14,7 @@ public class UserData {
         return isSuccess;
     }
 
-    public void setSuccess(boolean success) {
-        isSuccess = success;
-    }
-
     public ArrayList<UserInfoData> getData() {
         return data;
-    }
-
-    public void setData(ArrayList<UserInfoData> data) {
-        this.data = data;
     }
 }

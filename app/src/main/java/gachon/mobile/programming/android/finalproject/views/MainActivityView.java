@@ -15,17 +15,17 @@ import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 
 public interface MainActivityView {
 
-    void showProgressDialog(ProgressDialog subscribeProgressDialog);
+    void showProgressDialog(final ProgressDialog subscribeProgressDialog);
 
-    void dismissProgressDialog(ProgressDialog subscribeProgressDialog);
+    void dismissProgressDialog(final ProgressDialog subscribeProgressDialog);
 
-    void showCustomToast(String message);
+    void showCustomToast(final String message);
 
-    void setBottomMenuItems(ArrayList<MenuData> menuDataArrayList);
+    void setBottomMenuItems(final ArrayList<MenuData> menuDataArrayList);
 
-    void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList);
+    void setDisplayRecyclerView(final ArrayList<RecyclerViewData> recyclerViewDataArrayList);
 
-    void setExpandableMenuItems(ArrayList<NavigationMenuData> groupMenuDataArrayList);
+    void setExpandableMenuItems(final ArrayList<NavigationMenuData> groupMenuDataArrayList);
 
     void addAdditionalData(final ArrayList<RecyclerViewData> additionalRecyclerViewData);
 

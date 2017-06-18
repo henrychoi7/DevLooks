@@ -7,10 +7,6 @@ package gachon.mobile.programming.android.finalproject.models;
 public class FavoritesCategoryCodeData {
     private String categoryCode;
 
-    private FavoritesCategoryCodeData(String categoryCode) {
-        this.categoryCode = categoryCode;
-    }
-
     public String getCategoryCode() {
         return categoryCode;
     }

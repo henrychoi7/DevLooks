@@ -47,24 +47,23 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private final Context mContext;
     private final MainActivityView mMainActivityView;
     private final int ENUM_GROUP = ExpandableMenuEnum.GROUP.getTypeValue();
-    private final int ENUM_CHILD = ExpandableMenuEnum.CHILD.getTypeValue();
+    //private final int ENUM_CHILD = ExpandableMenuEnum.CHILD.getTypeValue();
 
-    public ExpandableMenuAdapter(Context context, MainActivityView mainActivityView, ArrayList<NavigationMenuData> navigationMenuDataArrayList) {
+    public ExpandableMenuAdapter(final Context context, final MainActivityView mainActivityView, final ArrayList<NavigationMenuData> navigationMenuDataArrayList) {
         this.mContext = context;
         this.mMainActivityView = mainActivityView;
         this.mNavigationMenuDataArrayList = navigationMenuDataArrayList;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View convertView = inflater.inflate(R.layout.nav_expandable_menu, parent, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        final LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View convertView = inflater.inflate(R.layout.nav_expandable_menu, parent, false);
         return new ListNavigationViewHolder(convertView);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final NavigationMenuData navigationMenuData = mNavigationMenuDataArrayList.get(position);
         if (navigationMenuData.getType() == ENUM_GROUP) {
             final ListNavigationViewHolder navigationViewHolder = (ListNavigationViewHolder) holder;
@@ -80,21 +79,21 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 final boolean isSelected = (boolean) v.getTag();
                 final String favoritesCode = CategoryMenuEnum.findValueByName(navigationViewHolder.navigationTextView.getText().toString(), mContext);
 
-                SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
-                String email = sharedPreferences.getString("email", null);
-                String password = sharedPreferences.getString("password", null);
-                JSONObject jsonObject = new JSONObject();
+                final SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+                final String email = sharedPreferences.getString("email", null);
+                final String password = sharedPreferences.getString("password", null);
+                final JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("email", email);
                     jsonObject.put("password", password);
                     jsonObject.put("favorites_code", favoritesCode);
                     jsonObject.put("is_selected", !isSelected);
-                } catch (JSONException e) {
+                } catch (final JSONException e) {
                     mMainActivityView.showCustomToast(ExceptionHelper.getApplicationExceptionMessage(e));
                     return;
                 }
 
-                Observable<SingleData> storeCategoryRx = RETROFIT_INTERFACE.StoreCategoryRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+                final Observable<SingleData> storeCategoryRx = RETROFIT_INTERFACE.StoreCategoryRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
                 storeCategoryRx.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(t -> {
@@ -110,13 +109,13 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             navigationViewHolder.navigationTextView.setOnClickListener(v -> {
                 if (navigationMenuData.getInvisibleChildren() == null) {
                     navigationMenuData.setInvisibleChildren(new ArrayList<>());
-                    int selectedPosition = mNavigationMenuDataArrayList.indexOf(navigationMenuData);
+                    final int selectedPosition = mNavigationMenuDataArrayList.indexOf(navigationMenuData);
                     while (mNavigationMenuDataArrayList.size() > selectedPosition + 1 && mNavigationMenuDataArrayList.get(selectedPosition + 1).getType() != ENUM_GROUP) {
                         removeChild(navigationMenuData, selectedPosition + 1);
                     }
                     navigationViewHolder.navigationImageView.setImageResource(R.drawable.ic_contracted_24dp);
                 } else {
-                    int selectedPosition = mNavigationMenuDataArrayList.indexOf(navigationMenuData);
+                    final int selectedPosition = mNavigationMenuDataArrayList.indexOf(navigationMenuData);
                     int index = selectedPosition + 1;
                     for (NavigationMenuData data : navigationMenuData.getInvisibleChildren()) {
                         addChild(data, index);
@@ -133,13 +132,13 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             navigationViewHolder.navigationTextView.setTypeface(Typekit.createFromAsset(mContext, CUSTOM_FONT));
             if (navigationMenuData.getImageResource() != null) {
                 navigationViewHolder.navigationImageView.setImageResource(navigationMenuData.getImageResource());
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                final RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(50, 10, 30, 10);
                 navigationViewHolder.navigationImageView.setLayoutParams(layoutParams);
             }
 
             navigationViewHolder.navigationTextView.setOnClickListener(v -> {
-                Intent subIntent = new Intent(mContext, SubActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                final Intent subIntent = new Intent(mContext, SubActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 subIntent.putExtra("child_title", childMenuTitle);
                 subIntent.putExtra("group_value", navigationMenuData.getType());
                 mContext.startActivity(subIntent);
@@ -166,17 +165,17 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     }
 
-    private void addChild(NavigationMenuData navigationMenuData, int position) {
+    private void addChild(final NavigationMenuData navigationMenuData, final int position) {
         mNavigationMenuDataArrayList.add(position, navigationMenuData);
         notifyItemInserted(position);
     }
 
-    private void removeChild(NavigationMenuData navigationMenuData, int position) {
+    private void removeChild(final NavigationMenuData navigationMenuData, final int position) {
         navigationMenuData.getInvisibleChildren().add(mNavigationMenuDataArrayList.remove(position));
         notifyItemRemoved(position);
     }
 
-    private void setCategoryFavorites(boolean isSelected, final ListNavigationViewHolder navigationViewHolder) {
+    private void setCategoryFavorites(final boolean isSelected, final ListNavigationViewHolder navigationViewHolder) {
         if (isSelected) {
             navigationViewHolder.navigationCategoryFavoritesImageView.setTag(true);
             navigationViewHolder.navigationCategoryFavoritesImageView.setImageResource(R.drawable.ic_favorites_fill_24dp);

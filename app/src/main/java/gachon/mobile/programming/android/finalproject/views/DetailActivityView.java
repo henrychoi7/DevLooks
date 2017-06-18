@@ -12,12 +12,12 @@ import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 
 public interface DetailActivityView {
 
-    void showProgressDialog(ProgressDialog subscribeProgressDialog);
+    void showProgressDialog(final ProgressDialog subscribeProgressDialog);
 
-    void dismissProgressDialog(ProgressDialog subscribeProgressDialog);
+    void dismissProgressDialog(final ProgressDialog subscribeProgressDialog);
 
-    void showCustomToast(String message);
+    void showCustomToast(final String message);
 
-    void setWebViewFromHtml(String baseUrl);
+    void setWebViewFromHtml(final String baseUrl);
 
 }

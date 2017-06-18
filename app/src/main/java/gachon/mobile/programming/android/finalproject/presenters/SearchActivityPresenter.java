@@ -44,24 +44,24 @@ public class SearchActivityPresenter implements SearchActivityView.UserInteracti
 
         @Override
         public int compare(Object objectFront, Object objectBack) {
-            RecyclerViewData recyclerViewDataFront = (RecyclerViewData) objectFront;
-            RecyclerViewData recyclerViewDataBack = (RecyclerViewData) objectBack;
+            final RecyclerViewData recyclerViewDataFront = (RecyclerViewData) objectFront;
+            final RecyclerViewData recyclerViewDataBack = (RecyclerViewData) objectBack;
             return collator.compare(String.valueOf(recyclerViewDataBack.getFavoritesCount().length()), String.valueOf(recyclerViewDataFront.getFavoritesCount().length()));
         }
     };
 
-    public SearchActivityPresenter(Context context, SearchActivityView searchActivityView) {
+    public SearchActivityPresenter(final Context context, final SearchActivityView searchActivityView) {
         this.mContext = context;
         this.mSearchActivityView = searchActivityView;
     }
 
-    private ArrayList<RecyclerViewData> setStackOverflowSearchData(ArrayList<RecyclerViewData> recyclerViewDataArrayList, Elements elements) {
-        for (Element element : elements) {
-            RecyclerViewData recyclerViewData = new RecyclerViewData();
+    private ArrayList<RecyclerViewData> setStackOverflowSearchData(final ArrayList<RecyclerViewData> recyclerViewDataArrayList, final Elements elements) {
+        for (final Element element : elements) {
+            final RecyclerViewData recyclerViewData = new RecyclerViewData();
             recyclerViewData.setTitle(element.select("div.summary div.result-link a").text());
-            Elements tagElements = element.select("div.summary div.tags a");
+            final Elements tagElements = element.select("div.summary div.tags a");
             String tagString = "";
-            for (Element tagElement : tagElements) {
+            for (final Element tagElement : tagElements) {
                 tagString += " [" + tagElement.text() + "]";
             }
             recyclerViewData.setTags(tagString);
@@ -78,13 +78,13 @@ public class SearchActivityPresenter implements SearchActivityView.UserInteracti
         return recyclerViewDataArrayList;
     }
 
-    private ArrayList<RecyclerViewData> setStackOverflowTagData(ArrayList<RecyclerViewData> recyclerViewDataArrayList, Elements elements) {
+    private ArrayList<RecyclerViewData> setStackOverflowTagData(final ArrayList<RecyclerViewData> recyclerViewDataArrayList, final Elements elements) {
         for (final Element element : elements) {
             final RecyclerViewData recyclerViewData = new RecyclerViewData();
             recyclerViewData.setTitle(element.select("div.summary h3 a.question-hyperlink").text());
-            Elements tagElements = element.select("div.summary div.tags a");
+            final Elements tagElements = element.select("div.summary div.tags a");
             String tagString = "";
-            for (Element tagElement : tagElements) {
+            for (final Element tagElement : tagElements) {
                 tagString += " [" + tagElement.text() + "]";
             }
             recyclerViewData.setTags(tagString);
@@ -101,13 +101,13 @@ public class SearchActivityPresenter implements SearchActivityView.UserInteracti
         return recyclerViewDataArrayList;
     }
 
-    private ArrayList<RecyclerViewData> setOKKYTechData(ArrayList<RecyclerViewData> recyclerViewDataArrayList, Elements elements) {
+    private ArrayList<RecyclerViewData> setOKKYTechData(final ArrayList<RecyclerViewData> recyclerViewDataArrayList, final Elements elements) {
         for (final Element element : elements) {
             final RecyclerViewData recyclerViewData = new RecyclerViewData();
             recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
-            Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
+            final Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
             String tagString = "";
-            for (Element tagElement : tagElements) {
+            for (final Element tagElement : tagElements) {
                 tagString += " [" + tagElement.text() + "]";
             }
             recyclerViewData.setTags(tagString);
@@ -122,13 +122,13 @@ public class SearchActivityPresenter implements SearchActivityView.UserInteracti
         return recyclerViewDataArrayList;
     }
 
-    private ArrayList<RecyclerViewData> setOKKYQnAData(ArrayList<RecyclerViewData> recyclerViewDataArrayList, Elements elements) {
+    private ArrayList<RecyclerViewData> setOKKYQnAData(final ArrayList<RecyclerViewData> recyclerViewDataArrayList, final Elements elements) {
         for (final Element element : elements) {
             final RecyclerViewData recyclerViewData = new RecyclerViewData();
             recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
-            Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
+            final Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
             String tagString = "";
-            for (Element tagElement : tagElements) {
+            for (final Element tagElement : tagElements) {
                 tagString += " [" + tagElement.text() + "]";
             }
             recyclerViewData.setTags(tagString);
@@ -145,11 +145,11 @@ public class SearchActivityPresenter implements SearchActivityView.UserInteracti
 
     @Override
     public void refreshDisplay(final String searchValue) {
-        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+        final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
-        Observable<ArrayList<RecyclerViewData>> stackOverflowData = Observable.fromCallable(() -> {
-            Document document = Jsoup.connect("https://stackoverflow.com/search?page=1&tab=Relevance&q=" + searchValue.replace(" ", "+")).get();
+        final Observable<ArrayList<RecyclerViewData>> stackOverflowData = Observable.fromCallable(() -> {
+            final Document document = Jsoup.connect("https://stackoverflow.com/search?page=1&tab=Relevance&q=" + searchValue.replace(" ", "+")).get();
             Elements elements = document.select("div.search-results.js-search-results div.question-summary.search-result");
             if (elements.size() > 0) {
                 return setStackOverflowSearchData(recyclerViewDataArrayList, elements);
@@ -159,21 +159,21 @@ public class SearchActivityPresenter implements SearchActivityView.UserInteracti
             }
         });
 
-        Observable<ArrayList<RecyclerViewData>> okkyTechData = Observable.fromCallable(() -> {
+        final Observable<ArrayList<RecyclerViewData>> okkyTechData = Observable.fromCallable(() -> {
             final Document document = Jsoup.connect("https://okky.kr/articles/tech?query=" + searchValue + "&sort=id&order=desc").get();
-            Elements elements = document.select("ul.list-group li.list-group-item");
+            final Elements elements = document.select("ul.list-group li.list-group-item");
             return setOKKYTechData(recyclerViewDataArrayList, elements);
         });
 
-        Observable<ArrayList<RecyclerViewData>> okkyQnAData = Observable.fromCallable(() -> {
+        final Observable<ArrayList<RecyclerViewData>> okkyQnAData = Observable.fromCallable(() -> {
             final Document document = Jsoup.connect("https://okky.kr/articles/questions?query=" + searchValue + "&sort=id&order=desc").get();
-            Elements elements = document.select("ul.list-group li.list-group-item");
+            final Elements elements = document.select("ul.list-group li.list-group-item");
             return setOKKYQnAData(recyclerViewDataArrayList, elements);
         });
 
         // merge 참고
         // http://www.introtorx.com/content/v1.0.10621.0/12_CombiningSequences.html
-        Observable<ArrayList<RecyclerViewData>> mergedData = Observable.merge(stackOverflowData, okkyTechData, okkyQnAData);
+        final Observable<ArrayList<RecyclerViewData>> mergedData = Observable.merge(stackOverflowData, okkyTechData, okkyQnAData);
 
         mergedData.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -186,7 +186,7 @@ public class SearchActivityPresenter implements SearchActivityView.UserInteracti
                     }
 
                     @Override
-                    public void onNext(@NonNull ArrayList<RecyclerViewData> recyclerViewTotalData) {
+                    public void onNext(@NonNull final ArrayList<RecyclerViewData> recyclerViewTotalData) {
                         finalRecyclerViewData = recyclerViewTotalData;
                         if (finalRecyclerViewData.size() == 0) {
                             mSearchActivityView.setDisplayRecyclerView(finalRecyclerViewData);
@@ -196,6 +196,7 @@ public class SearchActivityPresenter implements SearchActivityView.UserInteracti
                     @Override
                     public void onError(@NonNull Throwable e) {
                         mSearchActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mSearchActivityView.showCustomToast(e.getMessage());
                     }
 
                     @Override

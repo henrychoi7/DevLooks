@@ -1,7 +1,6 @@
 package gachon.mobile.programming.android.finalproject.utils;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -24,9 +23,9 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
  */
 
 public class PasswordEditText extends AppCompatEditText implements TextWatcher, View.OnTouchListener, View.OnFocusChangeListener {
-    private Drawable clearDrawable;
-    private OnFocusChangeListener onFocusChangeListener;
-    private OnTouchListener onTouchListener;
+    private Drawable mTransparentDrawable;
+    private OnFocusChangeListener mOnFocusChangeListener;
+    private OnTouchListener mOnTouchListener;
 
     public PasswordEditText(final Context context) {
         super(context);
@@ -45,19 +44,19 @@ public class PasswordEditText extends AppCompatEditText implements TextWatcher, 
 
     @Override
     public void setOnFocusChangeListener(final OnFocusChangeListener onFocusChangeListener) {
-        this.onFocusChangeListener = onFocusChangeListener;
+        this.mOnFocusChangeListener = onFocusChangeListener;
     }
 
     @Override
     public void setOnTouchListener(final OnTouchListener onTouchListener) {
-        this.onTouchListener = onTouchListener;
+        this.mOnTouchListener = onTouchListener;
     }
 
     private void init() {
         final Drawable tempDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_password_black_24dp);
-        clearDrawable = DrawableCompat.wrap(tempDrawable);
-        DrawableCompat.setTintList(clearDrawable, getHintTextColors());
-        clearDrawable.setBounds(0, 0, clearDrawable.getIntrinsicWidth(), clearDrawable.getIntrinsicHeight());
+        mTransparentDrawable = DrawableCompat.wrap(tempDrawable);
+        DrawableCompat.setTintList(mTransparentDrawable, getHintTextColors());
+        mTransparentDrawable.setBounds(0, 0, mTransparentDrawable.getIntrinsicWidth(), mTransparentDrawable.getIntrinsicHeight());
 
         setClearIconVisible(false);
 
@@ -74,15 +73,15 @@ public class PasswordEditText extends AppCompatEditText implements TextWatcher, 
             setClearIconVisible(false);
         }
 
-        if (onFocusChangeListener != null) {
-            onFocusChangeListener.onFocusChange(view, isFocus);
+        if (mOnFocusChangeListener != null) {
+            mOnFocusChangeListener.onFocusChange(view, isFocus);
         }
     }
 
     @Override
     public boolean onTouch(final View view, final MotionEvent motionEvent) {
         final int x = (int) motionEvent.getX();
-        if (clearDrawable.isVisible() && x > getWidth() - getPaddingRight() - clearDrawable.getIntrinsicWidth()) {
+        if (mTransparentDrawable.isVisible() && x > getWidth() - getPaddingRight() - mTransparentDrawable.getIntrinsicWidth()) {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 if (getInputType() == InputType.TYPE_CLASS_TEXT) {
                     setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -94,12 +93,7 @@ public class PasswordEditText extends AppCompatEditText implements TextWatcher, 
             return true;
         }
 
-        /*if (onTouchListener != null) {
-            return onTouchListener.onTouch(view, motionEvent);
-        } else {
-            return false;
-        }*/
-        return onTouchListener != null && onTouchListener.onTouch(view, motionEvent);
+        return mOnTouchListener != null && mOnTouchListener.onTouch(view, motionEvent);
     }
 
     @Override
@@ -119,8 +113,8 @@ public class PasswordEditText extends AppCompatEditText implements TextWatcher, 
 
     }
 
-    private void setClearIconVisible(boolean isVisible) {
-        clearDrawable.setVisible(isVisible, false);
-        setCompoundDrawables(null, null, isVisible ? clearDrawable : null, null);
+    private void setClearIconVisible(final boolean isVisible) {
+        mTransparentDrawable.setVisible(isVisible, false);
+        setCompoundDrawables(null, null, isVisible ? mTransparentDrawable : null, null);
     }
 }

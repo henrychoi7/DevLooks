@@ -12,13 +12,13 @@ public interface LoginActivityView {
 
     boolean getAutoLoginCheckBox();
 
-    void setEmailError(String message);
+    void setEmailError(final String message);
 
-    void setPasswordError(String message);
+    void setPasswordError(final String message);
 
     void validateSuccess();
 
-    void validateFailure(String message);
+    void validateFailure(final String message);
 
     interface UserInteractions{
         void attemptLogin();

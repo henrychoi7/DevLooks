@@ -16,18 +16,18 @@ public enum CategoryMenuEnum {
     JAVASCRIPT("005", R.string.javascript),
     ETC("006", R.string.etc);
 
-    private String id;
-    private int name;
+    private final String id;
+    private final int name;
 
-    CategoryMenuEnum(String id, int name) {
+    CategoryMenuEnum(final String id, final int name) {
         this.id = id;
         this.name = name;
     }
 
     public String getValue() { return id; }
-    public String getName(Context context) {return context.getString(name); }
+    public String getName(final Context context) {return context.getString(name); }
 
-    public static String findNameByValue(String id, Context context) {
+    public static String findNameByValue(final String id, final Context context) {
         for (CategoryMenuEnum CategoryMenuEnum : values()) {
             if (CategoryMenuEnum.getValue().equals(id)) {
                 return CategoryMenuEnum.getName(context);

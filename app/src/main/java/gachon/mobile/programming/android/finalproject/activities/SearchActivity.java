@@ -32,14 +32,14 @@ public class SearchActivity extends BaseActivity implements SearchActivityView {
     private SearchActivityView.UserInteractions mSearchActivityPresenter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
         final Toolbar toolbarSearch = (Toolbar) findViewById(R.id.toolbar_search);
         setSupportActionBar(toolbarSearch);
 
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -48,29 +48,29 @@ public class SearchActivity extends BaseActivity implements SearchActivityView {
         mSearchActivityPresenter = new SearchActivityPresenter(SearchActivity.this, this);
     }
 
+    // 검색을 통한 자료 불러오기 요청 작업
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint(getResources().getString(R.string.require_search));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String searchValue) {
+            public boolean onQueryTextSubmit(final String searchValue) {
                 mSearchActivityPresenter.refreshDisplay(searchValue);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String searchValue) {
-
                 return false;
             }
         });
         return true;
     }
     @Override
-    public void showProgressDialog(ProgressDialog subscribeProgressDialog) {
+    public void showProgressDialog(final ProgressDialog subscribeProgressDialog) {
         subscribeProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         subscribeProgressDialog.setMessage(getResources().getString(R.string.loading));
         subscribeProgressDialog.setCancelable(false);
@@ -78,19 +78,20 @@ public class SearchActivity extends BaseActivity implements SearchActivityView {
     }
 
     @Override
-    public void dismissProgressDialog(ProgressDialog subscribeProgressDialog) {
+    public void dismissProgressDialog(final ProgressDialog subscribeProgressDialog) {
         subscribeProgressDialog.dismiss();
     }
 
     @Override
-    public void showCustomToast(String message) {
+    public void showCustomToast(final String message) {
         DisplayCustomToast(getApplicationContext(), message);
     }
 
+    // 검색을 통한 자료 불러온것 화면에 처리 작업
     @Override
-    public void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
-        TextView textViewSearchContent = (TextView) findViewById(R.id.text_view_search_content);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_search);
+    public void setDisplayRecyclerView(final ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
+        final TextView textViewSearchContent = (TextView) findViewById(R.id.text_view_search_content);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_search);
 
         if (recyclerViewDataArrayList.size() == 0) {
             textViewSearchContent.setVisibility(View.VISIBLE);
@@ -106,7 +107,7 @@ public class SearchActivity extends BaseActivity implements SearchActivityView {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), recyclerViewDataArrayList);
+        final RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), recyclerViewDataArrayList);
         ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(recyclerViewAdapter);
         scaleInAnimationAdapter.setFirstOnly(true);
         scaleInAnimationAdapter.setDuration(500);
@@ -121,7 +122,7 @@ public class SearchActivity extends BaseActivity implements SearchActivityView {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }

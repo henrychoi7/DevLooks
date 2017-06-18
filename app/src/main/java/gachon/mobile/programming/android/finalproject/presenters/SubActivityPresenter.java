@@ -108,6 +108,7 @@ public class SubActivityPresenter implements SubActivityView.UserInteractions {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         mSubActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mSubActivityView.showCustomToast(e.getMessage());
                     }
 
                     @Override
@@ -169,6 +170,7 @@ public class SubActivityPresenter implements SubActivityView.UserInteractions {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         mSubActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mSubActivityView.showCustomToast(e.getMessage());
                     }
 
                     @Override
@@ -230,6 +232,7 @@ public class SubActivityPresenter implements SubActivityView.UserInteractions {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         mSubActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mSubActivityView.showCustomToast(e.getMessage());
                     }
 
                     @Override
@@ -277,7 +280,7 @@ public class SubActivityPresenter implements SubActivityView.UserInteractions {
                                 recyclerViewData.setContent(null);
                                 recyclerViewData.setWatchCount(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMix_attend));
                                 recyclerViewData.setFavoritesCount(eventListData.getCategoryIdx());
-                                recyclerViewData.setSubInfo(eventListData.getUsePayment().equals("n") ? "무료" : "유료");
+                                recyclerViewData.setSubInfo(eventListData.getUsePayment().equals("n") ? "무료" : "유료" + eventListData.getRegTime());
                                 recyclerViewData.setImageResources(getBitmapFromVectorDrawable(mContext, R.drawable.ic_onoffmix_24dp));
                                 recyclerViewData.setImageUrl(eventListData.getBannerUrl());
                                 recyclerViewData.setContentUrl(eventListData.getEventUrl().replace("http://onoffmix", "http://m.onoffmix"));

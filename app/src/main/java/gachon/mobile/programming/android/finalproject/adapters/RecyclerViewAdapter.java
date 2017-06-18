@@ -33,9 +33,9 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private final Context mContext;
-    private ArrayList<RecyclerViewData> mRecyclerViewDataArrayList;
+    private final ArrayList<RecyclerViewData> mRecyclerViewDataArrayList;
 
-    public RecyclerViewAdapter(Context context, ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
+    public RecyclerViewAdapter(final Context context, final ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
         this.mContext = context;
         this.mRecyclerViewDataArrayList = recyclerViewDataArrayList;
     }
@@ -70,13 +70,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view, parent, false);
+    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerViewAdapter.ViewHolder holder, final int position) {
         final RecyclerViewData recyclerViewData = mRecyclerViewDataArrayList.get(position);
 
         setData(holder, recyclerViewData);
@@ -90,21 +90,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
 
         holder.mImageViewMore.setOnClickListener(v -> {
-                PopupMenu popupMenu = new PopupMenu(mContext, v);
+                final PopupMenu popupMenu = new PopupMenu(mContext, v);
                 popupMenu.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
                         case R.id.action_copy:
-                            ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                            cm.setPrimaryClip(ClipData.newPlainText("text", recyclerViewData.getContentUrl()));
+                            final ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                            clipboardManager.setPrimaryClip(ClipData.newPlainText("text", recyclerViewData.getContentUrl()));
                             DisplayCustomToast(mContext, mContext.getString(R.string.complete_to_copy));
                             break;
                         case R.id.action_share:
-                            SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
-                            String userName = sharedPreferences.getString("name", null);
+                            final SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+                            final String userName = sharedPreferences.getString("name", null);
 
-                            Intent intentForShare = new Intent(Intent.ACTION_SEND);
+                            final Intent intentForShare = new Intent(Intent.ACTION_SEND);
 
-                            intentForShare.addCategory(Intent.CATEGORY_DEFAULT);
+                            //intentForShare.addCategory(Intent.CATEGORY_DEFAULT);
 
                             intentForShare.putExtra(Intent.EXTRA_SUBJECT, mContext.getString(R.string.from_devLooks) + userName + mContext.getString(R.string.share_data) + "\n");
                             intentForShare.putExtra(Intent.EXTRA_TEXT, "제목 : " + recyclerViewData.getTitle() + "\n\n" + recyclerViewData.getContentUrl());
@@ -118,22 +118,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 popupMenu.inflate(R.menu.menu_sub);
                 popupMenu.show();
         });
-
-        /*holder.mImageViewShare.setOnClickListener(v -> {
-            // 기본적인 스크랩 템플릿을 사용하여 보내는 코드
-            KakaoLinkService.getInstance().sendScrap(mContext, "https://stackoverflow.com", new ResponseCallback<KakaoLinkResponse>() {
-                @Override
-                public void onFailure(ErrorResult errorResult) {
-                    Logger.e(errorResult.toString());
-                    DisplayCustomToast(mContext, errorResult.getErrorMessage());
-                }
-
-                @Override
-                public void onSuccess(KakaoLinkResponse result) {
-                    DisplayCustomToast(mContext, "성공");
-                }
-            });
-        });*/
     }
 
     @Override
@@ -141,13 +125,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return mRecyclerViewDataArrayList.size();
     }
 
-    private void setData(RecyclerViewAdapter.ViewHolder holder, RecyclerViewData recyclerViewData) {
+    private void setData(final RecyclerViewAdapter.ViewHolder holder, final RecyclerViewData recyclerViewData) {
         holder.mImageViewTags.setVisibility(View.GONE);
         holder.mTags.setVisibility(View.GONE);
         holder.mContent.setVisibility(View.GONE);
         holder.mImageViewPhotoContent.setVisibility(View.GONE);
 
-        String categoryType = recyclerViewData.getType();
+        final String categoryType = recyclerViewData.getType();
         if (categoryType.equals(STACK_OVERFLOW)) {
             if (recyclerViewData.getImageUrl() != null) {
                 Glide
@@ -206,10 +190,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.mSubInfo.setText(recyclerViewData.getSubInfo());
     }
 
-    public ArrayList<RecyclerViewData> add(ArrayList<RecyclerViewData> additionalData, int position) {
+    public ArrayList<RecyclerViewData> add(final ArrayList<RecyclerViewData> additionalData, final int position) {
         for (RecyclerViewData data : additionalData) {
             mRecyclerViewDataArrayList.add(position, data);
-            //notifyItemInserted(position);
         }
         notifyDataSetChanged();
         return mRecyclerViewDataArrayList;

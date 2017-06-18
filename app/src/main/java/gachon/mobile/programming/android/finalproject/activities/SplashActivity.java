@@ -20,14 +20,16 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 
 public class SplashActivity extends BaseActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        // 이미지뷰에 애니메이션 작업
         bindLogo();
+        // 2초의 딜레이 후에 자동로그인 여부 확인
         new Handler().postDelayed(() -> {
-            SharedPreferences sharedPreferences = getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
-            boolean isCheckedAutoLogin = sharedPreferences.getBoolean("is_checked_auto_login", false);
+            final SharedPreferences sharedPreferences = getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+            final boolean isCheckedAutoLogin = sharedPreferences.getBoolean("is_checked_auto_login", false);
             if (isCheckedAutoLogin) {
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
             } else {
@@ -44,11 +46,9 @@ public class SplashActivity extends BaseActivity {
         animation1.setDuration(700);
         final AlphaAnimation animation2 = new AlphaAnimation(1.0f, 0.2f);
         animation2.setDuration(700);
-        //animation1 AnimationListener
         animation1.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationEnd(Animation arg0) {
-                // start animation2 when animation1 ends (continue)
+            public void onAnimationEnd(final Animation arg0) {
                 splash.startAnimation(animation2);
             }
             @Override
@@ -57,11 +57,9 @@ public class SplashActivity extends BaseActivity {
             public void onAnimationStart(Animation arg0) {}
         });
 
-        //animation2 AnimationListener
         animation2.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationEnd(Animation arg0) {
-                // start animation1 when animation2 ends (repeat)
+            public void onAnimationEnd(final Animation arg0) {
                 splash.startAnimation(animation1);
             }
             @Override

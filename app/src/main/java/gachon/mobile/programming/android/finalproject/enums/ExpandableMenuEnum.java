@@ -5,12 +5,12 @@ package gachon.mobile.programming.android.finalproject.enums;
  */
 
 public enum ExpandableMenuEnum {
-    GROUP(0),
-    CHILD(1);
+    GROUP(0);
+    //CHILD(1);
 
     private final int typeValue;
 
-    ExpandableMenuEnum(int viewType) {
+    ExpandableMenuEnum(final int viewType) {
         this.typeValue = viewType;
     }
 

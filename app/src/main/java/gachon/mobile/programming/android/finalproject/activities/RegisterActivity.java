@@ -9,7 +9,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 
 import gachon.mobile.programming.android.finalproject.R;
@@ -34,14 +33,14 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
     private RegisterActivityView.UserInteractions mRegisterActivityPresenter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
         final Toolbar toolbarRegister = (Toolbar) findViewById(R.id.toolbar_register);
         setSupportActionBar(toolbarRegister);
 
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -50,7 +49,7 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
         mRegisterActivityPresenter = new RegisterActivityPresenter(RegisterActivity.this, this);
 
         mRegisterUsernameView = (ClearEditText) findViewById(R.id.username);
-        TextView usernameTextView = (TextView) findViewById(R.id.username_text_edited);
+        final TextView usernameTextView = (TextView) findViewById(R.id.username_text_edited);
         mRegisterUsernameView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -61,13 +60,13 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                usernameTextView.setText(String.valueOf(s.length()));
+            public void afterTextChanged(final Editable editable) {
+                usernameTextView.setText(String.valueOf(editable.length()));
             }
         });
 
         mRegisterEmailView = (ClearEditText) findViewById(R.id.email);
-        TextView emailTextView = (TextView) findViewById(R.id.email_text_edited);
+        final TextView emailTextView = (TextView) findViewById(R.id.email_text_edited);
         mRegisterEmailView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -78,13 +77,13 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                emailTextView.setText(String.valueOf(s.length()));
+            public void afterTextChanged(final Editable editable) {
+                emailTextView.setText(String.valueOf(editable.length()));
             }
         });
 
         mRegisterPasswordView = (PasswordEditText) findViewById(R.id.password);
-        TextView passwordTextView = (TextView) findViewById(R.id.password_text_edited);
+        final TextView passwordTextView = (TextView) findViewById(R.id.password_text_edited);
 
         mRegisterPasswordView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -96,13 +95,13 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                passwordTextView.setText(String.valueOf(s.length()));
+            public void afterTextChanged(Editable editable) {
+                passwordTextView.setText(String.valueOf(editable.length()));
             }
         });
 
         mRegisterPasswordConfirmView = (PasswordEditText) findViewById(R.id.password_confirm);
-        TextView passwordConfirmTextView = (TextView) findViewById(R.id.password_confirm_text_edited);
+        final TextView passwordConfirmTextView = (TextView) findViewById(R.id.password_confirm_text_edited);
 
         mRegisterPasswordConfirmView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -114,13 +113,13 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                passwordConfirmTextView.setText(String.valueOf(s.length()));
+            public void afterTextChanged(Editable editable) {
+                passwordConfirmTextView.setText(String.valueOf(editable.length()));
             }
         });
 
         mRegisterPhoneView = (ClearEditText) findViewById(R.id.phone);
-        TextView phoneTextView = (TextView) findViewById(R.id.phone_text_edited);
+        final TextView phoneTextView = (TextView) findViewById(R.id.phone_text_edited);
         mRegisterPhoneView.setOnEditorActionListener((textView, id, keyEvent) -> {
             mRegisterActivityPresenter.attemptSignUp();
             return true;
@@ -135,17 +134,17 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                phoneTextView.setText(String.valueOf(s.length()));
+            public void afterTextChanged(final Editable editable) {
+                phoneTextView.setText(String.valueOf(editable.length()));
             }
         });
 
-        Button mRegisterSignUpButton = (Button) findViewById(R.id.register_sign_up_button);
-        mRegisterSignUpButton.setOnClickListener(view -> mRegisterActivityPresenter.attemptSignUp());
+        // 회원가입 버튼을 통한 서버와의 통신
+        findViewById(R.id.register_sign_up_button).setOnClickListener(view -> mRegisterActivityPresenter.attemptSignUp());
     }
 
     @Override
-    public void showProgressDialog(ProgressDialog subscribeProgressDialog) {
+    public void showProgressDialog(final ProgressDialog subscribeProgressDialog) {
         subscribeProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         subscribeProgressDialog.setMessage(getResources().getString(R.string.loading));
         subscribeProgressDialog.setCancelable(false);
@@ -153,7 +152,7 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
     }
 
     @Override
-    public void dismissProgressDialog(ProgressDialog subscribeProgressDialog) {
+    public void dismissProgressDialog(final ProgressDialog subscribeProgressDialog) {
         subscribeProgressDialog.dismiss();
     }
 
@@ -183,31 +182,31 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
     }
 
     @Override
-    public void setUsernameError(String message) {
+    public void setUsernameError(final String message) {
         mRegisterUsernameView.requestFocus();
         mRegisterUsernameView.setError(message);
     }
 
     @Override
-    public void setEmailError(String message) {
+    public void setEmailError(final String message) {
         mRegisterEmailView.requestFocus();
         mRegisterEmailView.setError(message);
     }
 
     @Override
-    public void setPasswordError(String message) {
+    public void setPasswordError(final String message) {
         mRegisterPasswordView.requestFocus();
         mRegisterPasswordView.setError(message);
     }
 
     @Override
-    public void setPasswordConfirmError(String message) {
+    public void setPasswordConfirmError(final String message) {
         mRegisterPasswordConfirmView.requestFocus();
         mRegisterPasswordConfirmView.setError(message);
     }
 
     @Override
-    public void setPhoneError(String message) {
+    public void setPhoneError(final String message) {
         mRegisterPhoneView.requestFocus();
         mRegisterPhoneView.setError(message);
     }
@@ -219,7 +218,7 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
     }
 
     @Override
-    public void validateFailure(String message) {
+    public void validateFailure(final String message) {
         DisplayCustomToast(getApplicationContext(), message);
     }
 
@@ -230,7 +229,7 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             startActivity(new Intent(getApplicationContext(), InitActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
         }

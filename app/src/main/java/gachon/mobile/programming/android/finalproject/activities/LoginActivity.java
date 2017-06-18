@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -36,14 +35,14 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
     private LoginActivityView.UserInteractions mLoginActivityPresenter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         final Toolbar toolbarLogin = (Toolbar) findViewById(R.id.toolbar_login);
         setSupportActionBar(toolbarLogin);
 
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -54,7 +53,7 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
         mAutoLoginCheckBox = (CheckBox) findViewById(R.id.auto_login_check_box);
 
         mEmailView = (ClearEditText) findViewById(R.id.email);
-        TextView emailTextView = (TextView) findViewById(R.id.email_text_edited);
+        final TextView emailTextView = (TextView) findViewById(R.id.email_text_edited);
         mEmailView.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -65,12 +64,12 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                emailTextView.setText(String.valueOf(s.length()));
+            public void afterTextChanged(final Editable editable) {
+                emailTextView.setText(String.valueOf(editable.length()));
             }
         });
         mPasswordView = (PasswordEditText) findViewById(R.id.password);
-        TextView passwordTextView = (TextView) findViewById(R.id.password_text_edited);
+        final TextView passwordTextView = (TextView) findViewById(R.id.password_text_edited);
         mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
             mLoginActivityPresenter.attemptLogin();
             return true;
@@ -85,13 +84,14 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                passwordTextView.setText(String.valueOf(s.length()));
+            public void afterTextChanged(final Editable editable) {
+                passwordTextView.setText(String.valueOf(editable.length()));
             }
         });
 
-        SharedPreferences sharedPreferences = getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
-        boolean isCheckedAutoLogin = sharedPreferences.getBoolean("is_checked_auto_login", false);
+        // SharedPreference를 통하여 자동로그인 여부 확인
+        final SharedPreferences sharedPreferences = getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+        final boolean isCheckedAutoLogin = sharedPreferences.getBoolean("is_checked_auto_login", false);
         mAutoLoginCheckBox.setChecked(isCheckedAutoLogin);
 
         if (isCheckedAutoLogin) {
@@ -100,8 +100,7 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
             mLoginActivityPresenter.attemptLogin();
         }
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(view -> mLoginActivityPresenter.attemptLogin());
+        findViewById(R.id.email_sign_in_button).setOnClickListener(view -> mLoginActivityPresenter.attemptLogin());
     }
 
     @Override
@@ -111,7 +110,7 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             startActivity(new Intent(getApplicationContext(), InitActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
         }
@@ -135,13 +134,13 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
     }
 
     @Override
-    public void setEmailError(String message) {
+    public void setEmailError(final String message) {
         mEmailView.requestFocus();
         mEmailView.setError(message);
     }
 
     @Override
-    public void setPasswordError(String message) {
+    public void setPasswordError(final String message) {
         mPasswordView.requestFocus();
         mPasswordView.setError(message);
     }
@@ -152,7 +151,7 @@ public class LoginActivity extends BaseActivity implements LoginActivityView {
     }
 
     @Override
-    public void validateFailure(String message) {
+    public void validateFailure(final String message) {
         DisplayCustomToast(getApplicationContext(), message);
     }
 }

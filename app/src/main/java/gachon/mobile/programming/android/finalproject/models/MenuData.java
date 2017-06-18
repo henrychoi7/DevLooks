@@ -5,13 +5,13 @@ package gachon.mobile.programming.android.finalproject.models;
  */
 
 public class MenuData {
-    private int groupId;
+    private final int groupId;
     private int itemId;
-    private int order;
+    private final int order;
     private String title;
     private Integer resourceIcon;
 
-    public MenuData(int groupId, int order) {
+    public MenuData(final int groupId, final int order) {
         this.groupId = groupId;
         this.order = order;
     }

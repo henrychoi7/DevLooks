@@ -30,17 +30,17 @@ public class RegisterActivityPresenter implements RegisterActivityView.UserInter
     private final RegisterActivityView mRegisterActivityView;
     private final Context mContext;
 
-    public RegisterActivityPresenter(Context context, RegisterActivityView registerActivityView) {
+    public RegisterActivityPresenter(final Context context, final RegisterActivityView registerActivityView) {
         this.mContext = context;
         this.mRegisterActivityView = registerActivityView;
     }
 
     private void validateAndSignUp() {
-        String username = mRegisterActivityView.getUsername();
-        String email = mRegisterActivityView.getEmail();
-        String password = mRegisterActivityView.getPassword();
-        String passwordConfirm = mRegisterActivityView.getPasswordConfirm();
-        String phone = mRegisterActivityView.getPhone();
+        final String username = mRegisterActivityView.getUsername();
+        final String email = mRegisterActivityView.getEmail();
+        final String password = mRegisterActivityView.getPassword();
+        final String passwordConfirm = mRegisterActivityView.getPasswordConfirm();
+        final String phone = mRegisterActivityView.getPhone();
 
         if (!isUsernameValid(username)) {
             mRegisterActivityView.setUsernameError(mContext.getString(R.string.error_invalid_username));
@@ -67,19 +67,19 @@ public class RegisterActivityPresenter implements RegisterActivityView.UserInter
             return;
         }
 
-        JSONObject jsonObject = new JSONObject();
+        final JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("name", username);
             jsonObject.put("email", email);
             jsonObject.put("password", password);
             jsonObject.put("password_confirmation", passwordConfirm);
             jsonObject.put("phone_number", phone);
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             mRegisterActivityView.validateFailure(e.getMessage());
             return;
         }
 
-        Observable<SingleData> registerRx = RETROFIT_INTERFACE.RegisterRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+        final Observable<SingleData> registerRx = RETROFIT_INTERFACE.RegisterRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
         registerRx.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<SingleData>() {
@@ -91,7 +91,7 @@ public class RegisterActivityPresenter implements RegisterActivityView.UserInter
                     }
 
                     @Override
-                    public void onNext(@NonNull SingleData singleData) {
+                    public void onNext(@NonNull final SingleData singleData) {
                         mRegisterActivityView.dismissProgressDialog(subscribeProgressDialog);
                         if (singleData.isSuccess()) {
                             mRegisterActivityView.validateSuccess();
@@ -111,23 +111,23 @@ public class RegisterActivityPresenter implements RegisterActivityView.UserInter
                     }
                 });
     }
-    private boolean isUsernameValid(String username) {
+    private boolean isUsernameValid(final String username) {
         return !TextUtils.isEmpty(username) && username.length() <= 20 && username.length() >= 4;
     }
 
-    private boolean isEmailValid(String email) {
+    private boolean isEmailValid(final String email) {
         return email.contains("@") && email.length() <= 30;
     }
 
-    private boolean isPasswordValid(String password) {
+    private boolean isPasswordValid(final String password) {
         return !TextUtils.isEmpty(password) && password.length() <= 60 && password.length() >= 6;
     }
 
-    private boolean isPasswordConfirmValid(String password, String passwordconfirm) {
+    private boolean isPasswordConfirmValid(final String password, final String passwordconfirm) {
         return passwordconfirm.equals(password) && passwordconfirm.length() <= 60 && passwordconfirm.length() >= 4;
     }
 
-    private boolean isPhoneValid(String phone) {
+    private boolean isPhoneValid(final String phone) {
         return TextUtils.isDigitsOnly(phone) && phone.length() <= 11 && phone.length() >= 10;
     }
 

@@ -6,15 +6,15 @@ import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 
 public interface SearchActivityView {
 
-    void showProgressDialog(ProgressDialog subscribeProgressDialog);
+    void showProgressDialog(final ProgressDialog subscribeProgressDialog);
 
-    void dismissProgressDialog(ProgressDialog subscribeProgressDialog);
+    void dismissProgressDialog(final ProgressDialog subscribeProgressDialog);
 
-    void showCustomToast(String message);
+    void showCustomToast(final String message);
 
-    void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList);
+    void setDisplayRecyclerView(final ArrayList<RecyclerViewData> recyclerViewDataArrayList);
 
     interface UserInteractions {
-        void refreshDisplay(String searchValue);
+        void refreshDisplay(final String searchValue);
     }
 }

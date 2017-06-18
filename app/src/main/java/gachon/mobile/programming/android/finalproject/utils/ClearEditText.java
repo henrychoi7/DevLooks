@@ -18,9 +18,9 @@ import gachon.mobile.programming.android.finalproject.R;
  */
 
 public class ClearEditText extends AppCompatEditText implements TextWatcher, View.OnTouchListener, View.OnFocusChangeListener {
-    private Drawable clearDrawable;
-    private OnFocusChangeListener onFocusChangeListener;
-    private OnTouchListener onTouchListener;
+    private Drawable mClearDrawable;
+    private OnFocusChangeListener mOnFocusChangeListener;
+    private OnTouchListener mOnTouchListener;
 
     public ClearEditText(final Context context) {
         super(context);
@@ -39,19 +39,19 @@ public class ClearEditText extends AppCompatEditText implements TextWatcher, Vie
 
     @Override
     public void setOnFocusChangeListener(final OnFocusChangeListener onFocusChangeListener) {
-        this.onFocusChangeListener = onFocusChangeListener;
+        this.mOnFocusChangeListener = onFocusChangeListener;
     }
 
     @Override
     public void setOnTouchListener(final OnTouchListener onTouchListener) {
-        this.onTouchListener = onTouchListener;
+        this.mOnTouchListener = onTouchListener;
     }
 
     private void init() {
         final Drawable tempDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_cancel_24dp);
-        clearDrawable = DrawableCompat.wrap(tempDrawable);
-        DrawableCompat.setTintList(clearDrawable, getHintTextColors());
-        clearDrawable.setBounds(0, 0, clearDrawable.getIntrinsicWidth(), clearDrawable.getIntrinsicHeight());
+        mClearDrawable = DrawableCompat.wrap(tempDrawable);
+        DrawableCompat.setTintList(mClearDrawable, getHintTextColors());
+        mClearDrawable.setBounds(0, 0, mClearDrawable.getIntrinsicWidth(), mClearDrawable.getIntrinsicHeight());
 
         setClearIconVisible(false);
 
@@ -68,15 +68,15 @@ public class ClearEditText extends AppCompatEditText implements TextWatcher, Vie
             setClearIconVisible(false);
         }
 
-        if (onFocusChangeListener != null) {
-            onFocusChangeListener.onFocusChange(view, isFocus);
+        if (mOnFocusChangeListener != null) {
+            mOnFocusChangeListener.onFocusChange(view, isFocus);
         }
     }
 
     @Override
     public boolean onTouch(final View view, final MotionEvent motionEvent) {
         final int x = (int) motionEvent.getX();
-        if (clearDrawable.isVisible() && x > getWidth() - getPaddingRight() - clearDrawable.getIntrinsicWidth()) {
+        if (mClearDrawable.isVisible() && x > getWidth() - getPaddingRight() - mClearDrawable.getIntrinsicWidth()) {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 setError(null);
                 setText(null);
@@ -84,12 +84,7 @@ public class ClearEditText extends AppCompatEditText implements TextWatcher, Vie
             return true;
         }
 
-        /*if (onTouchListener != null) {
-            return onTouchListener.onTouch(view, motionEvent);
-        } else {
-            return false;
-        }*/
-        return onTouchListener != null && onTouchListener.onTouch(view, motionEvent);
+        return mOnTouchListener != null && mOnTouchListener.onTouch(view, motionEvent);
     }
 
     @Override
@@ -109,8 +104,8 @@ public class ClearEditText extends AppCompatEditText implements TextWatcher, Vie
 
     }
 
-    private void setClearIconVisible(boolean isVisible) {
-        clearDrawable.setVisible(isVisible, false);
-        setCompoundDrawables(null, null, isVisible ? clearDrawable : null, null);
+    private void setClearIconVisible(final boolean isVisible) {
+        mClearDrawable.setVisible(isVisible, false);
+        setCompoundDrawables(null, null, isVisible ? mClearDrawable : null, null);
     }
 }

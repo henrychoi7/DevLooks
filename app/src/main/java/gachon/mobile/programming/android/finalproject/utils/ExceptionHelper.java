@@ -11,7 +11,7 @@ import java.net.UnknownHostException;
 public class ExceptionHelper {
     private ExceptionHelper() {}
 
-    public static String getApplicationExceptionMessage(Exception e) {
+    public static String getApplicationExceptionMessage(final Exception e) {
         if (e instanceof JSONException) {
             return "데이터 읽는 도중 오류가 발생하였습니다. (JSON 관련 오류).";
         }

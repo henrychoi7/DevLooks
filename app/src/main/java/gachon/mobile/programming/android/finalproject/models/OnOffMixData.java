@@ -14,15 +14,7 @@ public class OnOffMixData {
         return error;
     }
 
-    public void setError(OnOffMixErrorData error) {
-        this.error = error;
-    }
-
     public ArrayList<OnOffMixEventListData> getEventList() {
         return eventList;
-    }
-
-    public void setEventList(ArrayList<OnOffMixEventListData> eventList) {
-        this.eventList = eventList;
     }
 }

@@ -17,55 +17,27 @@ public class OnOffMixEventListData {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getBannerUrl() {
         return bannerUrl;
-    }
-
-    public void setBannerUrl(String bannerUrl) {
-        this.bannerUrl = bannerUrl;
     }
 
     public int getTotalCanAttend() {
         return totalCanAttend;
     }
 
-    public void setTotalCanAttend(int totalCanAttend) {
-        this.totalCanAttend = totalCanAttend;
-    }
-
     public String getEventUrl() {
         return eventUrl;
-    }
-
-    public void setEventUrl(String eventUrl) {
-        this.eventUrl = eventUrl;
     }
 
     public String getCategoryIdx() {
         return categoryIdx;
     }
 
-    public void setCategoryIdx(String categoryIdx) {
-        this.categoryIdx = categoryIdx;
-    }
-
     public String getRegTime() {
         return regTime;
     }
 
-    public void setRegTime(String regTime) {
-        this.regTime = regTime;
-    }
-
     public String getUsePayment() {
         return usePayment;
-    }
-
-    public void setUsePayment(String usePayment) {
-        this.usePayment = usePayment;
     }
 }

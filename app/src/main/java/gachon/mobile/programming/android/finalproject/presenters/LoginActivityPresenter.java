@@ -30,15 +30,15 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
     private final LoginActivityView mLoginActivityView;
     private final Context mContext;
 
-    public LoginActivityPresenter(Context context, LoginActivityView loginActivityView) {
+    public LoginActivityPresenter(final Context context, final LoginActivityView loginActivityView) {
         this.mContext = context;
         this.mLoginActivityView = loginActivityView;
     }
 
     private void validateAndLogin() {
-        String email = mLoginActivityView.getEmail();
-        String password = mLoginActivityView.getPassword();
-        boolean isCheckedAutoLogin = mLoginActivityView.getAutoLoginCheckBox();
+        final String email = mLoginActivityView.getEmail();
+        final String password = mLoginActivityView.getPassword();
+        final boolean isCheckedAutoLogin = mLoginActivityView.getAutoLoginCheckBox();
 
         if (!isEmailValid(email)) {
             mLoginActivityView.setEmailError(mContext.getString(R.string.error_invalid_email));
@@ -50,26 +50,26 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
             return;
         }
 
-        JSONObject jsonObject = new JSONObject();
+        final JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("email", email);
             jsonObject.put("password", password);
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             mLoginActivityView.validateFailure(e.getMessage());
             return;
         }
 
-        //Observable<SingleData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
-        Observable<UserData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+        final Observable<UserData> loginRx = RETROFIT_INTERFACE.LoginRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
         loginRx.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(t -> {
                             if (t.isSuccess()) {
-                                SharedPreferences.Editor sharedPreferencesEditors = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE).edit();
+                                final SharedPreferences.Editor sharedPreferencesEditors = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE).edit();
                                 sharedPreferencesEditors.putBoolean("is_checked_auto_login", isCheckedAutoLogin);
                                 sharedPreferencesEditors.putString("email", email);
                                 sharedPreferencesEditors.putString("password", password);
-                                UserInfoData userInfoData = t.getData().get(0);
+
+                                final UserInfoData userInfoData = t.getData().get(0);
                                 sharedPreferencesEditors.putString("name", userInfoData.getName());
                                 sharedPreferencesEditors.putString("phone_number", userInfoData.getPhoneNumber());
                                 sharedPreferencesEditors.apply();
@@ -81,11 +81,11 @@ public class LoginActivityPresenter implements LoginActivityView.UserInteraction
                         e -> mLoginActivityView.validateFailure(ExceptionHelper.getApplicationExceptionMessage((Exception) e)));
     }
 
-    private boolean isEmailValid(String email) {
+    private boolean isEmailValid(final String email) {
         return email.contains("@") && email.length() <= 30;
     }
 
-    private boolean isPasswordValid(String password) {
+    private boolean isPasswordValid(final String password) {
         return password.length() >= 6 && password.length() <= 60;
     }
 

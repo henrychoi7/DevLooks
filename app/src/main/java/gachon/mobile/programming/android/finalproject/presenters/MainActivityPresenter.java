@@ -67,18 +67,18 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
         @Override
         public int compare(Object objectFront, Object objectBack) {
-            RecyclerViewData recyclerViewDataFront = (RecyclerViewData) objectFront;
-            RecyclerViewData recyclerViewDataBack = (RecyclerViewData) objectBack;
+            final RecyclerViewData recyclerViewDataFront = (RecyclerViewData) objectFront;
+            final RecyclerViewData recyclerViewDataBack = (RecyclerViewData) objectBack;
             return collator.compare(String.valueOf(recyclerViewDataBack.getFavoritesCount().length()), String.valueOf(recyclerViewDataFront.getFavoritesCount().length()));
         }
     };
 
-    public MainActivityPresenter(Context context, MainActivityView mainActivityView) {
+    public MainActivityPresenter(final Context context, final MainActivityView mainActivityView) {
         this.mContext = context;
         this.mMainActivityView = mainActivityView;
     }
 
-    private Integer getCategoryIcon(String categoryCode) {
+    private Integer getCategoryIcon(final String categoryCode) {
         if (categoryCode.equals(CategoryMenuEnum.ANDROID.getValue())) {
             return R.drawable.ic_android_24dp;
         } else if (categoryCode.equals(CategoryMenuEnum.JAVA.getValue())) {
@@ -96,10 +96,10 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         }
     }
 
-    private ArrayList<NavigationMenuData> getExpandableMenuData(ArrayList<MenuData> menuDataArrayList) {
+    private ArrayList<NavigationMenuData> getExpandableMenuData(final ArrayList<MenuData> menuDataArrayList) {
         TypedArray category_icon = mContext.getResources().obtainTypedArray(R.array.category_default_image);
 
-        ArrayList<NavigationMenuData> groupMenuDataArrayList = new ArrayList<>();
+        final ArrayList<NavigationMenuData> groupMenuDataArrayList = new ArrayList<>();
         for (int i = 0; i < EXPANDABLE_MENU_COUNT; i++) {
             final NavigationMenuData groupMenuData = new NavigationMenuData();
             groupMenuData.setType(ExpandableMenuEnum.GROUP.getTypeValue());
@@ -107,7 +107,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
             final String groupMenuTitle = CategoryMenuEnum.findNameByValue(categoryCode, mContext);
             groupMenuData.setTitle(groupMenuTitle);
             groupMenuData.setImageResource(R.drawable.ic_contracted_24dp);
-            for (MenuData menuData : menuDataArrayList)
+            for (final MenuData menuData : menuDataArrayList)
                 if (menuData.getTitle().equals(groupMenuTitle)) {
                     groupMenuData.setFavorite(true);
                 }
@@ -122,16 +122,10 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
             }
 
             for (int j = 0; j < category_name.length; j++) {
-                NavigationMenuData childMenuData = new NavigationMenuData();
-                //childMenuData.setType(ExpandableMenuEnum.CHILD.getTypeValue());
+                final NavigationMenuData childMenuData = new NavigationMenuData();
                 childMenuData.setType(i + 1);
                 childMenuData.setTitle(category_name[j]);
                 childMenuData.setImageResource(category_icon.getResourceId(j, -1));
-                /*if (j > category_icon.length() - 1) {
-                    childMenuData.setImageResource(R.drawable.ic_android_24dp);
-                } else {
-                    childMenuData.setImageResource(category_icon.getResourceId(j , R.drawable.ic_android_24dp));
-                }*/
                 childMenuDataArrayList.add(childMenuData);
             }
             groupMenuData.setInvisibleChildren(childMenuDataArrayList);
@@ -142,8 +136,8 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
         return groupMenuDataArrayList;
     }
 
-    private ArrayList<MenuData> getMenuData(ArrayList<FavoritesCategoryCodeData> categoryNameArrayList) {
-        ArrayList<MenuData> menuDataArrayList = new ArrayList<>();
+    private ArrayList<MenuData> getMenuData(final ArrayList<FavoritesCategoryCodeData> categoryNameArrayList) {
+        final ArrayList<MenuData> menuDataArrayList = new ArrayList<>();
 
         for (int i = 0; i < categoryNameArrayList.size(); i++) {
             if (categoryNameArrayList.get(i).getCategoryCode().equals("")) {
@@ -155,12 +149,12 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                 continue;
             }
 
-            String categoryTitle = CategoryMenuEnum.findNameByValue(categoryCode, mContext);
+            final String categoryTitle = CategoryMenuEnum.findNameByValue(categoryCode, mContext);
             if (categoryTitle == null) {
                 continue;
             }
 
-            MenuData menuData = new MenuData(0, 0);
+            final MenuData menuData = new MenuData(0, 0);
             menuData.setItemId(Integer.parseInt(categoryCode));
             menuData.setTitle(categoryTitle);
             menuData.setResourceIcon(getCategoryIcon(categoryCode));
@@ -171,12 +165,12 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     private void setHomeData() {
-        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+        final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
-        Observable<ArrayList<RecyclerViewData>> onOffMixData = Observable.fromCallable(() -> {
+        final Observable<ArrayList<RecyclerViewData>> onOffMixData = Observable.fromCallable(() -> {
             final Document document = Jsoup.connect("http://onoffmix.com/event?s=개발").get();
-            Elements elements = document.select("div#content.content > div.eventMain > div.sideLeft > div.contentBox.todayEventArea > ul:not(.todayEvent.noneEvent, .todayEvent.alwaysShow)");
+            final Elements elements = document.select("div#content.content > div.eventMain > div.sideLeft > div.contentBox.todayEventArea > ul:not(.todayEvent.noneEvent, .todayEvent.alwaysShow)");
             for (final Element element : elements) {
                 final RecyclerViewData recyclerViewData = new RecyclerViewData();
                 recyclerViewData.setTitle(element.select("li.eventTitle").text());
@@ -193,14 +187,14 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
             return recyclerViewDataArrayList;
         });
 
-        Observable<ArrayList<RecyclerViewData>> stackOverflowData = Observable.fromCallable(() -> {
-            Document document = Jsoup.connect("https://stackoverflow.com/?tab=month").get();
-            Elements elements = document.select("div#question-mini-list div.question-summary.narrow");
+        final Observable<ArrayList<RecyclerViewData>> stackOverflowData = Observable.fromCallable(() -> {
+            final Document document = Jsoup.connect("https://stackoverflow.com/?tab=month").get();
+            final Elements elements = document.select("div#question-mini-list div.question-summary.narrow");
             for (int i = 0; i <= 15; i++) {
                 Element element = elements.get(i);
                 RecyclerViewData recyclerViewData = new RecyclerViewData();
                 recyclerViewData.setTitle(element.select("div.summary h3").text());
-                Elements tagElements = element.select("div.summary div.tags a");
+                final Elements tagElements = element.select("div.summary div.tags a");
                 String tagString = "";
                 for (Element tagElement : tagElements) {
                     tagString += " [" + tagElement.text() + "]";
@@ -220,13 +214,13 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
             return recyclerViewDataArrayList;
         });
 
-        Observable<ArrayList<RecyclerViewData>> okkyData = Observable.fromCallable(() -> {
+        final Observable<ArrayList<RecyclerViewData>> okkyData = Observable.fromCallable(() -> {
             final Document document = Jsoup.connect("https://okky.kr/articles/tech?query=&sort=scrapCount&order=desc").get();
-            Elements elements = document.select("ul.list-group li.list-group-item");
+            final Elements elements = document.select("ul.list-group li.list-group-item");
             for (final Element element : elements) {
                 final RecyclerViewData recyclerViewData = new RecyclerViewData();
                 recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
-                Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
+                final Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
                 String tagString = "";
                 for (Element tagElement : tagElements) {
                     tagString += " [" + tagElement.text() + "]";
@@ -245,7 +239,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
         // merge 참고
         // http://www.introtorx.com/content/v1.0.10621.0/12_CombiningSequences.html
-        Observable<ArrayList<RecyclerViewData>> mergedData = Observable.merge(onOffMixData, stackOverflowData, okkyData);
+        final Observable<ArrayList<RecyclerViewData>> mergedData = Observable.merge(onOffMixData, stackOverflowData, okkyData);
 
         mergedData.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -258,13 +252,14 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                     }
 
                     @Override
-                    public void onNext(@NonNull ArrayList<RecyclerViewData> recyclerViewTotalData) {
+                    public void onNext(@NonNull final ArrayList<RecyclerViewData> recyclerViewTotalData) {
                         finalRecyclerViewData = recyclerViewTotalData;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mMainActivityView.showCustomToast(e.getMessage());
                     }
 
                     @Override
@@ -277,18 +272,18 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     private void setCategoryData(final String categoryParam, final int pageCount) {
-        ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+        final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
-        String stackOverflowUrl = "https://stackoverflow.com/questions/tagged/" + categoryParam + "?page=" + pageCount + "&sort=frequent&pagesize=15";
+        final String stackOverflowUrl = "https://stackoverflow.com/questions/tagged/" + categoryParam + "?page=" + pageCount + "&sort=frequent&pagesize=15";
 
-        Observable<ArrayList<RecyclerViewData>> stackOverflowData = Observable.fromCallable(() -> {
-            Document document = Jsoup.connect(stackOverflowUrl).get();
-            Elements elements = document.select("div#questions.content-padding div.question-summary");
+        final Observable<ArrayList<RecyclerViewData>> stackOverflowData = Observable.fromCallable(() -> {
+            final Document document = Jsoup.connect(stackOverflowUrl).get();
+            final Elements elements = document.select("div#questions.content-padding div.question-summary");
             for (final Element element : elements) {
                 final RecyclerViewData recyclerViewData = new RecyclerViewData();
                 recyclerViewData.setTitle(element.select("div.summary h3 a.question-hyperlink").text());
-                Elements tagElements = element.select("div.summary div.tags a");
+                final Elements tagElements = element.select("div.summary div.tags a");
                 String tagString = "";
                 for (Element tagElement : tagElements) {
                     tagString += " [" + tagElement.text() + "]";
@@ -308,16 +303,16 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
             return recyclerViewDataArrayList;
         });
 
-        int okkyOffsetCount = (pageCount - 1) * 20;
-        String okkyTechUrl = "https://okky.kr/articles/tech?offset=" + okkyOffsetCount + "&max=20&sort=voteCount&order=desc&query=" + categoryParam;
+        final int okkyOffsetCount = (pageCount - 1) * 20;
+        final String okkyTechUrl = "https://okky.kr/articles/tech?offset=" + okkyOffsetCount + "&max=20&sort=voteCount&order=desc&query=" + categoryParam;
 
-        Observable<ArrayList<RecyclerViewData>> okkyTechData = Observable.fromCallable(() -> {
+        final Observable<ArrayList<RecyclerViewData>> okkyTechData = Observable.fromCallable(() -> {
             final Document document = Jsoup.connect(okkyTechUrl).get();
-            Elements elements = document.select("ul.list-group li.list-group-item");
+            final Elements elements = document.select("ul.list-group li.list-group-item");
             for (final Element element : elements) {
                 final RecyclerViewData recyclerViewData = new RecyclerViewData();
                 recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
-                Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
+                final Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
                 String tagString = "";
                 for (Element tagElement : tagElements) {
                     tagString += " [" + tagElement.text() + "]";
@@ -334,15 +329,15 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
             return recyclerViewDataArrayList;
         });
 
-        String okkyQnAUrl = "https://okky.kr/articles/questions?offset=" + okkyOffsetCount + "&max=20&sort=voteCount&order=desc&query=" + categoryParam;
+        final String okkyQnAUrl = "https://okky.kr/articles/questions?offset=" + okkyOffsetCount + "&max=20&sort=voteCount&order=desc&query=" + categoryParam;
 
-        Observable<ArrayList<RecyclerViewData>> okkyQnAData = Observable.fromCallable(() -> {
+        final Observable<ArrayList<RecyclerViewData>> okkyQnAData = Observable.fromCallable(() -> {
             final Document document = Jsoup.connect(okkyQnAUrl).get();
-            Elements elements = document.select("ul.list-group li.list-group-item");
+            final Elements elements = document.select("ul.list-group li.list-group-item");
             for (final Element element : elements) {
                 final RecyclerViewData recyclerViewData = new RecyclerViewData();
                 recyclerViewData.setTitle(element.select("div.list-title-wrapper.clearfix h5.list-group-item-heading a").text());
-                Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
+                final Elements tagElements = element.select("div.list-title-wrapper.clearfix a.list-group-item-text");
                 String tagString = "";
                 for (Element tagElement : tagElements) {
                     tagString += " [" + tagElement.text() + "]";
@@ -361,7 +356,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
         // merge 참고
         // http://www.introtorx.com/content/v1.0.10621.0/12_CombiningSequences.html
-        Observable<ArrayList<RecyclerViewData>> mergedData = Observable.merge(stackOverflowData, okkyTechData, okkyQnAData);
+        final Observable<ArrayList<RecyclerViewData>> mergedData = Observable.merge(stackOverflowData, okkyTechData, okkyQnAData);
 
         mergedData.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -374,13 +369,14 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                     }
 
                     @Override
-                    public void onNext(@NonNull ArrayList<RecyclerViewData> recyclerViewTotalData) {
+                    public void onNext(@NonNull final ArrayList<RecyclerViewData> recyclerViewTotalData) {
                         finalRecyclerViewData = recyclerViewTotalData;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mMainActivityView.showCustomToast(e.getMessage());
                     }
 
                     @Override
@@ -397,7 +393,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                 });
     }
 
-    private void setOnOffMixData(final String baseUrl, int pageCount) {
+    private void setOnOffMixData(final String baseUrl, final int pageCount) {
         final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
         final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
@@ -428,7 +424,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                                 recyclerViewData.setContent(null);
                                 recyclerViewData.setWatchCount(eventListData.getTotalCanAttend() + mContext.getString(R.string.onOffMix_attend));
                                 recyclerViewData.setFavoritesCount(eventListData.getCategoryIdx());
-                                recyclerViewData.setSubInfo(eventListData.getUsePayment().equals("n") ? "무료" : "유료");
+                                recyclerViewData.setSubInfo(eventListData.getUsePayment().equals("n") ? "무료" : "유료" + eventListData.getRegTime());
                                 recyclerViewData.setImageResources(getBitmapFromVectorDrawable(mContext, R.drawable.ic_onoffmix_24dp));
                                 recyclerViewData.setImageUrl(eventListData.getBannerUrl());
                                 recyclerViewData.setContentUrl(eventListData.getEventUrl().replace("http://onoffmix", "http://m.onoffmix"));
@@ -461,27 +457,27 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     private void setLeftNavigationMenuItems() {
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
-        String email = sharedPreferences.getString("email", null);
-        String password = sharedPreferences.getString("password", null);
+        final SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+        final String email = sharedPreferences.getString("email", null);
+        final String password = sharedPreferences.getString("password", null);
 
-        JSONObject jsonObject = new JSONObject();
+        final JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("email", email);
             jsonObject.put("password", password);
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             mMainActivityView.showCustomToast(e.getMessage());
             return;
         }
 
-        Observable<FavoritesCategoryData> callCategoryRx = RETROFIT_INTERFACE.CallCategoryRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+        final Observable<FavoritesCategoryData> callCategoryRx = RETROFIT_INTERFACE.CallCategoryRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
         callCategoryRx.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(t -> {
                             if (t.isSuccess()) {
-                                ArrayList<FavoritesCategoryCodeData> categoryNameArrayList = t.getData();
-                                ArrayList<MenuData> menuDataArrayList = getMenuData(categoryNameArrayList);
-                                ArrayList<NavigationMenuData> groupMenuDataArrayList = getExpandableMenuData(menuDataArrayList);
+                                final ArrayList<FavoritesCategoryCodeData> categoryNameArrayList = t.getData();
+                                final ArrayList<MenuData> menuDataArrayList = getMenuData(categoryNameArrayList);
+                                final ArrayList<NavigationMenuData> groupMenuDataArrayList = getExpandableMenuData(menuDataArrayList);
 
                                 mMainActivityView.setBottomMenuItems(menuDataArrayList);
                                 mMainActivityView.setExpandableMenuItems(groupMenuDataArrayList);
@@ -525,7 +521,6 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                 break;
             default:
                 setCategoryData(categoryParam, pageCount);
-                //setStackOverflowData("https://stackoverflow.com/questions/tagged/" +  + "?page=" + pageCount + "&sort=frequent&pagesize=15");
                 break;
         }
     }

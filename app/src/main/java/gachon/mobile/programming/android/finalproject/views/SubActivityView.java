@@ -14,13 +14,13 @@ import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 
 public interface SubActivityView {
 
-    void showProgressDialog(ProgressDialog subscribeProgressDialog);
+    void showProgressDialog(final ProgressDialog subscribeProgressDialog);
 
-    void dismissProgressDialog(ProgressDialog subscribeProgressDialog);
+    void dismissProgressDialog(final ProgressDialog subscribeProgressDialog);
 
-    void showCustomToast(String message);
+    void showCustomToast(final String message);
 
-    void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList);
+    void setDisplayRecyclerView(final ArrayList<RecyclerViewData> recyclerViewDataArrayList);
 
     void addAdditionalData(final ArrayList<RecyclerViewData> additionalRecyclerViewData);
 

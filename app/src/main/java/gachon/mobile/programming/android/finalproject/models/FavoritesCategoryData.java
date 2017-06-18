@@ -10,11 +10,6 @@ public class FavoritesCategoryData {
     private boolean isSuccess;
     private ArrayList<FavoritesCategoryCodeData> data;
 
-    public FavoritesCategoryData(boolean isSuccess, ArrayList<FavoritesCategoryCodeData> data) {
-        this.isSuccess = isSuccess;
-        this.data = data;
-    }
-
     public boolean isSuccess() {
         return isSuccess;
     }

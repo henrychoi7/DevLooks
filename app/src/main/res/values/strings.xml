@@ -15,22 +15,24 @@
     <!-- Menu -->
     <string name="action_search">검색</string>
     <string name="action_logout">로그아웃</string>
-    <string name="action_share">앱 공유하기</string>
-    <string name="action_copy">주소 복사</string>
+    <string name="action_share">콘텐츠 공유</string>
+    <string name="action_copy">URL 복사</string>
+
+    <!-- PopupMenu -->
+    <string name="title">제목</string>
+    <string name="share">공유</string>
 
     <!-- Navigation -->
     <string name="title_home">Home</string>
     <string name="title_category">카테고리</string>
-    <string name="nav_main_image_view">네비게이션 메인 이미지</string>
     <string name="nav_group_menu_icon">그룹메뉴아이콘</string>
     <string name="nav_child_menu_icon">자식메뉴아이콘</string>
-    <string name="set_category_favorites_error">카테고리 즐겨찾기에 실패하였습니다.</string>
 
     <!-- Search -->
     <string name="search">검색하기</string>
-    <string name="required_search_value">자료를 검색해주세요.</string>
+    <string name="required_search_value">자료를 검색해 주세요.</string>
     <string name="empty_search_value">자료가 존재하지 않습니다.</string>
-    <string name="require_search">검색어를 입력해주세요.</string>
+    <string name="require_search">검색어를 입력해 주세요.</string>
 
     <!-- Bottom Navigation Category -->
     <string name="android">Android</string>

@@ -23,8 +23,6 @@ import android.widget.TextView;
 
 import com.baoyz.widget.PullRefreshLayout;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
@@ -56,34 +54,43 @@ public class MainActivity extends BaseActivity
     private int pageCount = 1;
     private BottomNavigationView mBottomNavigationView;
     private MainActivityView.UserInteractions mMainActivityPresenter;
+    private SharedPreferences mSharedPreferences;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
-        //mMainActivityPresenter = new MainActivityPresenter(getApplicationContext(), this);
         mMainActivityPresenter = new MainActivityPresenter(MainActivity.this, this);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         final NavigationView leftNavigationView = (NavigationView) findViewById(R.id.left_navigation);
         leftNavigationView.setNavigationItemSelectedListener(this);
+        final View headerView = leftNavigationView.getHeaderView(0);
+
+        // SharedPreference를 통해 사용자이름과 이메일주소 좌측 네비게이션바에 표시
+        mSharedPreferences = getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+        final TextView userNameTextView = (TextView) headerView.findViewById(R.id.username_text_view);
+        userNameTextView.setText(mSharedPreferences.getString("name", getString(R.string.username)));
+        final TextView emailTextView = (TextView) headerView.findViewById(R.id.email_text_view);
+        emailTextView.setText(mSharedPreferences.getString("email", getString(R.string.email)));
 
         mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
+        // 콘텐츠 리스트를 표시할 리사이클러뷰에 스크롤 끝에 도달시 추가 자료 불러오도록 작업
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_main);
         mRecyclerView.setItemAnimator(new SlideInUpAnimator());
         mRecyclerView.setHasFixedSize(true);
@@ -95,8 +102,8 @@ public class MainActivity extends BaseActivity
                     return;
                 }
 
-                int lastVisibleItemPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
-                int itemTotalCount = mFinalRecyclerViewData.size() - 1;
+                final int lastVisibleItemPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+                final int itemTotalCount = mFinalRecyclerViewData.size() - 1;
 
                 if (lastVisibleItemPosition == itemTotalCount) {
                     pageCount++;
@@ -105,6 +112,7 @@ public class MainActivity extends BaseActivity
             }
         });
 
+        // 스크롤의 처음에서 아래로 끌어당길시 Refresh 되도록 작업
         final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) findViewById(R.id.pull_to_refresh_main);
         pullRefreshLayout.setOnRefreshListener(() -> {
             clearStackedData();
@@ -112,6 +120,7 @@ public class MainActivity extends BaseActivity
             pullRefreshLayout.setRefreshing(false);
         });
 
+        // 인터넷권한을 체크하여 데이터를 불러오도록 작업
         if (super.checkPermissionAndSetDisplayData()) {
             mMainActivityPresenter.refreshDisplay(mFinalRecyclerViewData);
             //DisplayCustomToast(getApplicationContext(), "인터넷 권한얻음");
@@ -119,9 +128,11 @@ public class MainActivity extends BaseActivity
             DisplayCustomToast(getApplicationContext(), "권한이 없어서 자료를 불러오지 못했습니다.");
         }
 
+
+        // 로그아웃 버튼을 통해 로그아웃시 자동로그인 체크와 사용자 정보 초기화
         final TextView logoutTextView = (TextView) findViewById(R.id.action_logout);
         logoutTextView.setOnClickListener(v -> {
-            SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE).edit();
+            final SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
             sharedPreferencesEditor.putBoolean("is_checked_auto_login", false);
             sharedPreferencesEditor.putString("email", null);
             sharedPreferencesEditor.putString("password", null);
@@ -132,8 +143,9 @@ public class MainActivity extends BaseActivity
         });
     }
 
+    // 좌측 네비게이션바에 카테고리 구성과 즐겨찾기 한 내용 체크 작업
     @Override
-    public void setExpandableMenuItems(ArrayList<NavigationMenuData> navigationMenuDataArrayList) {
+    public void setExpandableMenuItems(final ArrayList<NavigationMenuData> navigationMenuDataArrayList) {
         final RecyclerView expandableMenu = (RecyclerView) findViewById(R.id.expandable_menu);
         expandableMenu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         expandableMenu.setItemAnimator(new ScaleInRightAnimator());
@@ -147,7 +159,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void showProgressDialog(ProgressDialog subscribeProgressDialog) {
+    public void showProgressDialog(final ProgressDialog subscribeProgressDialog) {
         subscribeProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         subscribeProgressDialog.setMessage(getResources().getString(R.string.loading));
         subscribeProgressDialog.setCancelable(false);
@@ -155,23 +167,24 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void dismissProgressDialog(ProgressDialog subscribeProgressDialog) {
+    public void dismissProgressDialog(final ProgressDialog subscribeProgressDialog) {
         subscribeProgressDialog.dismiss();
     }
 
     @Override
-    public void showCustomToast(String message) {
+    public void showCustomToast(final String message) {
         DisplayCustomToast(getApplicationContext(), message);
     }
 
+    // 하단 네비게이션바에 사용자가 즐겨찾기 해놓은 카테고리 구성
     @Override
-    public void setBottomMenuItems(ArrayList<MenuData> menuDataArrayList) {
+    public void setBottomMenuItems(final ArrayList<MenuData> menuDataArrayList) {
         final BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        bottomNavigationView.inflateMenu(R.menu.menu_main_bottom_navigation);
+        bottomNavigationView.inflateMenu(R.menu.menu_main_bottom_nav);
         final Menu menu = bottomNavigationView.getMenu();
         menu.add(0, HOME_VALUE, 0, getString(R.string.title_home)).setIcon(R.drawable.ic_home_black_24dp);
 
-        for (MenuData menuData : menuDataArrayList) {
+        for (final MenuData menuData : menuDataArrayList) {
             // MAX COUNT = 5 (즉, 4개만 추가가능)
             // groupId, itemId, order, CharSequence
             if (menuData.getResourceIcon() == null) {
@@ -184,19 +197,21 @@ public class MainActivity extends BaseActivity
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
+    // 콘텐츠 리스트화면 구성
     @Override
-    public void setDisplayRecyclerView(ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
-        for (RecyclerViewData recyclerViewData : recyclerViewDataArrayList) {
+    public void setDisplayRecyclerView(final ArrayList<RecyclerViewData> recyclerViewDataArrayList) {
+        for (final RecyclerViewData recyclerViewData : recyclerViewDataArrayList) {
             mFinalRecyclerViewData.add(recyclerViewData);
         }
         mRecyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mFinalRecyclerViewData);
-        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mRecyclerViewAdapter);
+        final ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mRecyclerViewAdapter);
         scaleInAnimationAdapter.setFirstOnly(true);
         scaleInAnimationAdapter.setDuration(500);
         scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator(1f));
         mRecyclerView.setAdapter(scaleInAnimationAdapter);
     }
 
+    // 추가적인 데이터를 불러 온 후 기존리스트에 데이터 추가 작업
     @Override
     public void addAdditionalData(final ArrayList<RecyclerViewData> additionalRecyclerViewData) {
         mFinalRecyclerViewData = mRecyclerViewAdapter.add(additionalRecyclerViewData, mFinalRecyclerViewData.size());
@@ -212,14 +227,16 @@ public class MainActivity extends BaseActivity
         handleUserApplicationExit(getApplicationContext(), this);
     }
 
+    // 비어있는 메뉴를 구성한 후,setBottomMenuItems() 를 통해 하단 네비게이션 바 구축 작업
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    // 검색화면으로 이동하는 작업
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
                 startActivity(new Intent(getApplicationContext(), SearchActivity.class));
@@ -228,8 +245,9 @@ public class MainActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
+    // 하단 네비게이션 클릭시 해당하는 카테고리의 데이터 불러오기 작업
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         clearStackedData();
         mMainActivityPresenter.changeCategory(item, pageCount);
 
@@ -237,6 +255,7 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
+    // 스크롤로 인한 추가데이터 보내온것을 초기화
     private void clearStackedData() {
         pageCount = 1;
         mFinalRecyclerViewData = new ArrayList<>();
