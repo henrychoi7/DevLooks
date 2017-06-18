@@ -81,7 +81,7 @@
     <string name="require_password">비밀번호를 입력해주세요.</string>
     <string name="error_invalid_email">이메일 형식이 올바르지 않습니다.</string>
     <string name="error_invalid_password">비밀번호는 최소 6자리 이상이어야 합니다.</string>
-    <string name="action_sign_in">커뮤니터 시작</string>
+    <string name="action_sign_in">개발다봐 시작</string>
     <string name="auto_login">자동 로그인</string>
 
     <!-- Community Name -->
