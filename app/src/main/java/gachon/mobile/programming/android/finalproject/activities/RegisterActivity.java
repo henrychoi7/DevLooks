@@ -1,5 +1,6 @@
 package gachon.mobile.programming.android.finalproject.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -46,7 +47,7 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mRegisterActivityPresenter = new RegisterActivityPresenter(getApplicationContext(), this);
+        mRegisterActivityPresenter = new RegisterActivityPresenter(RegisterActivity.this, this);
 
         mRegisterUsernameView = (ClearEditText) findViewById(R.id.username);
         TextView usernameTextView = (TextView) findViewById(R.id.username_text_edited);
@@ -141,6 +142,19 @@ public class RegisterActivity extends BaseActivity implements RegisterActivityVi
 
         Button mRegisterSignUpButton = (Button) findViewById(R.id.register_sign_up_button);
         mRegisterSignUpButton.setOnClickListener(view -> mRegisterActivityPresenter.attemptSignUp());
+    }
+
+    @Override
+    public void showProgressDialog(ProgressDialog subscribeProgressDialog) {
+        subscribeProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        subscribeProgressDialog.setMessage(getResources().getString(R.string.loading));
+        subscribeProgressDialog.setCancelable(false);
+        subscribeProgressDialog.show();
+    }
+
+    @Override
+    public void dismissProgressDialog(ProgressDialog subscribeProgressDialog) {
+        subscribeProgressDialog.dismiss();
     }
 
     @Override

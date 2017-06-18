@@ -1,10 +1,16 @@
 package gachon.mobile.programming.android.finalproject.views;
 
+import android.app.ProgressDialog;
+
 /**
  * Created by henryman on 05/06/2017.
  */
 
 public interface RegisterActivityView {
+
+    void showProgressDialog(ProgressDialog subscribeProgressDialog);
+
+    void dismissProgressDialog(ProgressDialog subscribeProgressDialog);
 
     String getUsername();
 

@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="autofittextview-0.2.1">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/bc00c2c7791b185a84c7a4285a34b01a1fc193c2/output/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/bc00c2c7791b185a84c7a4285a34b01a1fc193c2/output/res" />
+      <root url="file://$USER_HOME$/.android/build-cache/0f10880417e324db74b72b4af02223174e444d69/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/0f10880417e324db74b72b4af02223174e444d69/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

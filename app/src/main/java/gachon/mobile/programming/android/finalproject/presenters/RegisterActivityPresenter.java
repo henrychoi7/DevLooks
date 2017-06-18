@@ -1,5 +1,6 @@
 package gachon.mobile.programming.android.finalproject.presenters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -11,7 +12,10 @@ import gachon.mobile.programming.android.finalproject.models.SingleData;
 import gachon.mobile.programming.android.finalproject.utils.ExceptionHelper;
 import gachon.mobile.programming.android.finalproject.views.RegisterActivityView;
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 
@@ -78,14 +82,34 @@ public class RegisterActivityPresenter implements RegisterActivityView.UserInter
         Observable<SingleData> registerRx = RETROFIT_INTERFACE.RegisterRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
         registerRx.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(t -> {
-                            if (t.isSuccess()) {
-                                mRegisterActivityView.validateSuccess();
-                            } else {
-                                mRegisterActivityView.validateFailure(t.getData());
-                            }
-                        },
-                        e -> mRegisterActivityView.validateFailure(ExceptionHelper.getApplicationExceptionMessage((Exception) e)));
+                .subscribe(new Observer<SingleData>() {
+                    final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
+
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        mRegisterActivityView.showProgressDialog(subscribeProgressDialog);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull SingleData singleData) {
+                        mRegisterActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        if (singleData.isSuccess()) {
+                            mRegisterActivityView.validateSuccess();
+                        } else {
+                            mRegisterActivityView.validateFailure(singleData.getData());
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        mRegisterActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mRegisterActivityView.validateFailure(ExceptionHelper.getApplicationExceptionMessage((Exception) e));
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
     }
     private boolean isUsernameValid(String username) {
         return !TextUtils.isEmpty(username) && username.length() <= 20 && username.length() >= 4;
