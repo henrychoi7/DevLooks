@@ -124,7 +124,7 @@ public class RegisterActivityPresenter implements RegisterActivityView.UserInter
     }
 
     private boolean isPasswordConfirmValid(final String password, final String passwordconfirm) {
-        return passwordconfirm.equals(password) && passwordconfirm.length() <= 60 && passwordconfirm.length() >= 4;
+        return passwordconfirm.equals(password) && passwordconfirm.length() <= 60 && passwordconfirm.length() >= 6;
     }
 
     private boolean isPhoneValid(final String phone) {

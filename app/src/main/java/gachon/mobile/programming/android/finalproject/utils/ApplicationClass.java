@@ -3,6 +3,7 @@ package gachon.mobile.programming.android.finalproject.utils;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -105,5 +106,15 @@ public class ApplicationClass extends Application {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+    public static void clearPreferencesData(SharedPreferences sharedPreferences) {
+        final SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+        sharedPreferencesEditor.putBoolean("is_checked_auto_login", false);
+        sharedPreferencesEditor.putString("email", null);
+        sharedPreferencesEditor.putString("password", null);
+        sharedPreferencesEditor.putString("name", null);
+        sharedPreferencesEditor.putString("phone_number", null);
+        sharedPreferencesEditor.apply();
     }
 }

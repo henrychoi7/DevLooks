@@ -41,6 +41,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.DisplayCustomToast;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.HOME_VALUE;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.clearPreferencesData;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.handleUserApplicationExit;
 
 public class MainActivity extends BaseActivity
@@ -132,15 +133,14 @@ public class MainActivity extends BaseActivity
         // 로그아웃 버튼을 통해 로그아웃시 자동로그인 체크와 사용자 정보 초기화
         final TextView logoutTextView = (TextView) findViewById(R.id.action_logout);
         logoutTextView.setOnClickListener(v -> {
-            final SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
-            sharedPreferencesEditor.putBoolean("is_checked_auto_login", false);
-            sharedPreferencesEditor.putString("email", null);
-            sharedPreferencesEditor.putString("password", null);
-            sharedPreferencesEditor.apply();
-
+            clearPreferencesData(mSharedPreferences);
             startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
             finish();
         });
+
+        // 개인정보 설정창으로 이동하여 정보 수정 혹은 탈퇴 작업
+        final TextView settingTextView = (TextView) findViewById(R.id.action_setting);
+        settingTextView.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SettingActivity.class)));
     }
 
     // 좌측 네비게이션바에 카테고리 구성과 즐겨찾기 한 내용 체크 작업

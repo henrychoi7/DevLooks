@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -93,24 +94,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 final PopupMenu popupMenu = new PopupMenu(mContext, v);
                 popupMenu.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
+                        case R.id.action_content_favorites:
+
+                            break;
                         case R.id.action_copy:
-                            final ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                            clipboardManager.setPrimaryClip(ClipData.newPlainText("text", recyclerViewData.getContentUrl()));
-                            DisplayCustomToast(mContext, mContext.getString(R.string.complete_to_copy));
+                            copyToClipboard(recyclerViewData);
                             break;
                         case R.id.action_share:
-                            final SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
-                            final String userName = sharedPreferences.getString("name", null);
-
-                            final Intent intentForShare = new Intent(Intent.ACTION_SEND);
-
-                            //intentForShare.addCategory(Intent.CATEGORY_DEFAULT);
-
-                            intentForShare.putExtra(Intent.EXTRA_SUBJECT, mContext.getString(R.string.from_devLooks) + userName + mContext.getString(R.string.share_data) + "\n");
-                            intentForShare.putExtra(Intent.EXTRA_TEXT, "제목 : " + recyclerViewData.getTitle() + "\n\n" + recyclerViewData.getContentUrl());
-                            intentForShare.setType("text/plain");
-
-                            mContext.startActivity(Intent.createChooser(intentForShare, "공유").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            shareToOther(recyclerViewData);
                             break;
                     }
                     return true;
@@ -123,6 +114,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public int getItemCount() {
         return mRecyclerViewDataArrayList.size();
+    }
+
+    private void copyToClipboard(final RecyclerViewData recyclerViewData){
+        final ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboardManager.setPrimaryClip(ClipData.newPlainText("text", recyclerViewData.getContentUrl()));
+        DisplayCustomToast(mContext, mContext.getString(R.string.complete_to_copy));
+    }
+
+    private void shareToOther(final RecyclerViewData recyclerViewData) {
+        final SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+        final String userName = sharedPreferences.getString("name", null);
+        final Intent intentForShare = new Intent(Intent.ACTION_SEND);
+
+        intentForShare.putExtra(Intent.EXTRA_SUBJECT, mContext.getString(R.string.from_devLooks) + userName + mContext.getString(R.string.share_data) + "\n");
+        intentForShare.putExtra(Intent.EXTRA_TEXT, "제목 : " + recyclerViewData.getTitle() + "\n\n" + recyclerViewData.getContentUrl());
+        intentForShare.setType("text/plain");
+
+        mContext.startActivity(Intent.createChooser(intentForShare, "공유").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     private void setData(final RecyclerViewAdapter.ViewHolder holder, final RecyclerViewData recyclerViewData) {

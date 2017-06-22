@@ -15,8 +15,10 @@
     <!-- Menu -->
     <string name="action_search">검색</string>
     <string name="action_logout">로그아웃</string>
+    <string name="action_setting">개인정보 설정</string>
     <string name="action_share">콘텐츠 공유</string>
     <string name="action_copy">URL 복사</string>
+    <string name="action_content_favorites">즐겨찾기 추가</string>
 
     <!-- PopupMenu -->
     <string name="title">제목</string>
@@ -73,6 +75,18 @@
     <string name="error_invalid_phone">휴대폰 번호 형식이 올바르지 않습니다.</string>
     <string name="action_sign_up">가입완료</string>
     <string name="complete_to_sign_up">회원가입에 성공했습니다.</string>
+
+    <!-- Setting -->
+    <string name="update_user_info">수정하기</string>
+    <string name="delete_user_info">탈퇴하기</string>
+    <string name="original_password">Original Password</string>
+    <string name="new_password">New Password</string>
+    <string name="new_password_confirm">New Password Confirm</string>
+    <string name="for_delete">삭제 하시려면 </string>
+    <string name="required_input_email_text_same">을 똑같이 입력해주세요.</string>
+    <string name="unmatched_value">값이 올바르지 않습니다.</string>
+    <string name="okay">확인</string>
+    <string name="cancel">취소</string>
 
     <!-- Login -->
     <string name="email">Email</string>

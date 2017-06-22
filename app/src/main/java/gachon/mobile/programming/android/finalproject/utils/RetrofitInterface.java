@@ -8,7 +8,10 @@ import gachon.mobile.programming.android.finalproject.models.UserData;
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -22,6 +25,12 @@ public interface RetrofitInterface {
 
     @POST("auth/register")
     Observable<SingleData> RegisterRx(@Body RequestBody params);
+
+    @PATCH("auth/update")
+    Observable<SingleData> UpdateUserInfoRx(@Body RequestBody params);
+
+    @HTTP(method = "DELETE", path = "auth/destroy", hasBody = true)
+    Observable<SingleData> DeleteUserInfoRx(@Body RequestBody params);
 
     @POST("auth/favorites/content/call")
     Observable<FavoritesContentData> CallContentRx(@Body RequestBody params);

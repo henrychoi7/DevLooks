@@ -8,13 +8,13 @@ import java.util.ArrayList;
 
 public class FavoritesContentData {
     private boolean isSuccess;
-    private ArrayList<String> data;
+    private ArrayList<FavoritesContentDetailData> data;
 
     public boolean isSuccess() {
         return isSuccess;
     }
 
-    public ArrayList<String> getData() {
+    public ArrayList<FavoritesContentDetailData> getData() {
         return data;
     }
 }
