@@ -15,10 +15,6 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-09.
- */
-
 public interface RetrofitInterface {
     @POST("auth/login")
     Observable<UserData> LoginRx(@Body RequestBody params);

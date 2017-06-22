@@ -8,10 +8,6 @@ import gachon.mobile.programming.android.finalproject.models.MenuData;
 import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-21.
- */
-
 public interface SubActivityView {
 
     void showProgressDialog(final ProgressDialog subscribeProgressDialog);

@@ -1,9 +1,5 @@
 package gachon.mobile.programming.android.finalproject.enums;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-25.
- */
-
 public enum ExpandableMenuEnum {
     GROUP(0);
     //CHILD(1);

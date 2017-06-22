@@ -56,10 +56,6 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.STACK_OVERFLOW_MAIN;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.getBitmapFromVectorDrawable;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-21.
- */
-
 public class MainActivityPresenter implements MainActivityView.UserInteractions {
     private final MainActivityView mMainActivityView;
     private final Context mContext;

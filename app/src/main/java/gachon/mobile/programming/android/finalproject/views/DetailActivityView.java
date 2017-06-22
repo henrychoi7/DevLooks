@@ -6,10 +6,6 @@ import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-21.
- */
-
 public interface DetailActivityView {
 
     void showProgressDialog(final ProgressDialog subscribeProgressDialog);

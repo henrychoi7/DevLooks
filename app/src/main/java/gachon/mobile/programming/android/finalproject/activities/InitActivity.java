@@ -7,10 +7,6 @@ import android.view.View;
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-09.
- */
-
 public class InitActivity extends BaseActivity implements View.OnClickListener {
 
     @Override

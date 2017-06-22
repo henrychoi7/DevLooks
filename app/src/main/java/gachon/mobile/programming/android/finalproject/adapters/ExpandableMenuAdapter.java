@@ -38,10 +38,6 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-21.
- */
-
 public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<NavigationMenuData> mNavigationMenuDataArrayList;
     private final Context mContext;

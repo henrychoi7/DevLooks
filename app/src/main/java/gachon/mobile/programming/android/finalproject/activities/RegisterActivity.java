@@ -20,10 +20,6 @@ import gachon.mobile.programming.android.finalproject.views.RegisterActivityView
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.DisplayCustomToast;
 
-/**
- * Created by henryman on 05/06/2017.
- */
-
 public class RegisterActivity extends BaseActivity implements RegisterActivityView {
     private ClearEditText mRegisterUsernameView;
     private ClearEditText mRegisterEmailView;

@@ -14,10 +14,6 @@ import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-09.
- */
-
 public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

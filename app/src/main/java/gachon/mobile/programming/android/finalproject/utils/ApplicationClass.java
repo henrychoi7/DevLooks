@@ -27,10 +27,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-09.
- */
-
 // Static Final 값들을 처리하도록 만들어진 Application Class
 public class ApplicationClass extends Application {
     // 온오프믹스의 JSON 데이터값의 MediaType 세팅 값

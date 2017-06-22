@@ -22,10 +22,6 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-09.
- */
-
 public class LoginActivityPresenter implements LoginActivityView.UserInteractions {
     private final LoginActivityView mLoginActivityView;
     private final Context mContext;

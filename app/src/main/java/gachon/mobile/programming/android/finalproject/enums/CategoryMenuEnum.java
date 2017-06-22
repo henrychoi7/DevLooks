@@ -4,10 +4,6 @@ import android.content.Context;
 
 import gachon.mobile.programming.android.finalproject.R;
 
-/**
- * Created by JJSoft on 2017-05-29.
- */
-
 public enum CategoryMenuEnum {
     ANDROID("001", R.string.android),
     JAVA("002", R.string.java),

@@ -25,10 +25,6 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
-/**
- * Created by henryman on 05/06/2017.
- */
-
 public class SettingActivityPresenter implements SettingActivityView.UserInteractions {
     private final SettingActivityView mSettingActivityView;
     private final Context mContext;

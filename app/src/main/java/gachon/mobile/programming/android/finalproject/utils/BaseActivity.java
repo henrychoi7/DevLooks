@@ -14,10 +14,6 @@ import gachon.mobile.programming.android.finalproject.R;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.DisplayCustomToast;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-09.
- */
-
 // Rxandroid Library작업을 위한 RxAppCompatActivity를 상속받은 BaseActivity
 public class BaseActivity extends RxAppCompatActivity {
 

@@ -22,10 +22,6 @@ import okhttp3.RequestBody;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
-/**
- * Created by henryman on 05/06/2017.
- */
-
 public class RegisterActivityPresenter implements RegisterActivityView.UserInteractions {
     private final RegisterActivityView mRegisterActivityView;
     private final Context mContext;

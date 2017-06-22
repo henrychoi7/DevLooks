@@ -2,10 +2,6 @@ package gachon.mobile.programming.android.finalproject.models;
 
 import java.util.ArrayList;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-25.
- */
-
 public class NavigationMenuData {
     private int type;
     private String title;

@@ -1,9 +1,5 @@
 package gachon.mobile.programming.android.finalproject.models;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-26.
- */
-
 public class OnOffMixEventListData {
     private String title;
     private int totalCanAttend;

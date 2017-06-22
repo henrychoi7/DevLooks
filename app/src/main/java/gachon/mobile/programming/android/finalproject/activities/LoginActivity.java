@@ -23,10 +23,6 @@ import gachon.mobile.programming.android.finalproject.views.LoginActivityView;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.DisplayCustomToast;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-09.
- */
-
 public class LoginActivity extends BaseActivity implements LoginActivityView {
     private ClearEditText mEmailView;
     private PasswordEditText mPasswordView;

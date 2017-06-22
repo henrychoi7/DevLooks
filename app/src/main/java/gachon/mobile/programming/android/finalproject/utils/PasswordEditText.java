@@ -18,10 +18,6 @@ import gachon.mobile.programming.android.finalproject.R;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.CUSTOM_FONT;
 
-/**
- * Created by JJSoft on 2017-05-10.
- */
-
 public class PasswordEditText extends AppCompatEditText implements TextWatcher, View.OnTouchListener, View.OnFocusChangeListener {
     private Drawable mTransparentDrawable;
     private OnFocusChangeListener mOnFocusChangeListener;

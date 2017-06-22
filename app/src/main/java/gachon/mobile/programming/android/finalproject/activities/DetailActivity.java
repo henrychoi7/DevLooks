@@ -37,10 +37,6 @@ import static gachon.mobile.programming.android.finalproject.utils.ApplicationCl
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-06-05.
- */
-
 public class DetailActivity extends BaseActivity implements DetailActivityView {
     private RecyclerViewData mRecyclerViewData = new RecyclerViewData();
     private SharedPreferences mSharedPreferences;

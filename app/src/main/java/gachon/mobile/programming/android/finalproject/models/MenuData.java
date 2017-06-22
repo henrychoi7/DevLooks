@@ -1,9 +1,5 @@
 package gachon.mobile.programming.android.finalproject.models;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-05-21.
- */
-
 public class MenuData {
     private final int groupId;
     private int itemId;

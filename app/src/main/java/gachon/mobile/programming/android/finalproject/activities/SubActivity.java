@@ -26,10 +26,6 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.DisplayCustomToast;
 
-/**
- * Created by JJSOFT-DESKTOP on 2017-06-04.
- */
-
 public class SubActivity extends BaseActivity implements SubActivityView {
     private SubActivityView.UserInteractions mSubActivityPresenter;
     private int mSelectedGroupValue = 0;
