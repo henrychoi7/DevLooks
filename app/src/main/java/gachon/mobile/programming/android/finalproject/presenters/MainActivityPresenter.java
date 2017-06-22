@@ -25,6 +25,8 @@ import gachon.mobile.programming.android.finalproject.enums.CategoryMenuEnum;
 import gachon.mobile.programming.android.finalproject.enums.ExpandableMenuEnum;
 import gachon.mobile.programming.android.finalproject.models.FavoritesCategoryCodeData;
 import gachon.mobile.programming.android.finalproject.models.FavoritesCategoryData;
+import gachon.mobile.programming.android.finalproject.models.FavoritesContentData;
+import gachon.mobile.programming.android.finalproject.models.FavoritesContentDetailData;
 import gachon.mobile.programming.android.finalproject.models.MenuData;
 import gachon.mobile.programming.android.finalproject.models.NavigationMenuData;
 import gachon.mobile.programming.android.finalproject.models.OnOffMixData;
@@ -165,8 +167,69 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
     }
 
     private void setHomeData() {
+        final SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+        final String email = sharedPreferences.getString("email", null);
+        final String password = sharedPreferences.getString("password", null);
+
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("email", email);
+            jsonObject.put("password", password);
+        } catch (final JSONException e) {
+            mMainActivityView.showCustomToast(ExceptionHelper.getApplicationExceptionMessage(e));
+            return;
+        }
+
+        final Observable<FavoritesContentData> callContentRx = RETROFIT_INTERFACE.CallContentRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+        callContentRx.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<FavoritesContentData>() {
+                    final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
+                    final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
+
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog, mContext.getResources().getString(R.string.loadingHomeData));
+                    }
+
+                    @Override
+                    public void onNext(@NonNull FavoritesContentData favoritesContentData) {
+                        final ArrayList<FavoritesContentDetailData> contentDetailDataArrayList = favoritesContentData.getData();
+                        for (final FavoritesContentDetailData detailData : contentDetailDataArrayList) {
+                            final RecyclerViewData recyclerViewData = new RecyclerViewData();
+                            if (detailData.getContentUrl().equals("")) {
+                                continue;
+                            }
+                            recyclerViewData.setTitle(detailData.getContentTitle());
+                            recyclerViewData.setTags(detailData.getContentTag());
+                            recyclerViewData.setContent(detailData.getContentSummary());
+                            recyclerViewData.setWatchCount(detailData.getContentWatchCount());
+                            recyclerViewData.setFavoritesCount(detailData.getContentFavoritesCount());
+                            recyclerViewData.setImageResources(getBitmapFromVectorDrawable(mContext, R.drawable.ic_favorites_fill_24dp));
+                            recyclerViewData.setImageUrl(null);
+                            recyclerViewData.setContentUrl(detailData.getContentUrl());
+                            recyclerViewData.setType("main");
+                            recyclerViewDataArrayList.add(recyclerViewData);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mMainActivityView.showCustomToast(ExceptionHelper.getApplicationExceptionMessage((Exception) e));
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
+                        mMainActivityView.setDisplayRecyclerView(recyclerViewDataArrayList);
+                        setCrawlingData(subscribeProgressDialog);
+                    }
+                });
+    }
+
+    private void setCrawlingData(ProgressDialog subscribeProgressDialog) {
         final ArrayList<RecyclerViewData> recyclerViewDataArrayList = new ArrayList<>();
-        final ProgressDialog subscribeProgressDialog = new ProgressDialog(mContext);
 
         final Observable<ArrayList<RecyclerViewData>> onOffMixData = Observable.fromCallable(() -> {
             final Document document = Jsoup.connect("http://onoffmix.com/event?s=개발").get();
@@ -245,10 +308,20 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ArrayList<RecyclerViewData>>() {
                     ArrayList<RecyclerViewData> finalRecyclerViewData = new ArrayList<>();
+                    private final Comparator homeComparator = new Comparator() {
+                        private final Collator collator = Collator.getInstance();
+
+                        @Override
+                        public int compare(Object objectFront, Object objectBack) {
+                            final RecyclerViewData recyclerViewDataFront = (RecyclerViewData) objectFront;
+                            final RecyclerViewData recyclerViewDataBack = (RecyclerViewData) objectBack;
+                            return collator.compare(String.valueOf(recyclerViewDataFront.getFavoritesCount().length()), String.valueOf(recyclerViewDataBack.getFavoritesCount().length()));
+                        }
+                    };
 
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog, mContext.getResources().getString(R.string.loadingHomeData));
                     }
 
                     @Override
@@ -264,8 +337,8 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
                     @Override
                     public void onComplete() {
-                        Collections.sort(finalRecyclerViewData, mComparator);
-                        mMainActivityView.setDisplayRecyclerView(finalRecyclerViewData);
+                        Collections.sort(finalRecyclerViewData, homeComparator);
+                        mMainActivityView.addAdditionalData(finalRecyclerViewData);
                         mMainActivityView.dismissProgressDialog(subscribeProgressDialog);
                     }
                 });
@@ -365,7 +438,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
 
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog, mContext.getString(R.string.loading));
                     }
 
                     @Override
@@ -412,7 +485,7 @@ public class MainActivityPresenter implements MainActivityView.UserInteractions 
                 .subscribe(new Observer<OnOffMixData>() {
                     @Override
                     public void onSubscribe(@NonNull final Disposable d) {
-                        mMainActivityView.showProgressDialog(subscribeProgressDialog);
+                        mMainActivityView.showProgressDialog(subscribeProgressDialog, mContext.getString(R.string.loading));
                     }
 
                     @Override

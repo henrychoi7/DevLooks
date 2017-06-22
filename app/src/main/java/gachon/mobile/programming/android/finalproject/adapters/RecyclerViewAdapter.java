@@ -19,18 +19,30 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import gachon.mobile.programming.android.finalproject.R;
 import gachon.mobile.programming.android.finalproject.activities.DetailActivity;
 import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
+import gachon.mobile.programming.android.finalproject.models.SingleData;
+import gachon.mobile.programming.android.finalproject.utils.ExceptionHelper;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.RequestBody;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.DisplayCustomToast;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.OKKY;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.ON_OFF_MIX;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.STACK_OVERFLOW;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.STACK_OVERFLOW_MAIN;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.getBitmapFromVectorDrawable;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private final Context mContext;
@@ -84,30 +96,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.mCardView.setOnClickListener(v -> {
             Intent detailIntent = new Intent(mContext, DetailActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            detailIntent.putExtra("selectedUrl", recyclerViewData.getContentUrl());
-            detailIntent.putExtra("selectedTitle", recyclerViewData.getTitle());
-            detailIntent.putExtra("selectedType", recyclerViewData.getType());
+            detailIntent.putExtra("selectedData", recyclerViewData);
             mContext.startActivity(detailIntent);
         });
 
         holder.mImageViewMore.setOnClickListener(v -> {
-                final PopupMenu popupMenu = new PopupMenu(mContext, v);
-                popupMenu.setOnMenuItemClickListener(item -> {
-                    switch (item.getItemId()) {
-                        case R.id.action_content_favorites:
-
-                            break;
-                        case R.id.action_copy:
-                            copyToClipboard(recyclerViewData);
-                            break;
-                        case R.id.action_share:
-                            shareToOther(recyclerViewData);
-                            break;
-                    }
-                    return true;
-                });
-                popupMenu.inflate(R.menu.menu_sub);
-                popupMenu.show();
+            final PopupMenu popupMenu = new PopupMenu(mContext, v);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.action_content_favorites:
+                        storeFavoritesContent(recyclerViewData, position);
+                        break;
+                    case R.id.action_copy:
+                        copyToClipboard(recyclerViewData);
+                        break;
+                    case R.id.action_share:
+                        shareToOther(recyclerViewData);
+                        break;
+                }
+                return true;
+            });
+            popupMenu.inflate(R.menu.menu_sub);
+            popupMenu.show();
         });
     }
 
@@ -116,7 +126,43 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return mRecyclerViewDataArrayList.size();
     }
 
-    private void copyToClipboard(final RecyclerViewData recyclerViewData){
+    private void storeFavoritesContent(final RecyclerViewData recyclerViewData, final int position) {
+        final SharedPreferences sharedPreferences = mContext.getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+        final String email = sharedPreferences.getString("email", null);
+        final String password = sharedPreferences.getString("password", null);
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("email", email);
+            jsonObject.put("password", password);
+            jsonObject.put("content_title", recyclerViewData.getTitle());
+            jsonObject.put("content_url", recyclerViewData.getContentUrl());
+            jsonObject.put("content_tag", recyclerViewData.getTags());
+            jsonObject.put("content_summary", recyclerViewData.getContent());
+            jsonObject.put("content_watch_count", recyclerViewData.getWatchCount());
+            jsonObject.put("content_favorites_count", recyclerViewData.getFavoritesCount());
+        } catch (final JSONException e) {
+            DisplayCustomToast(mContext, ExceptionHelper.getApplicationExceptionMessage(e));
+            return;
+        }
+
+        final Observable<SingleData> storeCategoryRx = RETROFIT_INTERFACE.StoreContentRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+        storeCategoryRx.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(t -> {
+                            String result = t.getData();
+                            DisplayCustomToast(mContext, result);
+                            if (result.contains("등록")) {
+                                favoritesContentAdd(recyclerViewData, position);
+                            } else {
+                                favoritesContentRemove(mRecyclerViewDataArrayList.indexOf(recyclerViewData));
+                            }
+
+                        },
+                        e -> DisplayCustomToast(mContext, ExceptionHelper.getApplicationExceptionMessage((Exception) e)))
+        ;
+    }
+
+    private void copyToClipboard(final RecyclerViewData recyclerViewData) {
         final ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
         clipboardManager.setPrimaryClip(ClipData.newPlainText("text", recyclerViewData.getContentUrl()));
         DisplayCustomToast(mContext, mContext.getString(R.string.complete_to_copy));
@@ -180,6 +226,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 .fitCenter())
                         .into(holder.mImageViewPhotoContent);
             }
+        } else {
+            holder.mImageView.setImageBitmap(recyclerViewData.getImageResources());
         }
 
         if (recyclerViewData.getTags() != null) {
@@ -197,6 +245,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.mWatchCount.setText(recyclerViewData.getWatchCount());
         holder.mFavoritesCount.setText(recyclerViewData.getFavoritesCount());
         holder.mSubInfo.setText(recyclerViewData.getSubInfo());
+    }
+
+    private void favoritesContentRemove(final int position) {
+        mRecyclerViewDataArrayList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    private void favoritesContentAdd(final RecyclerViewData recyclerViewData, final int position) {
+        recyclerViewData.setType("main");
+        recyclerViewData.setImageResources(getBitmapFromVectorDrawable(mContext, R.drawable.ic_favorites_fill_24dp));
+        recyclerViewData.setImageUrl(null);
+        mRecyclerViewDataArrayList.add(position, recyclerViewData);
+        notifyItemInserted(position);
     }
 
     public ArrayList<RecyclerViewData> add(final ArrayList<RecyclerViewData> additionalData, final int position) {

@@ -15,7 +15,7 @@ import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
 
 public interface MainActivityView {
 
-    void showProgressDialog(final ProgressDialog subscribeProgressDialog);
+    void showProgressDialog(final ProgressDialog subscribeProgressDialog, final String message);
 
     void dismissProgressDialog(final ProgressDialog subscribeProgressDialog);
 

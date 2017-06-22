@@ -59,6 +59,7 @@
     <string name="share_data">님이 자료를 공유하였습니다.</string>
 
     <!-- ProgressDialog Message -->
+    <string name="loadingHomeData">즐겨찾기 및 신규 데이터를 불러오고 있습니다.</string>
     <string name="loading">데이터를 불러오고 있습니다.</string>
 
     <!-- Register -->

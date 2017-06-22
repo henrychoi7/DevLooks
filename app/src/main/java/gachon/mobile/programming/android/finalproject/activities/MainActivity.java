@@ -159,9 +159,9 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void showProgressDialog(final ProgressDialog subscribeProgressDialog) {
+    public void showProgressDialog(final ProgressDialog subscribeProgressDialog, final String message) {
         subscribeProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        subscribeProgressDialog.setMessage(getResources().getString(R.string.loading));
+        subscribeProgressDialog.setMessage(message);
         subscribeProgressDialog.setCancelable(false);
         subscribeProgressDialog.show();
     }

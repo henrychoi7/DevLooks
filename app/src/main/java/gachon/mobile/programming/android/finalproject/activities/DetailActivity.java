@@ -16,22 +16,34 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 
 import gachon.mobile.programming.android.finalproject.R;
+import gachon.mobile.programming.android.finalproject.models.RecyclerViewData;
+import gachon.mobile.programming.android.finalproject.models.SingleData;
 import gachon.mobile.programming.android.finalproject.utils.BaseActivity;
+import gachon.mobile.programming.android.finalproject.utils.ExceptionHelper;
 import gachon.mobile.programming.android.finalproject.views.DetailActivityView;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.RequestBody;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.DisplayCustomToast;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.MEDIA_TYPE_JSON;
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.PREF_ID;
+import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.RETROFIT_INTERFACE;
 
 /**
  * Created by JJSOFT-DESKTOP on 2017-06-05.
  */
 
 public class DetailActivity extends BaseActivity implements DetailActivityView {
-    private String mSelectedUrl = "";
-    private String mSelectedTitle = "";
+    private RecyclerViewData mRecyclerViewData = new RecyclerViewData();
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -48,12 +60,13 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
         }
         final TextView detailTitle = (TextView) findViewById(R.id.text_view_detail_title);
 
+        mSharedPreferences = getApplicationContext().getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
+
         final Intent selectedIntent = getIntent();
         if (selectedIntent != null) {
-            mSelectedUrl = selectedIntent.getStringExtra("selectedUrl");
-            mSelectedTitle = selectedIntent.getStringExtra("selectedTitle");
-            detailTitle.setText(selectedIntent.getStringExtra("selectedType"));
-            setWebViewFromHtml(mSelectedUrl);
+            mRecyclerViewData = selectedIntent.getParcelableExtra("selectedData");
+            detailTitle.setText(mRecyclerViewData.getTitle());
+            setWebViewFromHtml(mRecyclerViewData.getContentUrl());
         }
     }
 
@@ -75,18 +88,41 @@ public class DetailActivity extends BaseActivity implements DetailActivityView {
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.action_content_favorites:
+                final String email = mSharedPreferences.getString("email", null);
+                final String password = mSharedPreferences.getString("password", null);
+                final JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("email", email);
+                    jsonObject.put("password", password);
+                    jsonObject.put("content_title", mRecyclerViewData.getTitle());
+                    jsonObject.put("content_url", mRecyclerViewData.getContentUrl());
+                    jsonObject.put("content_tag", mRecyclerViewData.getTags());
+                    jsonObject.put("content_summary", mRecyclerViewData.getContent());
+                    jsonObject.put("content_watch_count", mRecyclerViewData.getWatchCount());
+                    jsonObject.put("content_favorites_count", mRecyclerViewData.getFavoritesCount());
+                } catch (final JSONException e) {
+                    DisplayCustomToast(getApplicationContext(), ExceptionHelper.getApplicationExceptionMessage(e));
+                    break;
+                }
+
+                final Observable<SingleData> storeCategoryRx = RETROFIT_INTERFACE.StoreContentRx(RequestBody.create(MEDIA_TYPE_JSON, jsonObject.toString()));
+                storeCategoryRx.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(t -> DisplayCustomToast(getApplicationContext(), t.getData()),
+                                e -> DisplayCustomToast(getApplicationContext(), ExceptionHelper.getApplicationExceptionMessage((Exception) e)));
+                break;
             case R.id.action_copy:
                 final ClipboardManager clipboardManager = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                clipboardManager.setPrimaryClip(ClipData.newPlainText("text", mSelectedUrl));
+                clipboardManager.setPrimaryClip(ClipData.newPlainText("text", mRecyclerViewData.getContentUrl()));
                 DisplayCustomToast(getApplicationContext(), getApplicationContext().getString(R.string.complete_to_copy));
                 break;
             case R.id.action_share:
-                final SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(PREF_ID, Activity.MODE_PRIVATE);
-                final String userName = sharedPreferences.getString("name", null);
+                final String userName = mSharedPreferences.getString("name", null);
 
                 final Intent intentForShare = new Intent(Intent.ACTION_SEND);
                 intentForShare.putExtra(Intent.EXTRA_SUBJECT, getApplicationContext().getString(R.string.from_devLooks) + userName + getApplicationContext().getString(R.string.share_data) + "\n");
-                intentForShare.putExtra(Intent.EXTRA_TEXT, getString(R.string.title) + " : " + mSelectedTitle + "\n\n" + mSelectedUrl);
+                intentForShare.putExtra(Intent.EXTRA_TEXT, getString(R.string.title) + " : " + mRecyclerViewData.getTitle() + "\n\n" + mRecyclerViewData.getContentUrl());
                 intentForShare.setType("text/plain");
 
                 getApplicationContext().startActivity(Intent.createChooser(intentForShare, getString(R.string.share)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
