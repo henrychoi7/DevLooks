@@ -8,7 +8,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
-import com.tsengvn.typekit.TypekitContextWrapper;
 
 import gachon.mobile.programming.android.finalproject.R;
 
@@ -20,7 +19,7 @@ public class BaseActivity extends RxAppCompatActivity {
     // ApplicationClass에서 작업한 폰트를 적용하는 작업
     @Override
     protected void attachBaseContext(final Context newBase) {
-        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+        //super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
     }
 
     // 권한이 있는지 확인하는 작업

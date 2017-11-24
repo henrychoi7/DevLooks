@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.view.MenuItem;
 
+import com.trello.rxlifecycle2.RxLifecycle;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;

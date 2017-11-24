@@ -1,13 +1,12 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "gachon.mobile.programming.android.finalproject"
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -27,58 +26,56 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     // https://github.com/square/retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
 
     // https://github.com/trello/RxLifecycle
-    compile 'com.trello.rxlifecycle2:rxlifecycle:2.0.1'
-    compile 'com.trello.rxlifecycle2:rxlifecycle-components:2.0.1'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.0.1'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.0.1'
 
     // https://github.com/ReactiveX/RxAndroid
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.
-    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.2'
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-vector-drawable:25.3.1'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:support-vector-drawable:26.1.0'
 
     // https://github.com/baoyongzhang/android-PullRefreshLayout
-    compile 'com.baoyz.pullrefreshlayout:library:1.2.0'
+    implementation 'com.baoyz.pullrefreshlayout:library:1.2.0'
     // https://github.com/tsengvn/Typekit
-    compile 'com.tsengvn:typekit:1.0.1'
+    //implementation 'com.tsengvn:typekit:1.0.1'
 
     // https://github.com/wasabeef/recyclerview-animators
-    compile 'jp.wasabeef:recyclerview-animators:2.2.6'
+    implementation 'jp.wasabeef:recyclerview-animators:2.2.6'
 
     // https://jsoup.org/download
-    compile 'org.jsoup:jsoup:1.10.2'
+    implementation 'org.jsoup:jsoup:1.10.2'
 
     // https://github.com/bumptech/glide
-    compile 'com.github.bumptech.glide:glide:4.0.0-RC0'
-    compile 'com.android.support:support-v4:25.3.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
+    implementation 'com.github.bumptech.glide:glide:4.3.1'
+    implementation 'com.android.support:support-v4:26.1.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
 
     // https://github.com/grantland/android-autofittextview
-    compile 'me.grantland:autofittextview:0.2.1'
+    implementation 'me.grantland:autofittextview:0.2.1'
 
     // https://github.com/balysv/material-ripple
-    compile 'com.balysv:material-ripple:1.0.2'
+    implementation 'com.balysv:material-ripple:1.0.2'
 
     // https://github.com/yarolegovich/LovelyDialog
-    compile 'com.yarolegovich:lovely-dialog:1.0.7'
+    implementation 'com.yarolegovich:lovely-dialog:1.0.7'
 
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
+    implementation 'com.android.support:cardview-v7:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
 
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }

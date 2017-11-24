@@ -1,5 +1,6 @@
 package gachon.mobile.programming.android.finalproject.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -15,11 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.tsengvn.typekit.Typekit;
-
-import java.text.Collator;
-import java.util.Comparator;
 
 import gachon.mobile.programming.android.finalproject.R;
 import okhttp3.MediaType;
@@ -57,9 +53,9 @@ public class ApplicationClass extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Typekit.getInstance()
-                .addNormal(Typekit.createFromAsset(this, CUSTOM_FONT))
-                .addBold(Typekit.createFromAsset(this, CUSTOM_FONT));
+        //Typekit.getInstance()
+        //        .addNormal(Typekit.createFromAsset(this, CUSTOM_FONT))
+        //        .addBold(Typekit.createFromAsset(this, CUSTOM_FONT));
     }
 
     public static void handleUserApplicationExit(final Context context, final Activity activity) {
@@ -81,7 +77,7 @@ public class ApplicationClass extends Application {
 
         final TextView customTextView = (TextView) customToastLayout.findViewById(R.id.custom_tv);
         customTextView.setText(toastText);
-        customTextView.setTypeface(Typekit.createFromAsset(context, CUSTOM_FONT));
+        //customTextView.setTypeface(Typekit.createFromAsset(context, CUSTOM_FONT));
         final Toast customToast = new Toast(context);
         customToast.setView(customToastLayout);
         customToast.setDuration(Toast.LENGTH_SHORT);
@@ -90,7 +86,7 @@ public class ApplicationClass extends Application {
 
     // Vector이미지를 bitmap으로 파싱해주는 함수 작업
     public static Bitmap getBitmapFromVectorDrawable(final Context context, final int drawableId) {
-        Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
+        @SuppressLint("RestrictedApi") Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }

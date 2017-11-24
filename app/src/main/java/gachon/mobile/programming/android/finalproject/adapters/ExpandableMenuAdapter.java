@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tsengvn.typekit.Typekit;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,7 +62,7 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (navigationMenuData.getType() == ENUM_GROUP) {
             final ListNavigationViewHolder navigationViewHolder = (ListNavigationViewHolder) holder;
             navigationViewHolder.navigationTextView.setText(navigationMenuData.getTitle());
-            navigationViewHolder.navigationTextView.setTypeface(Typekit.createFromAsset(mContext, CUSTOM_FONT));
+            //navigationViewHolder.navigationTextView.setTypeface(Typekit.createFromAsset(mContext, CUSTOM_FONT));
             if (navigationMenuData.getImageResource() != null) {
                 navigationViewHolder.navigationImageView.setImageResource(navigationMenuData.getImageResource());
             }
@@ -125,7 +123,7 @@ public class ExpandableMenuAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             final ListNavigationViewHolder navigationViewHolder = (ListNavigationViewHolder) holder;
             final String childMenuTitle = navigationMenuData.getTitle();
             navigationViewHolder.navigationTextView.setText(childMenuTitle);
-            navigationViewHolder.navigationTextView.setTypeface(Typekit.createFromAsset(mContext, CUSTOM_FONT));
+            //navigationViewHolder.navigationTextView.setTypeface(Typekit.createFromAsset(mContext, CUSTOM_FONT));
             if (navigationMenuData.getImageResource() != null) {
                 navigationViewHolder.navigationImageView.setImageResource(navigationMenuData.getImageResource());
                 final RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

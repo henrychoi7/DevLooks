@@ -12,8 +12,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.tsengvn.typekit.Typekit;
-
 import gachon.mobile.programming.android.finalproject.R;
 
 import static gachon.mobile.programming.android.finalproject.utils.ApplicationClass.CUSTOM_FONT;
@@ -84,7 +82,7 @@ public class PasswordEditText extends AppCompatEditText implements TextWatcher, 
                 } else {
                     setInputType(InputType.TYPE_CLASS_TEXT);
                 }
-                setTypeface(Typekit.createFromAsset(getContext(), CUSTOM_FONT));
+                //setTypeface(Typekit.createFromAsset(getContext(), CUSTOM_FONT));
             }
             return true;
         }
